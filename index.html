@@ -3,44 +3,44 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Stars & Premium — MiniApp</title>
+<title>Starify — MiniApp</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-
 <style>
 :root{
-  --bg:#0e1020;
+  /* HALLOWEEN THEME */
+  --bg:#0b0a12;
+  --bg2:#140f1f;
   --card:rgba(255,255,255,.06);
   --line:rgba(255,255,255,.10);
-  --text:#eaf1ff;
-  --muted:#a9b3c7;
-  --accent:#6a8dff;
-  --accent2:#2fe0a1;
-  --danger:#ff5c7a;
-  --ok:#5cff9c;
+  --text:#f7f4ff;
+  --muted:#b7abc9;
+  --accent:#ff7a18; /* orange */
+  --accent2:#9c5cff; /* purple */
+  --ok:#35ffb1;
+  --danger:#ff3b6b;
   --shadow:0 20px 40px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
-html,body{height:100%}
 body{
   margin:0; font-family:"Inter",system-ui,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
   background:
-    radial-gradient(1200px 500px at 10% -10%, rgba(106,141,255,.25), transparent 70%),
-    radial-gradient(900px 500px at 110% 10%, rgba(47,224,161,.20), transparent 70%),
-    var(--bg);
-  display:flex; flex-direction:column;
+    radial-gradient(900px 400px at 110% -10%, rgba(156,92,255,.22), transparent 60%),
+    radial-gradient(1200px 600px at -10% 10%, rgba(255,122,24,.18), transparent 60%),
+    linear-gradient(180deg,var(--bg),var(--bg2));
+  min-height:100svh; display:flex; flex-direction:column;
 }
 
 /* Header */
 .header{
-  position:sticky; top:0; z-index:10;
-  padding:12px 16px; display:flex; align-items:center; gap:12px;
+  position:sticky; top:0; z-index:10; padding:12px 16px; display:flex; align-items:center; gap:12px;
   background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.2));
   backdrop-filter:blur(14px) saturate(140%); -webkit-backdrop-filter:blur(14px) saturate(140%);
   border-bottom:1px solid var(--line);
 }
 .logo{width:36px; height:36px; border-radius:12px; display:grid; place-items:center; font-weight:800;
-  background:conic-gradient(from 0deg, #9a7bff, #6a8dff,#54ffd1,#9a7bff); color:#080a12; box-shadow:var(--shadow)}
+  background:conic-gradient(from 0deg, #ffb86b, #ff7a18, #9c5cff, #ffb86b);
+  color:#150b00; box-shadow:var(--shadow)}
 .title{font-weight:800; letter-spacing:.3px}
 .subtitle{font-size:12px; color:var(--muted)}
 
@@ -48,35 +48,28 @@ body{
 .container{padding:16px; display:none; animation:fade .25s ease forwards}
 .container.active{display:block}
 .grid{display:grid; gap:12px}
-.grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .card{
   background:var(--card); border:1px solid var(--line); border-radius:20px; padding:14px; box-shadow:var(--shadow);
-  transition:.25s transform, .25s background, .25s box-shadow;
+  transition:.25s transform,.25s background,.25s box-shadow;
 }
 .card:hover{transform:translateY(-2px)}
 .card h3{margin:.2rem 0 .4rem; font-size:16px}
 .card p{margin:0; font-size:12px; color:var(--muted)}
-.badge{font-size:12px; padding:6px 8px; border-radius:10px; background:rgba(255,255,255,.12); border:1px solid var(--line); color:var(--muted)}
 .row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
+.badge{font-size:12px; padding:6px 8px; border-radius:10px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:var(--muted)}
+.hr{height:1px; background:var(--line); margin:6px 0 2px}
 
 /* Buttons */
-.btn{appearance:none; border:0; cursor:pointer; padding:10px 14px; border-radius:14px; font-weight:800; color:#fff;
-  background:linear-gradient(135deg, var(--accent), #9a7bff); box-shadow:0 10px 24px rgba(106,141,255,.35); transition:transform .15s, filter .2s}
+.btn{appearance:none; border:0; cursor:pointer; padding:12px 14px; border-radius:16px; font-weight:800; color:#1b0b00;
+  background:linear-gradient(135deg, var(--accent), #ffb86b); box-shadow:0 12px 26px rgba(255,122,24,.35); transition:transform .15s,filter .2s}
 .btn:active{transform:scale(.98)}
+.btn.purple{background:linear-gradient(135deg, var(--accent2), #c39aff); color:#0c0216; box-shadow:0 12px 26px rgba(156,92,255,.35)}
 .btn.ghost{background:transparent; color:var(--text); border:1px solid var(--line); box-shadow:none}
-.btn.ok{background:linear-gradient(135deg, var(--accent2), #54ffd1); color:#042b1f; box-shadow:0 10px 24px rgba(47,224,161,.3)}
-.btn.danger{background:linear-gradient(135deg, var(--danger), #ff8ea4)}
-.price{font-weight:800}
 
-/* Hero banner */
-.banner{
-  position:relative; overflow:hidden; border-radius:20px; height:140px; display:flex; align-items:center; padding:16px;
-  background:linear-gradient(135deg, rgba(106,141,255,.25), rgba(47,224,161,.18));
-  border:1px solid var(--line);
-}
-.banner img{position:absolute; right:-6px; bottom:-6px; height:160px; opacity:.25; filter:saturate(120%) blur(.2px)}
-.banner h2{margin:0 0 6px 0}
-.banner p{margin:0; color:var(--muted)}
+/* Big quick buttons on Home */
+.bigbtn{display:flex; gap:12px}
+.bigbtn .btn{flex:1; font-size:15px}
 
 /* Bottom nav */
 .nav{
@@ -84,10 +77,21 @@ body{
   background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.55)); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
   border-top:1px solid var(--line);
 }
-.tab{appearance:none; border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff; padding:10px 8px; border-radius:14px; font-size:12px}
-.tab.active{background:linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.08))}
+.tab{
+  appearance:none; border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff;
+  padding:12px 8px; border-radius:16px; font-size:12px; display:flex; flex-direction:column; align-items:center; gap:4px
+}
+.tab span{opacity:.85; font-size:11px}
+.tab.active{background:linear-gradient(135deg, rgba(255,122,24,.18), rgba(156,92,255,.18))}
 
-/* Slot machine */
+/* Shop tiles */
+.tile{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.price{font-weight:800}
+.input{
+  width:100%; padding:12px 12px; border-radius:14px; border:1px solid var(--line); background:rgba(255,255,255,.06); color:var(--text);
+}
+
+/* Slot */
 .slot-wrap{display:grid; place-items:center; gap:10px}
 .slot{
   width:280px; height:110px; border-radius:18px; overflow:hidden; position:relative;
@@ -97,7 +101,7 @@ body{
 .reel.spin{animation:spin 1.1s cubic-bezier(.2,.7,.2,1) infinite}
 @keyframes spin{0%{transform:translateY(0)}100%{transform:translateY(-100%)}}
 
-/* Confetti / Emoji rain */
+/* Emoji/confetti */
 .particle{position:fixed; top:-20px; font-size:22px; animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(105vh) rotate(360deg); opacity:.95}}
 
@@ -105,152 +109,101 @@ body{
 .toast{position:fixed; left:50%; bottom:120px; transform:translateX(-50%) translateY(20px); background:rgba(0,0,0,.8);
   border:1px solid var(--line); color:#fff; padding:10px 14px; border-radius:12px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; font-size:13px}
 .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
-
-/* Fade in */
 @keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
-.hidden{display:none}
-.hr{height:1px; background:var(--line); margin:4px 0 0}
 </style>
 </head>
 <body>
   <!-- HEADER -->
   <div class="header">
-    <div class="logo">★</div>
+    <div class="logo">🦇</div>
     <div>
-      <div class="title">Stars & Premium</div>
-      <div class="subtitle">звёзды • premium • игры • рефералка</div>
+      <div class="title">Starify</div>
+      <div class="subtitle">магазин • мини-игры • рефералка</div>
     </div>
-    <div style="margin-left:auto" class="badge" id="userBadge">guest</div>
+    <div style="margin-left:auto" class="badge" id="userBadge">@guest</div>
   </div>
 
-  <!-- HOME -->
+  <!-- HOME (минимум текста) -->
   <section class="container active" id="home">
-    <div class="banner">
-      <!-- OPTIONAL: banner image -->
-      <!-- <img src="assets/banner.webp" alt=""> -->
-      <div>
-        <h2>Добро пожаловать 👋</h2>
-        <p>Красивые анимации, быстрые покупки и немного фана.</p>
-        <div class="row" style="margin-top:8px">
-          <button class="btn ok" id="themeBtn">Подхватить тему</button>
-          <button class="btn ghost" id="confettiBtn">Конфетти</button>
-        </div>
+    <div class="card">
+      <!-- <img src="assets/banner.webp" alt="" style="width:100%;border-radius:14px;opacity:.9;margin-bottom:10px"> -->
+      <h3>Добро пожаловать в Starify 🎃</h3>
+      <div class="bigbtn" style="margin-top:10px">
+        <button class="btn" data-tab-go="shop">🛒 Магазин</button>
+        <button class="btn purple" data-tab-go="games">🎲 Игры</button>
+        <button class="btn ghost" data-tab-go="ref">🤝 Рефералка</button>
       </div>
     </div>
+  </section>
 
-    <div class="grid cols-2" style="margin-top:12px">
-      <div class="card">
-        <h3>Купить звёзды ⭐</h3>
-        <p>Выбирай пакеты, оформляй в 2 клика.</p>
-        <div class="row" style="margin-top:8px">
-          <span class="badge">звёзды</span>
-          <button class="btn" data-tab-go="stars">Перейти</button>
+  <!-- SHOP (звёзды + premium) -->
+  <section class="container" id="shop">
+    <div class="card">
+      <h3>Магазин</h3>
+      <p>Выбери звёзды или Premium. При покупке сразу перейдём к оформлению.</p>
+      <div class="hr"></div>
+
+      <div class="grid cols-2" style="margin-top:6px">
+        <!-- Stars quick packs -->
+        <div class="card">
+          <h3>⭐ Звёзды</h3>
+          <div class="grid" id="starsQuick"></div>
+          <div class="hr"></div>
+          <div class="tile">
+            <div style="flex:1">
+              <div class="badge" style="margin-bottom:6px">Свой лот</div>
+              <input id="customStars" class="input" type="number" min="1" placeholder="Введите количество звёзд">
+            </div>
+            <button class="btn purple" id="buyCustomStars">Купить</button>
+          </div>
         </div>
-      </div>
 
-      <div class="card">
-        <h3>Telegram Premium 💎</h3>
-        <p>Оформление подписки без лишних шагов.</p>
-        <div class="row" style="margin-top:8px">
-          <span class="badge">premium</span>
-          <button class="btn" data-tab-go="premium">Перейти</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Слот-машина 🎰</h3>
-        <p>Мини-игра с вибро и победным всплеском.</p>
-        <div class="row" style="margin-top:8px">
-          <span class="badge">развлечение</span>
-          <button class="btn" data-tab-go="games">Играть</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Рефералка 🤝</h3>
-        <p>Приглашай друзей и забирай бонусы.</p>
-        <div class="row" style="margin-top:8px">
-          <span class="badge">до 10%</span>
-          <button class="btn" data-tab-go="ref">Подробнее</button>
+        <!-- Premium plans -->
+        <div class="card">
+          <h3>💎 Premium</h3>
+          <div class="grid" id="premiumPlans"></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- STARS -->
-  <section class="container" id="stars">
+  <!-- CHECKOUT (юзер + количество) -->
+  <section class="container" id="checkout">
     <div class="card">
-      <!-- OPTIONAL: banner image -->
-      <!-- <img src="assets/stars.webp" alt="" style="width:100%; border-radius:12px; opacity:.9; margin-bottom:10px"> -->
-      <h3>Пакеты звёзд ⭐</h3>
-      <p>Кнопки оформлены, покупка — демо (заглушка).</p>
+      <h3>Оформление</h3>
+      <p id="checkoutWhat">Выбранный товар</p>
       <div class="hr"></div>
-      <div class="grid cols-2" id="starsList"></div>
-      <div class="row" style="margin-top:12px">
-        <span class="badge" id="starsTotal">Итого: 0 ⭐</span>
-        <button class="btn ghost" id="starsClear">Сбросить</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- PREMIUM -->
-  <section class="container" id="premium">
-    <div class="card">
-      <!-- OPTIONAL: banner image -->
-      <!-- <img src="assets/premium.webp" alt="" style="width:100%; border-radius:12px; opacity:.9; margin-bottom:10px"> -->
-      <h3>Telegram Premium 💎</h3>
-      <p>Выбери период и оформи в один тап.</p>
-      <div class="hr"></div>
-      <div class="grid cols-2">
-        <div class="card">
-          <h3>1 месяц</h3>
-          <p>Быстрый старт</p>
-          <div class="row" style="margin-top:8px">
-            <span class="price">~ 499 ₽</span>
-            <button class="btn buy-premium" data-plan="1m">Оформить</button>
-          </div>
-        </div>
-        <div class="card">
-          <h3>3 месяца</h3>
-          <p>Небольшая экономия</p>
-          <div class="row" style="margin-top:8px">
-            <span class="price">~ 1 399 ₽</span>
-            <button class="btn buy-premium" data-plan="3m">Оформить</button>
-          </div>
-        </div>
-        <div class="card">
-          <h3>6 месяцев</h3>
-          <p>Оптимально</p>
-          <div class="row" style="margin-top:8px">
-            <span class="price">~ 2 699 ₽</span>
-            <button class="btn buy-premium" data-plan="6m">Оформить</button>
-          </div>
-        </div>
-        <div class="card">
-          <h3>12 месяцев</h3>
-          <p>Максимум выгоды</p>
-          <div class="row" style="margin-top:8px">
-            <span class="price">~ 4 999 ₽</span>
-            <button class="btn buy-premium" data-plan="12m">Оформить</button>
-          </div>
-        </div>
+      <div class="grid">
+        <input id="username" class="input" type="text" placeholder="Введите @username получателя">
+        <input id="amount" class="input" type="number" min="1" placeholder="Количество (для звёзд)">
+        <button class="btn" id="proceed">Продолжить</button>
+        <button class="btn ghost" data-tab-go="shop">Назад в магазин</button>
       </div>
     </div>
   </section>
 
   <!-- GAMES -->
   <section class="container" id="games">
-    <div class="card slot-wrap">
-      <h3>Слот-машина 🎰</h3>
-      <p>Нажми «Spin» — три барабана крутятся, рандом выдаёт результат. Победа — конфетти!</p>
+    <div class="card">
+      <h3>Мини-игры</h3>
+      <p>Выбери режим: слот-машина или анимированные игры (баскетбол, боулинг, дартс).</p>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" data-game="slot">🎰 Слот</button>
+        <button class="btn purple" data-game="basket">🏀 Баскетбол</button>
+        <button class="btn ghost" data-game="bowling">🎳 Боулинг</button>
+        <button class="btn ghost" data-game="darts">🎯 Дартс</button>
+      </div>
+    </div>
+
+    <div class="card slot-wrap" id="slotBox">
       <div class="slot" id="slot">
-        <div class="reel" id="reel1">★</div>
-        <div class="reel" id="reel2">💎</div>
-        <div class="reel" id="reel3">⚡</div>
+        <div class="reel" id="reel1">🎃</div>
+        <div class="reel" id="reel2">🕷️</div>
+        <div class="reel" id="reel3">🦇</div>
       </div>
       <div class="row">
-        <button class="btn ok" id="spinBtn">Spin</button>
-        <button class="btn ghost" id="emojiRain">Эмоджи-дождь</button>
+        <button class="btn" id="spinBtn">Spin</button>
+        <button class="btn purple" id="confettiBtn">Конфетти</button>
       </div>
       <span class="badge" id="slotOut">Удачи!</span>
     </div>
@@ -259,12 +212,12 @@ body{
   <!-- REFERRAL -->
   <section class="container" id="ref">
     <div class="card">
-      <h3>Реферальная программа 🤝</h3>
-      <p>Поделись ссылкой — друг получает скидку, ты — бонус звёздами.</p>
+      <h3>Реферальная программа 🧙‍♀️</h3>
+      <p>Поделись ссылкой — друг получит скидку, а ты бонус звёздами.</p>
       <div class="hr"></div>
       <div class="row" style="margin-top:8px">
-        <span class="badge" id="refLink">ваша ссылка появится тут</span>
-        <button class="btn" id="copyRef">Скопировать</button>
+        <input id="refLink" class="input" readonly value="https://t.me/your_bot_here?start=ref_0000">
+        <button class="btn purple" id="copyRef">Скопировать</button>
       </div>
       <div class="row" style="margin-top:8px">
         <button class="btn ghost">Мои рефералы (0)</button>
@@ -273,13 +226,12 @@ body{
     </div>
   </section>
 
-  <!-- PROFILE -->
+  <!-- PROFILE (минимум) -->
   <section class="container" id="profile">
     <div class="card">
       <h3>Профиль</h3>
-      <p id="whoami">Имя и ник подтянем из Telegram, если доступно.</p>
+      <p id="whoami">Информация подтянется из Telegram, если доступно.</p>
       <div class="row" style="margin-top:8px">
-        <button class="btn" id="sendOrder">Отправить заказ боту</button>
         <button class="btn ghost" id="closeBtn">Закрыть MiniApp</button>
       </div>
     </div>
@@ -287,11 +239,11 @@ body{
 
   <!-- NAV -->
   <nav class="nav">
-    <button class="tab active" data-tab="home">🏠 Дом</button>
-    <button class="tab" data-tab="stars">⭐ Звёзды</button>
-    <button class="tab" data-tab="premium">💎 Premium</button>
-    <button class="tab" data-tab="games">🎮 Игры</button>
-    <button class="tab" data-tab="ref">🤝 Рефералка</button>
+    <button class="tab active" data-tab="home">🏠<span>Дом</span></button>
+    <button class="tab" data-tab="shop">🛒<span>Магазин</span></button>
+    <button class="tab" data-tab="games">🎲<span>Игры</span></button>
+    <button class="tab" data-tab="ref">🤝<span>Рефералка</span></button>
+    <button class="tab" data-tab="profile">👤<span>Профиль</span></button>
   </nav>
 
   <div class="toast" id="toast">Готово!</div>
@@ -299,174 +251,163 @@ body{
 <script>
 const tg = window.Telegram?.WebApp;
 
-// THEME адаптация
+/* Theme + user */
 function applyTheme(){
   if(!tg) return;
   const t = tg.themeParams || {};
-  document.documentElement.style.setProperty('--bg', t.bg_color || '#0e1020');
-  document.documentElement.style.setProperty('--text', t.text_color || '#eaf1ff');
   document.documentElement.style.setProperty('--line', t.section_separator_color || 'rgba(255,255,255,.10)');
-  // телеграм сам подставит кнопки/статус-бар
 }
-
-// UI helpers
-const showToast = (msg='Готово!')=>{
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'), 1500);
-  try{ navigator.vibrate?.(20); tg?.HapticFeedback?.notificationOccurred('success'); }catch{}
-};
-const confetti = ()=>{
-  const icons = ['✨','⭐','💎','🎉','⚡','🪄','🌟'];
-  for(let i=0;i<30;i++){
-    const s = document.createElement('div');
-    s.className='particle'; s.textContent=icons[Math.floor(Math.random()*icons.length)];
-    s.style.left = Math.random()*100+'vw';
-    s.style.animationDuration = (1.2+Math.random()*1.2)+'s';
-    document.body.appendChild(s);
-    setTimeout(()=>s.remove(), 2600);
-  }
-};
-
-// Навигация
-const tabs = [...document.querySelectorAll('.tab')];
-const sections = [...document.querySelectorAll('.container')];
-function openTab(id){
-  tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===id));
-  sections.forEach(s=>s.classList.toggle('active', s.id===id));
-  tg?.BackButton?.show();
-}
-tabs.forEach(t=>t.addEventListener('click', ()=>openTab(t.dataset.tab)));
-document.querySelectorAll('[data-tab-go]').forEach(b=>b.onclick=()=>openTab(b.dataset.tabGo));
-tg?.BackButton?.onClick(()=>openTab('home'));
-
-// HOME actions
-document.getElementById('themeBtn').onclick=()=>{applyTheme(); showToast('Тема применена');};
-document.getElementById('confettiBtn').onclick=()=>{confetti();};
-
-// USER info
 (function hydrateUser(){
   try{
     const user = tg?.initDataUnsafe?.user;
     if(user){
       document.getElementById('userBadge').textContent = user.username ? '@'+user.username : (user.first_name||'user');
       document.getElementById('whoami').textContent = `Ты: ${user.first_name||''} ${user.last_name||''} ${user.username?'(@'+user.username+')':''}`;
+      const link = `https://t.me/${tg?.initDataUnsafe?.receiver?.username || 'your_bot_here'}?start=ref_${user.id}`;
+      document.getElementById('refLink').value = link;
     }
   }catch{}
 })();
 
-// Звёзды (демо-каталог)
-const starPacks = [
-  {id:'s100', name:'100 ⭐', price:'~ 99 ₽'},
-  {id:'s500', name:'500 ⭐', price:'~ 459 ₽'},
-  {id:'s1000', name:'1000 ⭐', price:'~ 899 ₽'},
-  {id:'s2500', name:'2500 ⭐', price:'~ 2190 ₽'},
-  {id:'s5000', name:'5000 ⭐', price:'~ 4290 ₽'},
-  {id:'s10000', name:'10000 ⭐', price:'~ 8390 ₽'},
-];
-let starsQty = 0;
-const starsList = document.getElementById('starsList');
-const starsTotal = document.getElementById('starsTotal');
-const starsClear = document.getElementById('starsClear');
-starPacks.forEach(p=>{
-  const c = document.createElement('div');
-  c.className='card';
-  c.innerHTML = `<h3>${p.name}</h3><p>Мгновенное начисление</p>
-    <div class="row" style="margin-top:8px">
-      <span class="price">${p.price}</span>
-      <button class="btn buy-stars" data-id="${p.id}">Купить</button>
-    </div>`;
-  starsList.appendChild(c);
-});
-starsList.addEventListener('click', (e)=>{
-  const btn = e.target.closest('.buy-stars'); if(!btn) return;
-  starsQty++; starsTotal.textContent = `Итого: ${starsQty} поз.`;
-  tg?.HapticFeedback?.impactOccurred('light');
-  showToast('Добавлено в заказ');
-  tg?.MainButton?.setText('Оформить покупку ⭐').show();
-});
-starsClear.onclick=()=>{starsQty=0; starsTotal.textContent='Итого: 0 ⭐'; tg?.MainButton?.hide(); showToast('Сброшено')};
-
-// Premium (заглушки)
-document.querySelectorAll('.buy-premium').forEach(b=>b.onclick=()=>{
-  tg?.MainButton?.setText('Оформить Premium').show();
-  showToast('Premium добавлен');
-  tg?.HapticFeedback?.impactOccurred('rigid');
-});
-
-// Slot-machine
-const symbols = ['★','💎','⚡','7️⃣','🍀','🪙'];
-const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
-const spinBtn = document.getElementById('spinBtn');
-const slotOut = document.getElementById('slotOut');
-function randSym(){ return symbols[Math.floor(Math.random()*symbols.length)]; }
-let spinning = false;
-spinBtn.onclick = ()=>{
-  if(spinning) return;
-  spinning = true; slotOut.textContent='Крутим...'; spinBtn.disabled=true;
-  reels.forEach(r=>{ r.classList.add('spin'); r.textContent = randSym(); });
-  tg?.HapticFeedback?.impactOccurred('medium');
-  setTimeout(()=>{
-    reels.forEach(r=>r.classList.remove('spin'));
-    const res = [randSym(),randSym(),randSym()];
-    reels.forEach((r,i)=>r.textContent=res[i]);
-    const win = res[0]===res[1] && res[1]===res[2];
-    if(win){ slotOut.textContent='Победа! 🎉'; confetti(); tg?.HapticFeedback?.notificationOccurred('success'); }
-    else { slotOut.textContent='Повезёт в следующий раз!'; }
-    spinBtn.disabled=false; spinning=false;
-  }, 1400);
+/* Toast + confetti */
+const toast = (m='Готово!')=>{
+  const el=document.getElementById('toast'); el.textContent=m; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),1500);
 };
-
-// Emoji rain
-document.getElementById('emojiRain').onclick=()=>{
-  const emo = ['🌟','💥','✨','🎉','💫','🪄','💎','⚡'];
-  for(let i=0;i<24;i++){
+const confetti = ()=>{
+  const icons = ['🎃','🦇','🕷️','🕸️','✨','💥','🎉'];
+  for(let i=0;i<28;i++){
     const p=document.createElement('div'); p.className='particle';
-    p.textContent = emo[Math.floor(Math.random()*emo.length)];
-    p.style.left = Math.random()*100+'vw';
-    p.style.animationDuration = (1.1+Math.random()*1.3)+'s';
-    document.body.appendChild(p);
-    setTimeout(()=>p.remove(), 2400);
+    p.textContent=icons[Math.floor(Math.random()*icons.length)];
+    p.style.left=Math.random()*100+'vw';
+    p.style.animationDuration=(1.1+Math.random()*1.3)+'s';
+    document.body.appendChild(p); setTimeout(()=>p.remove(),2400);
   }
 };
 
-// Referral
-const refSpan = document.getElementById('refLink');
-const copyRef = document.getElementById('copyRef');
-(function buildRef(){
-  const uid = tg?.initDataUnsafe?.user?.id || Math.floor(Math.random()*1e8);
-  const link = `https://t.me/${tg?.initDataUnsafe?.receiver?.username || 'your_bot_here'}?start=ref_${uid}`;
-  refSpan.textContent = link;
-})();
-copyRef.onclick=async()=>{
-  try{
-    await navigator.clipboard.writeText(refSpan.textContent);
-    showToast('Ссылка скопирована');
-  }catch{ showToast('Скопируй вручную'); }
+/* Navigation */
+const tabs=[...document.querySelectorAll('.tab')];
+const sections=[...document.querySelectorAll('.container')];
+function openTab(id){
+  tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===id));
+  sections.forEach(s=>s.classList.toggle('active', s.id===id));
+}
+tabs.forEach(t=>t.addEventListener('click',()=>openTab(t.dataset.tab)));
+document.querySelectorAll('[data-tab-go]').forEach(b=>b.onclick=()=>openTab(b.dataset.tabGo));
+
+/* Shop data */
+const starsQuick = [
+  {name:'500 ⭐', qty:500},
+  {name:'1 000 ⭐', qty:1000},
+  {name:'2 500 ⭐', qty:2500},
+  {name:'5 000 ⭐', qty:5000},
+];
+const premiumPlans = [
+  {name:'1 месяц', plan:'1m'},
+  {name:'3 месяца', plan:'3m'},
+  {name:'6 месяцев', plan:'6m'},
+  {name:'12 месяцев', plan:'12m'},
+];
+
+const elStarsQuick = document.getElementById('starsQuick');
+starsQuick.forEach(p=>{
+  const c=document.createElement('div'); c.className='tile';
+  c.innerHTML=`<div>${p.name}</div><button class="btn" data-buy-stars="${p.qty}">Купить</button>`;
+  elStarsQuick.appendChild(c);
+});
+const elPremium = document.getElementById('premiumPlans');
+premiumPlans.forEach(p=>{
+  const c=document.createElement('div'); c.className='tile';
+  c.innerHTML=`<div>${p.name}</div><button class="btn purple" data-buy-premium="${p.plan}">Купить</button>`;
+  elPremium.appendChild(c);
+});
+
+/* Checkout flow (без логики оплаты) */
+let checkoutState = { type:null, label:'', qty:null, plan:null };
+const checkoutWhat = document.getElementById('checkoutWhat');
+const username = document.getElementById('username');
+const amount = document.getElementById('amount');
+
+function goCheckout(state){
+  checkoutState = state;
+  // подписи
+  if(state.type==='stars'){
+    checkoutWhat.textContent = `Покупка звёзд: ${state.qty ? state.qty+' ⭐' : 'укажите количество ниже'}`;
+    amount.value = state.qty || '';
+    amount.placeholder = "Количество звёзд";
+    amount.parentElement.style.display = '';
+  } else {
+    checkoutWhat.textContent = `Оформление Telegram Premium: ${state.plan}`;
+    amount.value=''; amount.parentElement.style.display='none';
+  }
+  openTab('checkout');
+  username.focus();
+}
+
+document.addEventListener('click', (e)=>{
+  const s = e.target.closest('[data-buy-stars]');
+  const p = e.target.closest('[data-buy-premium]');
+  if(s){ goCheckout({type:'stars', label:'Звёзды', qty:parseInt(s.dataset.buyStars,10)}); }
+  if(p){ goCheckout({type:'premium', label:'Premium', plan:p.dataset.buyPremium}); }
+});
+
+document.getElementById('buyCustomStars').onclick=()=>{
+  const qty = parseInt(document.getElementById('customStars').value,10);
+  goCheckout({type:'stars', label:'Звёзды', qty: isNaN(qty)?null:qty});
 };
 
-// Profile actions
-document.getElementById('sendOrder').onclick=()=>{
-  // отправка заглушки в бот
-  tg?.sendData?.(JSON.stringify({type:'order_demo', starsQty, premium:true}));
-  showToast('Отправлено боту'); tg?.HapticFeedback?.impactOccurred('soft');
+document.getElementById('proceed').onclick=()=>{
+  // пока просто визуальный финал
+  const u = username.value.trim() || '@username';
+  const q = amount.value? ` • ${amount.value} ⭐` : '';
+  toast(`Заявка: ${checkoutState.label} → ${u}${q}`);
+  confetti();
 };
+
+/* Games */
+const symbols = ['🎃','🕷️','🦇','🕸️','🍬','7️⃣'];
+const reels = [document.getElementById('reel1'),document.getElementById('reel2'),document.getElementById('reel3')];
+const spinBtn=document.getElementById('spinBtn');
+const slotOut=document.getElementById('slotOut');
+function randSym(){ return symbols[Math.floor(Math.random()*symbols.length)]; }
+let spinning=false;
+spinBtn.onclick=()=>{
+  if(spinning) return;
+  spinning=true; slotOut.textContent='Крутим...'; spinBtn.disabled=true;
+  reels.forEach(r=>{ r.classList.add('spin'); r.textContent=randSym(); });
+  setTimeout(()=>{
+    reels.forEach(r=>r.classList.remove('spin'));
+    const res=[randSym(),randSym(),randSym()];
+    reels.forEach((r,i)=>r.textContent=res[i]);
+    const win=res[0]===res[1] && res[1]===res[2];
+    if(win){ slotOut.textContent='Победа! 🎉'; confetti(); } else { slotOut.textContent='Почти!' }
+    spinBtn.disabled=false; spinning=false;
+  },1400);
+};
+document.getElementById('confettiBtn').onclick=()=>confetti();
+
+/* Game mode buttons (визуал) */
+document.querySelectorAll('[data-game]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const mode = b.dataset.game;
+    toast(`Режим: ${mode==='slot'?'Слот':'Анимация '+mode}`);
+    // тут можно подсветить выбранный режим/подгрузить анимацию
+  });
+});
+
+/* Referral */
+document.getElementById('copyRef').onclick=async()=>{
+  try{
+    await navigator.clipboard.writeText(document.getElementById('refLink').value);
+    toast('Ссылка скопирована');
+  }catch{ toast('Скопируй вручную'); }
+};
+
+/* Close */
 document.getElementById('closeBtn').onclick=()=>tg?.close?.();
 
-// Global: MainButton поведение (демо)
-tg?.MainButton?.onClick(()=>{ showToast('Заглушка оплаты'); });
-
-// BackButton логика
-tg?.BackButton?.onClick(()=>openTab('home'));
-
-// первичная инициализация
-(function init(){
-  applyTheme();
-  tg?.ready?.();
-  tg?.expand?.();
-  // быстрые переходы с главной
-  document.querySelectorAll('[data-tab-go]').forEach(b=>b.addEventListener('click',()=>tg?.HapticFeedback?.selectionChanged()));
-})();
+/* Init */
+tg?.ready?.(); tg?.expand?.(); applyTheme();
 </script>
 </body>
 </html>
