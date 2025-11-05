@@ -14,72 +14,120 @@
   --danger:#ff3b6b; --ok:#35ffb1; --shadow:0 20px 40px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
+html,body{height:100%}
 body{
   margin:0; font-family:"Inter",system-ui,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
   background:
     radial-gradient(900px 400px at 110% -10%, rgba(156,92,255,.22), transparent 60%),
     radial-gradient(1200px 600px at -10% 10%, rgba(255,122,24,.18), transparent 60%),
     linear-gradient(180deg,var(--bg),var(--bg2));
-  min-height:100svh; display:flex; flex-direction:column;
+  display:flex; flex-direction:column;
 }
-.header{position:sticky; top:0; z-index:10; padding:12px 16px; display:flex; align-items:center; gap:12px;
+
+/* --- Layout / spacing --- */
+.header{
+  position:sticky; top:0; z-index:10;
+  padding:14px 16px; display:flex; align-items:center; gap:12px;
   background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.2));
   backdrop-filter:blur(14px) saturate(140%); -webkit-backdrop-filter:blur(14px) saturate(140%);
-  border-bottom:1px solid var(--line);}
+  border-bottom:1px solid var(--line);
+}
+.page{flex:1; display:flex; flex-direction:column}
+.container{
+  width:100%; max-width:860px; margin:0 auto;
+  padding:14px 14px 90px;   /* одинаковые отступы везде */
+  display:none; animation:fade .25s ease forwards;
+}
+.container.active{display:block}
+
 .logo{width:36px; height:36px; border-radius:12px; display:grid; place-items:center; font-weight:800;
-  background:conic-gradient(from 0deg, var(--orange2), var(--orange), var(--violet), var(--orange2)); color:#150b00; box-shadow:var(--shadow)}
+  background:conic-gradient(from 0deg, var(--orange2), var(--orange), var(--violet), var(--orange2));
+  color:#150b00; box-shadow:var(--shadow)}
 .title{font-weight:800; letter-spacing:.3px}
 .subtitle{font-size:12px; color:var(--muted)}
-.container{padding:16px; display:none; animation:fade .25s ease forwards}
-.container.active{display:block}
+
 .grid{display:grid; gap:12px}
 .grid.cols-2{grid-template-columns:1fr}
-@media (min-width:420px){ .grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (min-width:520px){ .grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))} }
+
 .card{
-  background:var(--card); border:1px solid var(--line); border-radius:20px; padding:14px; box-shadow:var(--shadow);
-  transition:.25s transform,.25s background,.25s box-shadow;}
+  background:var(--card); border:1px solid var(--line); border-radius:18px; padding:14px; box-shadow:var(--shadow);
+  transition:.25s transform,.25s background,.25s box-shadow;
+}
 .card:hover{transform:translateY(-2px)}
 .card h3{margin:.2rem 0 .4rem; font-size:16px}
 .card p{margin:0; font-size:12px; color:var(--muted)}
+.hr{height:1px; background:var(--line); margin:8px 0 2px}
 .row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
-.tile{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px; border-radius:16px; background:rgba(255,255,255,.06); border:1px solid var(--line)}
-.price{font-weight:800}
-.hr{height:1px; background:var(--line); margin:6px 0 2px}
-.badge{font-size:12px; padding:6px 8px; border-radius:10px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:var(--muted)}
-.btn{appearance:none; border:0; cursor:pointer; padding:12px 14px; border-radius:16px; font-weight:800; color:#1b0b00;
-  background:linear-gradient(135deg, var(--orange), var(--orange2)); box-shadow:0 12px 26px rgba(255,122,24,.35); transition:transform .15s,filter .2s}
+.tile{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px; border-radius:14px; background:rgba(255,255,255,.06); border:1px solid var(--line)}
+
+/* --- Inputs (fix top line & arrows) --- */
+.input{
+  width:100%; padding:12px 12px; border-radius:14px;
+  border:1px solid var(--line); background:rgba(255,255,255,.06);
+  color:var(--text); outline:none; background-clip:padding-box;
+  transition:border-color .2s, box-shadow .2s, transform .1s;
+}
+/* убираем стрелки у number */
+.input[type=number]::-webkit-outer-spin-button,
+.input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0 }
+.input[type=number]{ -moz-appearance:textfield }
+.input:focus{
+  border-color: rgba(255,186,107,.6);
+  box-shadow:0 0 0 6px rgba(255,122,24,.15);
+  transform:translateY(-1px);
+}
+
+/* --- Buttons --- */
+.btn{
+  appearance:none; border:0; cursor:pointer; padding:12px 14px; border-radius:14px; font-weight:800;
+  color:#1b0b00; background:linear-gradient(135deg, var(--orange), var(--orange2));
+  box-shadow:0 12px 26px rgba(255,122,24,.35); transition:transform .12s,filter .2s, box-shadow .2s;
+}
 .btn:active{transform:scale(.98)}
 .btn.purple{background:linear-gradient(135deg, var(--violet), var(--violet2)); color:#0c0216; box-shadow:0 12px 26px rgba(156,92,255,.35)}
 .btn.ghost{background:transparent; color:var(--text); border:1px solid var(--line); box-shadow:none}
-.input{width:100%; padding:12px 12px; border-radius:14px; border:1px solid var(--line); background:rgba(255,255,255,.06); color:var(--text)}
+.badge{font-size:12px; padding:6px 8px; border-radius:10px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:var(--muted)}
 .bigbtn{display:flex; gap:12px}
 .bigbtn .btn{flex:1; font-size:15px}
 
-/* bottom nav */
-.nav{position:sticky; bottom:0; z-index:10; display:grid; grid-template-columns:repeat(5,1fr); gap:8px; padding:10px;
-  background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.55)); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-  border-top:1px solid var(--line);}
-.tab{appearance:none; border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff; padding:12px 8px; border-radius:16px; font-size:12px; display:flex; flex-direction:column; align-items:center; gap:4px}
+/* --- Bottom nav --- */
+.nav{
+  position:sticky; bottom:0; z-index:10;
+  display:grid; grid-template-columns:repeat(5,1fr); gap:8px; padding:10px;
+  background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.55));
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);
+}
+.tab{
+  appearance:none; border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff;
+  padding:12px 8px; border-radius:16px; font-size:12px; display:flex; flex-direction:column; align-items:center; gap:4px
+}
 .tab span{opacity:.85; font-size:11px}
 .tab.active{background:linear-gradient(135deg, rgba(255,122,24,.18), rgba(156,92,255,.18))}
 
-/* SLOT (новая анимация) */
+/* --- Slot: smooth & fast ease-out --- */
 .slot-wrap{display:grid; place-items:center; gap:10px}
-.slot{width:280px; height:110px; border-radius:18px; overflow:hidden; position:relative;
-  background:rgba(0,0,0,.35); border:1px solid var(--line); box-shadow:var(--shadow); display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:8px}
-.reel{background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px; display:grid; place-items:center; font-size:36px; font-weight:800; position:relative; overflow:hidden}
-.reel .roller{position:absolute; left:0; right:0; top:0; display:grid; place-items:center; row-gap:8px}
-.reel .roller span{display:block; font-size:34px; line-height:46px;}
+.slot{width:300px; height:120px; border-radius:16px; overflow:hidden;
+  background:rgba(0,0,0,.35); border:1px solid var(--line); box-shadow:var(--shadow);
+  display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:8px}
+.reel{position:relative; overflow:hidden; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,.08); display:grid; place-items:center}
+.roller{position:absolute; left:0; right:0; top:0; will-change:transform}
+.symbol{height:48px; display:grid; place-items:center; font-size:36px;}
 
-/* GAME STAGE */
-.stage{position:relative; height:220px; border-radius:16px; background:rgba(255,255,255,.06); border:1px solid var(--line); overflow:hidden}
-.ball, .bowling, .dart{position:absolute}
-.ball{font-size:42px}
-.pin{position:absolute; font-size:30px}
-.target{position:absolute; width:140px; height:140px; border-radius:50%; border:6px solid #fff3; left:50%; top:50%; transform:translate(-50%,-50%); box-shadow:inset 0 0 0 4px #fff2}
-.target::before,.target::after{content:""; position:absolute; border-radius:50%; border:4px solid #fff2}
-.target::before{inset:18px}
-.target::after{inset:40px}
+/* --- Game stage --- */
+.stage{position:relative; height:240px; border-radius:16px; background:rgba(255,255,255,.06); border:1px solid var(--line); overflow:hidden}
+.hoop{position:absolute; right:18px; top:38px; font-size:36px; filter:drop-shadow(0 4px 6px rgba(0,0,0,.4))}
+.ball,.dart,.bowl{position:absolute}
+.ball{font-size:44px}
+.bowl{font-size:44px}
+.pin{position:absolute; font-size:32px}
+.target{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:170px; height:170px; border-radius:50%;
+  background:
+    radial-gradient(circle at center, #d41414 0 12%, #fff 12% 24%, #d41414 24% 36%, #fff 36% 48%, #d41414 48% 60%, transparent 60%);
+  box-shadow:0 0 0 6px #ffffff22 inset, 0 10px 30px rgba(0,0,0,.25);
+}
 
 /* Toast */
 .toast{position:fixed; left:50%; bottom:120px; transform:translateX(-50%) translateY(20px); background:rgba(0,0,0,.8);
@@ -89,7 +137,6 @@ body{
 </style>
 </head>
 <body>
-  <!-- HEADER -->
   <div class="header">
     <div class="logo">🦇</div>
     <div>
@@ -99,118 +146,107 @@ body{
     <div style="margin-left:auto" class="badge" id="userBadge">@guest</div>
   </div>
 
-  <!-- HOME -->
-  <section class="container active" id="home">
-    <div class="card">
-      <h3>Добро пожаловать в Starify 🎃</h3>
-      <div class="bigbtn" style="margin-top:10px">
-        <button class="btn" data-tab-go="shop">🛒 Магазин</button>
-        <button class="btn purple" data-tab-go="games">🎲 Игры</button>
-        <button class="btn ghost" data-tab-go="ref">🤝 Рефералка</button>
+  <div class="page">
+    <!-- HOME -->
+    <section class="container active" id="home">
+      <div class="card">
+        <h3>Добро пожаловать в Starify 🎃</h3>
+        <div class="bigbtn" style="margin-top:10px">
+          <button class="btn" data-tab-go="shop">🛒 Магазин</button>
+          <button class="btn purple" data-tab-go="games">🎲 Игры</button>
+          <button class="btn ghost" data-tab-go="ref">🤝 Рефералка</button>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- SHOP -->
-  <section class="container" id="shop">
-    <div class="card">
-      <h3>Магазин</h3>
-      <p>Выбери звёзды или Premium. Сразу перейдём к оформлению.</p>
-      <div class="hr"></div>
+    <!-- SHOP -->
+    <section class="container" id="shop">
+      <div class="card">
+        <h3>Магазин</h3>
+        <p>Выбери звёзды или Premium. Сразу перейдём к оформлению.</p>
+        <div class="hr"></div>
 
-      <div class="grid cols-2" style="margin-top:6px">
-        <!-- Stars panel -->
-        <div class="card" style="background:linear-gradient(180deg,rgba(255,122,24,.10),rgba(255,255,255,.06))">
-          <h3>⭐ Звёзды</h3>
-          <div class="grid" id="starsQuick"></div>
-          <div class="hr"></div>
-          <div class="tile">
-            <div style="flex:1">
-              <div class="badge" style="margin-bottom:6px">Другое количество</div>
-              <input id="customStars" class="input" type="number" min="1" placeholder="Введите количество">
+        <div class="grid cols-2" style="margin-top:6px">
+          <!-- Stars -->
+          <div class="card" style="background:linear-gradient(180deg,rgba(255,122,24,.10),rgba(255,255,255,.06))">
+            <h3>⭐ Звёзды</h3>
+            <div class="grid" id="starsQuick"></div>
+            <div class="hr"></div>
+            <div class="tile">
+              <div style="flex:1">
+                <div class="badge" style="margin-bottom:6px">Другое количество</div>
+                <input id="customStars" class="input" type="number" min="1" placeholder="Введите количество">
+              </div>
+              <button class="btn purple" id="buyCustomStars">Указать</button>
             </div>
-            <button class="btn purple" id="buyCustomStars">Указать</button>
+          </div>
+
+          <!-- Premium -->
+          <div class="card" style="background:linear-gradient(180deg,rgba(156,92,255,.12),rgba(255,255,255,.06))">
+            <h3>💎 Premium</h3>
+            <div class="grid" id="premiumPlans"></div>
           </div>
         </div>
+      </div>
+    </section>
 
-        <!-- Premium panel -->
-        <div class="card" style="background:linear-gradient(180deg,rgba(156,92,255,.12),rgba(255,255,255,.06))">
-          <h3>💎 Premium</h3>
-          <div class="grid" id="premiumPlans"></div>
+    <!-- CHECKOUT -->
+    <section class="container" id="checkout">
+      <div class="card">
+        <h3>Оформление</h3>
+        <p id="checkoutWhat">Выбранный товар</p>
+        <div class="hr"></div>
+        <div class="grid">
+          <input id="username" class="input" type="text" placeholder="Введите @username получателя">
+          <input id="amount" class="input" type="number" min="1" placeholder="Количество (для звёзд)">
+          <button class="btn" id="proceed">Продолжить</button>
+          <button class="btn ghost" data-tab-go="shop">Назад в магазин</button>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- CHECKOUT -->
-  <section class="container" id="checkout">
-    <div class="card">
-      <h3>Оформление</h3>
-      <p id="checkoutWhat">Выбранный товар</p>
-      <div class="hr"></div>
-      <div class="grid">
-        <input id="username" class="input" type="text" placeholder="Введите @username получателя">
-        <input id="amount" class="input" type="number" min="1" placeholder="Количество (для звёзд)">
-        <button class="btn" id="proceed">Продолжить</button>
-        <button class="btn ghost" data-tab-go="shop">Назад в магазин</button>
+    <!-- GAMES -->
+    <section class="container" id="games">
+      <div class="card">
+        <h3>Мини-игры</h3>
+        <div class="row" style="margin-top:8px">
+          <button class="btn" data-game="slot">🎰 Слот</button>
+          <button class="btn purple" data-game="basket">🏀 Баскетбол</button>
+          <button class="btn ghost" data-game="bowling">🎳 Боулинг</button>
+          <button class="btn ghost" data-game="darts">🎯 Дартс</button>
+        </div>
       </div>
-    </div>
-  </section>
 
-  <!-- GAMES -->
-  <section class="container" id="games">
-    <div class="card">
-      <h3>Мини-игры</h3>
-      <div class="row" style="margin-top:8px">
-        <button class="btn" data-game="slot">🎰 Слот</button>
-        <button class="btn purple" data-game="basket">🏀 Баскетбол</button>
-        <button class="btn ghost" data-game="bowling">🎳 Боулинг</button>
-        <button class="btn ghost" data-game="darts">🎯 Дартс</button>
+      <!-- Visible game container -->
+      <div id="gameArea" class="grid" style="margin-top:6px">
+        <!-- will switch content here -->
       </div>
-    </div>
+    </section>
 
-    <!-- Slot -->
-    <div class="card slot-wrap" id="slotBox">
-      <div class="slot" id="slot">
-        <div class="reel"><div class="roller" id="r1"></div></div>
-        <div class="reel"><div class="roller" id="r2"></div></div>
-        <div class="reel"><div class="roller" id="r3"></div></div>
+    <!-- REF -->
+    <section class="container" id="ref">
+      <div class="card">
+        <h3>Реферальная программа</h3>
+        <p>Поделись ссылкой — друг получит скидку, а ты бонус звёздами.</p>
+        <div class="hr"></div>
+        <div class="row" style="margin-top:8px">
+          <input id="refLink" class="input" readonly value="https://t.me/your_bot_here?start=ref_0000">
+          <button class="btn purple" id="copyRef">Скопировать</button>
+        </div>
       </div>
-      <div class="row">
-        <button class="btn" id="spinBtn">Spin</button>
-      </div>
-      <span class="badge" id="slotOut">Удачи!</span>
-    </div>
+    </section>
 
-    <!-- Stage for basket/bowling/darts -->
-    <div class="card">
-      <div class="stage" id="stage"></div>
-    </div>
-  </section>
-
-  <!-- REF -->
-  <section class="container" id="ref">
-    <div class="card">
-      <h3>Реферальная программа</h3>
-      <p>Поделись ссылкой — друг получит скидку, а ты бонус звёздами.</p>
-      <div class="hr"></div>
-      <div class="row" style="margin-top:8px">
-        <input id="refLink" class="input" readonly value="https://t.me/your_bot_here?start=ref_0000">
-        <button class="btn purple" id="copyRef">Скопировать</button>
+    <!-- PROFILE -->
+    <section class="container" id="profile">
+      <div class="card">
+        <h3>Профиль</h3>
+        <p id="whoami">Информация подтянется из Telegram, если доступно.</p>
+        <div class="row" style="margin-top:8px">
+          <button class="btn ghost" id="closeBtn">Закрыть MiniApp</button>
+        </div>
       </div>
-    </div>
-  </section>
-
-  <!-- PROFILE -->
-  <section class="container" id="profile">
-    <div class="card">
-      <h3>Профиль</h3>
-      <p id="whoami">Информация подтянется из Telegram, если доступно.</p>
-      <div class="row" style="margin-top:8px">
-        <button class="btn ghost" id="closeBtn">Закрыть MiniApp</button>
-      </div>
-    </div>
-  </section>
+    </section>
+  </div>
 
   <!-- NAV -->
   <nav class="nav">
@@ -226,7 +262,7 @@ body{
 <script>
 const tg = window.Telegram?.WebApp;
 
-/* Theme + user */
+/* theme + user */
 function applyTheme(){
   if(!tg) return;
   const t = tg.themeParams || {};
@@ -244,52 +280,44 @@ function applyTheme(){
   }catch{}
 })();
 
-/* Toast */
-const toast = (m='Готово!')=>{
-  const el=document.getElementById('toast'); el.textContent=m; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),1200);
-};
-
-/* Navigation */
-const tabs=[...document.querySelectorAll('.tab')];
-const sections=[...document.querySelectorAll('.container')];
-function openTab(id){ tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===id)); sections.forEach(s=>s.classList.toggle('active', s.id===id)); }
-tabs.forEach(t=>t.addEventListener('click',()=>openTab(t.dataset.tab)));
+/* helpers */
+const toast=(m='Готово!')=>{const el=document.getElementById('toast'); el.textContent=m; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),1100);};
+function openTab(id){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id)); document.querySelectorAll('.container').forEach(s=>s.classList.toggle('active',s.id===id));}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>openTab(t.dataset.tab));
 document.querySelectorAll('[data-tab-go]').forEach(b=>b.onclick=()=>openTab(b.dataset.tabGo));
 
-/* Shop data */
-const starsQuick = [{qty:500},{qty:1000},{qty:2500},{qty:5000}];
-const premiumPlans = [{name:'1 месяц',plan:'1m'},{name:'3 месяца',plan:'3m'},{name:'6 месяцев',plan:'6m'},{name:'12 месяцев',plan:'12m'}];
+/* shop */
+const starsQuick=[500,1000,2500,5000];
+const plans=[{name:'1 месяц',plan:'1m'},{name:'3 месяца',plan:'3m'},{name:'6 месяцев',plan:'6m'},{name:'12 месяцев',plan:'12m'}];
+
 const elStarsQuick=document.getElementById('starsQuick');
-starsQuick.forEach(p=>{
+starsQuick.forEach(q=>{
   const c=document.createElement('div'); c.className='tile';
-  c.innerHTML=`<div>⭐ ${p.qty.toLocaleString('ru-RU')}</div><button class="btn" data-buy-stars="${p.qty}">Купить</button>`;
+  c.innerHTML=`<div>⭐ ${q.toLocaleString('ru-RU')}</div><button class="btn" data-buy-stars="${q}">Купить</button>`;
   elStarsQuick.appendChild(c);
 });
-const elPremium=document.getElementById('premiumPlans');
-premiumPlans.forEach(p=>{
+const elPlans=document.getElementById('premiumPlans');
+plans.forEach(p=>{
   const c=document.createElement('div'); c.className='tile';
   c.innerHTML=`<div>${p.name}</div><button class="btn purple" data-buy-premium="${p.plan}">Купить</button>`;
-  elPremium.appendChild(c);
+  elPlans.appendChild(c);
 });
 
-/* Checkout (визуал) */
 let checkoutState={type:null, label:'', qty:null, plan:null};
-const checkoutWhat=document.getElementById('checkoutWhat');
-const username=document.getElementById('username');
-const amount=document.getElementById('amount');
 function goCheckout(state){
   checkoutState=state;
+  const what=document.getElementById('checkoutWhat');
+  const amount=document.getElementById('amount');
   if(state.type==='stars'){
-    checkoutWhat.textContent=`Покупка звёзд: ${state.qty? state.qty+' ⭐' : 'укажите количество ниже'}`;
+    what.textContent=`Покупка звёзд: ${state.qty? state.qty+' ⭐' : 'укажите количество ниже'}`;
     amount.value = state.qty || '';
     amount.placeholder="Количество звёзд";
     amount.parentElement.style.display='';
   } else {
-    checkoutWhat.textContent=`Оформление Telegram Premium: ${state.plan}`;
+    what.textContent=`Оформление Telegram Premium: ${state.plan}`;
     amount.value=''; amount.parentElement.style.display='none';
   }
-  openTab('checkout'); username.focus();
+  openTab('checkout'); document.getElementById('username').focus();
 }
 document.addEventListener('click',(e)=>{
   const s=e.target.closest('[data-buy-stars]'); const p=e.target.closest('[data-buy-premium]');
@@ -301,82 +329,167 @@ document.getElementById('buyCustomStars').onclick=()=>{
   goCheckout({type:'stars', label:'Звёзды', qty});
 };
 document.getElementById('proceed').onclick=()=>{
-  const u=username.value.trim() || '@username';
-  const q=amount.parentElement.style.display!== 'none' ? (` • ${amount.value||checkoutState.qty||0} ⭐`) : '';
-  toast(`Заявка: ${checkoutState.label} → ${u}${q}`);
+  const u=(document.getElementById('username').value.trim()||'@username');
+  const qty=document.getElementById('amount').parentElement.style.display==='none' ? '' : ` • ${document.getElementById('amount').value||checkoutState.qty||0} ⭐`;
+  toast(`Заявка: ${checkoutState.label} → ${u}${qty}`);
 };
 
-/* SLOT — плавное замедление */
+/* --- Games: switchable single game --- */
+const gameArea=document.getElementById('gameArea');
 const symbols=['🎃','🕷️','🦇','🕸️','🍬','7️⃣'];
-['r1','r2','r3'].forEach(id=>{
-  const roller=document.getElementById(id);
-  roller.innerHTML = symbols.concat(symbols).map(s=>`<span>${s}</span>`).join('');
-});
-function spinOne(roller, delay){
-  return new Promise(res=>{
-    const total=30+Math.floor(Math.random()*20); // сколько «щелчков»
-    let i=0; let speed=40; // начальная скорость
-    const tick=()=>{ // обновляем translateY по шагам
-      i++;
-      roller.style.transform=`translateY(-${(i%symbols.length)*46}px)`;
-      if(i<total){ speed = Math.min(speed+6, 140); setTimeout(tick, speed); }
-      else { res((i%symbols.length)); }
-    };
-    setTimeout(tick, delay);
-  });
-}
-document.getElementById('spinBtn').onclick=async()=>{
-  document.getElementById('slotOut').textContent='Крутим...';
-  const idx1=await spinOne(document.getElementById('r1'),0);
-  const idx2=await spinOne(document.getElementById('r2'),120);
-  const idx3=await spinOne(document.getElementById('r3'),240);
-  const a=symbols[idx1], b=symbols[idx2], c=symbols[idx3];
-  const win = a===b && b===c;
-  document.getElementById('slotOut').textContent = win ? 'Победа! 🎉' : 'Почти!';
-};
 
-/* GAME STAGE — баскетбол, боулинг, дартс */
-const stage=document.getElementById('stage');
-function clearStage(){ stage.innerHTML=''; }
-function playBasket(){
-  clearStage();
-  const ball=document.createElement('div'); ball.className='ball'; ball.textContent='🏀'; stage.appendChild(ball);
-  let x=20, y=10, vx=3.2, vy=0, g=0.35, floor=stage.clientHeight-42;
-  const hoop=document.createElement('div'); hoop.style.position='absolute'; hoop.style.right='18px'; hoop.style.top='40px';
-  hoop.innerHTML='🟧'; stage.appendChild(hoop);
-  const loop=()=>{ vy+=g; x+=vx; y+=vy; if(y>floor){y=floor; vy*=-0.72;} ball.style.transform=`translate(${x}px,${y}px)`; if(x<stage.clientWidth-36) requestAnimationFrame(loop); };
-  loop();
-}
-function playBowling(){
-  clearStage();
-  const ball=document.createElement('div'); ball.className='ball'; ball.textContent='🎳'; ball.style.left='10px'; ball.style.top='160px'; stage.appendChild(ball);
-  const pins=[]; for(let i=0;i<5;i++){ const p=document.createElement('div'); p.className='pin'; p.textContent='🎳'; p.style.left=(180+i*26)+'px'; p.style.top=(40+ (i%2)*18)+'px'; stage.appendChild(p); pins.push(p); }
-  let x=10; const loop=()=>{ x+=4.2; ball.style.transform=`translate(${x}px,0)`; if(x<stage.clientWidth-40){ requestAnimationFrame(loop); } else { pins.forEach((p,i)=>{ p.style.transition='transform .6s ease, opacity .6s ease'; p.style.transform=`translate(${(i-2)*30}px,60px) rotate(40deg)`; p.style.opacity='.2'; }); } };
-  loop();
-}
-function playDarts(){
-  clearStage();
-  const target=document.createElement('div'); target.className='target'; stage.appendChild(target);
-  const dart=document.createElement('div'); dart.className='dart'; dart.textContent='🪁'; dart.style.left='-40px'; dart.style.top='20px'; dart.style.fontSize='38px'; stage.appendChild(dart);
-  const cx=stage.clientWidth/2-10, cy=stage.clientHeight/2-10; let t=0;
-  const loop=()=>{ t+=0.02; const x=-40 + t*(cx+40); const y=20 + Math.sin(t*6)*8; dart.style.transform=`translate(${x}px,${y}px) rotate(20deg)`; if(x<cx) requestAnimationFrame(loop); else { dart.textContent='🎯'; } };
-  loop();
-}
-document.querySelectorAll('[data-game]').forEach(b=>{
-  b.addEventListener('click',()=>{
-    if(b.dataset.game==='slot'){ document.getElementById('slotBox').scrollIntoView({behavior:'smooth',block:'center'}); return; }
-    if(b.dataset.game==='basket') playBasket();
-    if(b.dataset.game==='bowling') playBowling();
-    if(b.dataset.game==='darts') playDarts();
+/* Slot component */
+function mountSlot(){
+  gameArea.innerHTML='';
+  const wrap=document.createElement('div'); wrap.className='card slot-wrap';
+  wrap.innerHTML=`
+    <div class="slot">
+      <div class="reel"><div class="roller" id="sl_r1"></div></div>
+      <div class="reel"><div class="roller" id="sl_r2"></div></div>
+      <div class="reel"><div class="roller" id="sl_r3"></div></div>
+    </div>
+    <div class="row"><button class="btn" id="spinBtn">Spin</button></div>
+    <span class="badge" id="slotOut">Удачи!</span>
+  `;
+  gameArea.appendChild(wrap);
+  ['sl_r1','sl_r2','sl_r3'].forEach(id=>{
+    const r=document.getElementById(id);
+    r.innerHTML = symbols.concat(symbols, symbols).map(s=>`<div class="symbol">${s}</div>`).join('');
   });
-});
 
-/* Misc */
-document.getElementById('copyRef').onclick=async()=>{
-  try{ await navigator.clipboard.writeText(document.getElementById('refLink').value); toast('Ссылка скопирована'); }
-  catch{ toast('Скопируй вручную'); }
-};
+  const rollers=[document.getElementById('sl_r1'),document.getElementById('sl_r2'),document.getElementById('sl_r3')];
+  function spinRoller(el, duration){
+    // плавный ease-out
+    const itemH=48; const cycles=6+Math.floor(Math.random()*4); // скорость/кол-во
+    const total=cycles*symbols.length*itemH + (Math.floor(Math.random()*symbols.length))*itemH;
+    const t0=performance.now();
+    const easeOut=t=>1-Math.pow(1-t,3);
+    return new Promise(res=>{
+      function step(t){
+        const dt=(t-t0)/duration; const p=Math.min(1, dt);
+        const y=easeOut(p)*total;
+        el.style.transform=`translateY(-${y}px)`;
+        if(p<1) requestAnimationFrame(step); else res(Math.round((y/itemH))%symbols.length);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  document.getElementById('spinBtn').onclick=async()=>{
+    const out=document.getElementById('slotOut'); out.textContent='Крутим...';
+    const i1=await spinRoller(rollers[0], 850);
+    const i2=await spinRoller(rollers[1], 950);
+    const i3=await spinRoller(rollers[2], 1050);
+    const a=symbols[i1], b=symbols[i2], c=symbols[i3];
+    out.textContent = (a===b && b===c) ? 'Победа! 🎉' : 'Почти!';
+  };
+}
+
+/* Basket game */
+function mountBasket(){
+  gameArea.innerHTML='';
+  const card=document.createElement('div'); card.className='card';
+  const stage=document.createElement('div'); stage.className='stage';
+  const hoop=document.createElement('div'); hoop.className='hoop'; hoop.textContent='🟧';
+  const ball=document.createElement('div'); ball.className='ball'; ball.textContent='🏀'; ball.style.left='12px'; ball.style.top='160px';
+  stage.append(hoop,ball); card.appendChild(stage); gameArea.appendChild(card);
+
+  // бросок по дуге, иногда точный
+  const W=stage.clientWidth, H=stage.clientHeight;
+  const goalX=W-46, goalY=70;
+  const hit = Math.random()<0.55; // иногда попадает
+  const ctrlX = W*0.55, ctrlY = hit? 10 : 30+Math.random()*40;
+
+  let t=0; const dur=1200;
+  const startX=20, startY=H-60;
+  function bezier(t){ // квадратичная крив. Безье
+    const x=(1-t)*(1-t)*startX + 2*(1-t)*t*ctrlX + t*t*goalX;
+    const y=(1-t)*(1-t)*startY + 2*(1-t)*t*ctrlY + t*t*goalY + (hit?0:20);
+    return {x,y};
+  }
+  const t0=performance.now();
+  (function loop(now){
+    const p=Math.min(1,(now-t0)/dur);
+    const pos=bezier(p);
+    ball.style.transform=`translate(${pos.x}px, ${pos.y}px)`;
+    if(p<1) requestAnimationFrame(loop);
+    else {
+      if(hit) { ball.textContent='✨'; }
+      else { ball.style.transition='transform .5s ease'; ball.style.transform=`translate(${goalX-30}px, ${H-50}px)`; }
+    }
+  })(performance.now());
+}
+
+/* Bowling game */
+function mountBowling(){
+  gameArea.innerHTML='';
+  const card=document.createElement('div'); card.className='card';
+  const stage=document.createElement('div'); stage.className='stage';
+  const ball=document.createElement('div'); ball.className='bowl'; ball.textContent='🎳'; ball.style.left='8px'; ball.style.top='170px';
+  stage.appendChild(ball);
+  const pins=[];
+  for(let r=0;r<3;r++){
+    for(let c=0;c<r+3;c++){
+      const p=document.createElement('div'); p.className='pin'; p.textContent='🎳';
+      p.style.left=(180 + c*26 - r*13)+'px'; p.style.top=(30 + r*26)+'px';
+      stage.appendChild(p); pins.push(p);
+    }
+  }
+  card.appendChild(stage); gameArea.appendChild(card);
+
+  // тяжёлый шар, инерция; иногда — страйк
+  const strike = Math.random()<0.5;
+  let x=8, vx=5.2, y=0;
+  function loop(){
+    x+=vx; ball.style.transform=`translate(${x}px, ${y}px)`;
+    if(x<stage.clientWidth-40){ requestAnimationFrame(loop); }
+    else {
+      pins.forEach((p,i)=>{
+        p.style.transition='transform .6s ease, opacity .6s ease';
+        const spread = strike ? (i-3)*35 : (i-3)*18;
+        p.style.transform=`translate(${spread}px, ${60+Math.random()*40}px) rotate(${strike?50:25}deg)`;
+        p.style.opacity = strike ? '.15' : '.4';
+      });
+    }
+  }
+  loop();
+}
+
+/* Darts game */
+function mountDarts(){
+  gameArea.innerHTML='';
+  const card=document.createElement('div'); card.className='card';
+  const stage=document.createElement('div'); stage.className='stage';
+  const target=document.createElement('div'); target.className='target';
+  const dart=document.createElement('div'); dart.className='dart'; dart.textContent='🪁'; dart.style.left='-40px'; dart.style.top='20px'; dart.style.fontSize='38px';
+  stage.append(target,dart); card.appendChild(stage); gameArea.appendChild(card);
+
+  const cx=stage.clientWidth/2-10, cy=stage.clientHeight/2-10;
+  const bull = Math.random()<0.45; // иногда буллзай
+  let t=0;
+  (function loop(){
+    t+=0.02;
+    const x=-40 + t*(cx+40);
+    const y=20 + (bull?0:Math.sin(t*7)*10);
+    dart.style.transform=`translate(${x}px,${y}px) rotate(20deg)`;
+    if(x<cx) requestAnimationFrame(loop);
+    else { dart.textContent='🎯'; }
+  })();
+}
+
+/* game switcher */
+function showGame(kind){
+  if(kind==='slot') mountSlot();
+  if(kind==='basket') mountBasket();
+  if(kind==='bowling') mountBowling();
+  if(kind==='darts') mountDarts();
+}
+document.querySelectorAll('[data-game]').forEach(b=>b.onclick=()=>showGame(b.dataset.game));
+showGame('slot'); // default
+
+/* misc */
+document.getElementById('copyRef').onclick=async()=>{try{await navigator.clipboard.writeText(document.getElementById('refLink').value); toast('Ссылка скопирована');}catch{toast('Скопируй вручную');}};
 document.getElementById('closeBtn').onclick=()=>tg?.close?.();
+
 tg?.ready?.(); tg?.expand?.(); applyTheme();
 </script>
 </body>
