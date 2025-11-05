@@ -1,70 +1,297 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MiniApp TG</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TG MiniApp Deluxe</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
-body {
-  font-family: 'Poppins', sans-serif;
-  margin: 0; padding: 0;
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  color: white; text-align: center;
-  overflow-x: hidden;
-  height: 100vh;
-  display: flex; flex-direction: column;
-  justify-content: center; align-items: center;
+:root{
+  --bg:#0f1221;
+  --card:rgba(255,255,255,.08);
+  --text:#fff;
+  --muted:#b9c2d0;
+  --accent:#6a8dff;
+  --accent-2:#2fe0a1;
+  --danger:#ff5c7a;
+  --shadow:0 20px 50px rgba(0,0,0,.35);
 }
-h1 {
-  animation: fadeIn 1s ease;
-  font-size: 2.2em;
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Inter',system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(106,141,255,.25), transparent 70%),
+    radial-gradient(900px 500px at 110% 10%, rgba(47,224,161,.2), transparent 70%),
+    var(--bg);
+  min-height:100svh;
+  display:flex; flex-direction:column;
 }
-button {
-  margin: 10px; padding: 12px 24px;
-  font-size: 1em; border: none; border-radius: 30px;
-  background: rgba(255,255,255,0.2);
-  color: white; cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+
+/* Top bar */
+.header{
+  position:sticky; top:0; z-index:10;
+  backdrop-filter:saturate(140%) blur(14px);
+  -webkit-backdrop-filter:saturate(140%) blur(14px);
+  background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.2));
+  border-bottom:1px solid rgba(255,255,255,.06);
+  padding:12px 16px;
+  display:flex; align-items:center; gap:10px;
 }
-button:hover {
-  background: rgba(255,255,255,0.4);
-  transform: scale(1.05);
+.logo{
+  width:34px; height:34px; border-radius:12px;
+  background:linear-gradient(135deg, var(--accent), #9a7bff);
+  box-shadow:0 10px 30px rgba(106,141,255,.5);
+  display:grid; place-items:center; font-weight:800;
 }
-section {
-  animation: slideUp 0.8s ease forwards;
-  opacity: 0;
+.title{font-weight:800; letter-spacing:.3px}
+.subtitle{font-size:12px; color:var(--muted)}
+
+/* Content sections */
+.container{padding:16px; flex:1; display:none; animation:fade .35s ease}
+.container.active{display:block}
+.grid{display:grid; gap:12px}
+.grid.cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+.card{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px; padding:14px;
+  box-shadow:var(--shadow);
+  transition:.25s transform, .25s box-shadow, .25s background;
 }
-@keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-@keyframes slideUp { from {opacity: 0; transform: translateY(50px);} to {opacity: 1; transform: translateY(0);} }
-footer {
-  position: absolute; bottom: 20px; font-size: 0.8em; opacity: 0.7;
+.card:hover{transform:translateY(-2px)}
+.card h3{margin:.2rem 0 .4rem; font-size:16px}
+.card p{margin:0; font-size:12px; color:var(--muted)}
+.price{font-weight:800; margin-top:6px}
+.row{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.btn{
+  appearance:none; border:0; cursor:pointer;
+  padding:10px 14px; border-radius:14px;
+  background:linear-gradient(135deg, var(--accent), #9a7bff);
+  color:#fff; font-weight:700; box-shadow:0 8px 20px rgba(106,141,255,.35);
+  transition:transform .15s ease, filter .2s ease;
 }
+.btn:active{transform:scale(.98)}
+.btn.ghost{
+  background:transparent; color:var(--text); border:1px solid rgba(255,255,255,.15)
+}
+.badge{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);
+  padding:6px 8px; border-radius:10px; font-size:12px; color:var(--muted)
+}
+
+.kbd{
+  font-size:11px; padding:4px 8px; border-radius:8px;
+  border:1px solid rgba(255,255,255,.12); color:var(--muted)
+}
+
+/* Bottom nav */
+.nav{
+  position:sticky; bottom:0; z-index:10;
+  display:grid; grid-template-columns:repeat(5,1fr);
+  gap:8px; padding:10px;
+  background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.55));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.tab{
+  appearance:none; border:0; background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  color:#fff; padding:10px 8px; border-radius:14px; font-size:12px;
+}
+.tab.active{background:linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.08))}
+
+/* Floating cart badge */
+.fab{
+  position:fixed; right:16px; bottom:76px; z-index:12;
+  background:linear-gradient(135deg, var(--accent-2), #54ffd1);
+  color:#003329; border:0; padding:14px 16px; border-radius:16px;
+  box-shadow:0 12px 24px rgba(47,224,161,.4); font-weight:800;
+  display:flex; gap:8px; align-items:center;
+}
+.fab .count{background:#003d2b; color:#b7ffea; padding:4px 8px; border-radius:10px; font-size:12px}
+
+/* Toast */
+.toast{
+  position:fixed; left:50%; bottom:120px; transform:translateX(-50%) translateY(20px);
+  background:rgba(0,0,0,.75); border:1px solid rgba(255,255,255,.15);
+  color:#fff; padding:10px 14px; border-radius:12px; opacity:0; pointer-events:none;
+  transition:opacity .2s ease, transform .2s ease; font-size:13px
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+
+/* Mini game wheel */
+.wheel-box{display:grid; place-items:center; gap:12px; margin-top:8px}
+.wheel{
+  width:220px; height:220px; border-radius:50%;
+  background:
+    conic-gradient(#fff0 0 10%, #ffffff15 0 20%,
+                   #fff0 0 30%, #ffffff15 0 40%,
+                   #fff0 0 50%, #ffffff15 0 60%,
+                   #fff0 0 70%, #ffffff15 0 80%,
+                   #fff0 0 90%, #ffffff15 0 100%),
+    radial-gradient(closest-side, rgba(255,255,255,.08), rgba(255,255,255,.02));
+  border:2px solid rgba(255,255,255,.2);
+  position:relative; box-shadow:var(--shadow);
+}
+.pointer{
+  width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:14px solid var(--accent);
+  position:absolute; top:-8px; left:calc(50% - 10px); filter:drop-shadow(0 6px 8px rgba(0,0,0,.5))
+}
+.spin{padding:10px 16px; border-radius:12px; font-weight:800; border:0; cursor:pointer}
+.spin[data-state="spin"]{background:linear-gradient(135deg, var(--accent), #9a7bff); color:#fff}
+.spin[data-state="stop"]{background:linear-gradient(135deg, var(--danger), #ff8da1); color:#fff}
+
+/* Fun emojirain */
+.emoji{position:fixed; top:-40px; font-size:26px; animation:fall linear forwards}
+@keyframes fall { to { transform:translateY(110vh) rotate(360deg); opacity:.9 } }
+
+@keyframes fade { from {opacity:0; transform:translateY(6px)} to {opacity:1; transform:translateY(0)} }
+.hidden{display:none}
+hr.sep{border:0; height:1px; background:rgba(255,255,255,.08); margin:10px 0 0}
 </style>
 </head>
 <body>
-  <h1>🌟 Привет из Mini App!</h1>
-  <section>
-    <button onclick="showSection('info')">ℹ️ Инфо</button>
-    <button onclick="showSection('shop')">🛍 Магазин</button>
-    <button onclick="showSection('contact')">📞 Контакты</button>
-  </section>
 
-  <div id="content" style="margin-top: 20px; font-size: 1.1em;"></div>
+<!-- TOP -->
+<div class="header">
+  <div class="logo">★</div>
+  <div>
+    <div class="title">MiniApp Deluxe</div>
+    <div class="subtitle">кнопки • эффекты • мини-игры • корзина</div>
+  </div>
+  <div style="margin-left:auto" class="badge" id="userBadge">guest</div>
+</div>
 
-  <footer>✨ Сделано с ❤️ для Telegram</footer>
+<!-- HOME -->
+<section class="container active" id="home">
+  <div class="grid">
+    <div class="card">
+      <h3>Добро пожаловать 👋</h3>
+      <p>Это улучшенная версия с кучей фишек: нижняя навигация, корзина, вибро-фидбек, конфетти, игры, «приколы» и отправка заказа обратно боту.</p>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="confettiBtn">Конфетти!</button>
+        <button class="btn ghost" id="themeBtn">Подхватить тему</button>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <span class="kbd">MainButton • BackButton • Haptics</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Мини-игры 🎲</h3>
+      <p>Крутилка удачи, монетка, кубик. Есть лёгкие эффекты и вибро.</p>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" data-open="games">Открыть игры</button>
+        <button class="btn ghost" id="coinBtn">Орел/Решка</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Каталог 🛍</h3>
+      <p>Добавляй товары в корзину. Оформление — через <b>MainButton</b>.</p>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" data-open="shop">Перейти</button>
+        <span class="badge">Корзина сохранится</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section class="container" id="shop">
+  <div class="grid cards" id="catalog"></div>
+  <hr class="sep">
+  <div class="row" style="margin-top:12px">
+    <div class="badge" id="totalBadge">Итого: 0 ₽</div>
+    <button class="btn ghost" id="clearCart">Очистить</button>
+  </div>
+  <button class="fab hidden" id="cartFab">🧺 В корзине <span class="count" id="cartCount">0</span></button>
+</section>
+
+<!-- FUN -->
+<section class="container" id="fun">
+  <div class="grid">
+    <div class="card">
+      <h3>Эмоджи-дождь 🌧️</h3>
+      <p>Запусти падающие эмодзи на пару секунд.</p>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="emojiRain">Погнали</button>
+        <span class="badge">весело 😄</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Шутка дня 😹</h3>
+      <p id="joke">Нажми, чтобы получить шутку.</p>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="jokeBtn">Расмеши меня</button>
+        <span class="badge">без серверов</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GAMES -->
+<section class="container" id="games">
+  <div class="grid">
+    <div class="card wheel-box">
+      <div class="wheel" id="wheel"><div class="pointer"></div></div>
+      <button class="spin" id="spinBtn" data-state="spin">Крутить колесо</button>
+      <div class="badge" id="wheelResult">приз скрыт 🎁</div>
+    </div>
+
+    <div class="card">
+      <h3>Кубик 🎲</h3>
+      <p id="diceOut">Нажми, чтобы бросить кубик.</p>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="diceBtn">Бросить</button>
+        <span class="badge">есть вибро</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE -->
+<section class="container" id="profile">
+  <div class="grid">
+    <div class="card">
+      <h3>Профиль</h3>
+      <p id="whoami">Имя подтянется из Telegram (если доступно). Тут можно отправить данные боту.</p>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="sendHello">Отправить «Привет» боту</button>
+        <button class="btn ghost" id="closeBtn">Закрыть MiniApp</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <button class="tab active" data-tab="home">🏠 Дом</button>
+  <button class="tab" data-tab="shop">🛍 Магазин</button>
+  <button class="tab" data-tab="fun">✨ Приколы</button>
+  <button class="tab" data-tab="games">🎮 Игры</button>
+  <button class="tab" data-tab="profile">👤 Профиль</button>
+</nav>
+
+<div class="toast" id="toast">Сделано!</div>
 
 <script>
-function showSection(name) {
-  const content = document.getElementById('content');
-  if (name === 'info') content.innerHTML = 'Это пример мини-приложения. Можно добавить анимации и API Telegram.';
-  if (name === 'shop') content.innerHTML = '🛒 Тут мог бы быть магазин — товары, кнопки оплаты и пр.';
-  if (name === 'contact') content.innerHTML = '📩 Свяжись с нами в Telegram!';
-}
-Telegram.WebApp.ready();
-Telegram.WebApp.expand();
-</script>
-</body>
-</html>
+const tg = window.Telegram?.WebApp;
+
+// THEME → CSS vars
+function applyTheme(){
+  if(!tg) return;
+  const t = tg.themeParams || {};
+  const set = (v, def)=> getComputedStyle(document.documentElement)
+    .setProperty(v, t[v] || def);
+  // Telegram theme variables loosely mapped
+  document.documentElement.style.setProperty('--bg', t.bg_color || '#0f1221');
+  document.documentElement.style.setProperty('--text', t.text_color || '#fff');
+  document.documentElement
