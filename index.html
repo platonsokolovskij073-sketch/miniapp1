@@ -171,7 +171,7 @@ body{
 }
 .wheel-svg{
   width:100%; height:100%;
-  transition: transform 5s cubic-bezier(0.2, 0.9, 0.3, 1);
+  /* Анимация будет управляться через JS для точности */
 }
 .wheel-center{
   position:absolute; width: 50px; height: 50px;
@@ -509,9 +509,9 @@ function mountCups(){
 
   function shuffle(array) { for (let i=array.length-1; i>0; i--) { const j=Math.floor(Math.random()*(i+1)); [array[i], array[j]]=[array[j], array[i]]; } }
   
-  function shuffleCupColors(){
-    shuffle(cupColorClasses);
-    // Применяем новый порядок цветов к текущему положению стаканов
+  function shuffleCupColors(){ shuffle(cupColorClasses); applyColors(); }
+  function cycleCupColors(){ cupColorClasses.push(cupColorClasses.shift()); applyColors(); }
+  function applyColors(){
     cupsAtPos.forEach((cup, i) => {
       cup.classList.remove('cup--color1', 'cup--color2', 'cup--color3');
       cup.classList.add(cupColorClasses[i]);
@@ -528,7 +528,11 @@ function mountCups(){
     cupsAtPos.forEach((cup,pos)=>{ cup.style.transition=`transform ${ms}ms ease`; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
     if(ballPosIndex===a) ballPosIndex=b; else if(ballPosIndex===b) ballPosIndex=a;
     ball.style.transition=`transform ${ms}ms ease`; ball.style.transform=`translate(${xs[ballPosIndex]}px, ${ballY}px) translate(-50%,-50%)`;
-    if (Math.random() < 0.3) shuffleCupColors();
+    
+    const rand = Math.random();
+    if (rand < 0.35) { shuffleCupColors(); }
+    else if (rand < 0.6) { cycleCupColors(); }
+
     await new Promise(r=>setTimeout(r,ms+18));
   }
   async function startRound(){
@@ -543,7 +547,8 @@ function mountCups(){
       ball.style.opacity='1';
       cupsAtPos.forEach((cup,pos)=>{ cup.style.transition='transform .2s ease'; cup.style.transform=`translate(${xs[pos]}px, ${upY}px) translate(-50%,-50%)`; });
       
-      localStorage.setItem('cup_color_order', JSON.stringify(cupColorClasses));
+      const finalColorOrder = cupsAtPos.map(cup => cup.classList[1]);
+      localStorage.setItem('cup_color_order', JSON.stringify(finalColorOrder));
       
       await new Promise(r=>setTimeout(r,200));
       toast(guessPos===ballPosIndex ? 'Верно! 🎉' : 'Мимо');
@@ -588,17 +593,29 @@ function mountWheel() {
     await anim.run(async () => {
       const targetIndex = rint(0, numSegments - 1);
       
+      // ИСПРАВЛЕННЫЙ РАСЧЕТ УГЛА ДЛЯ 100% ТОЧНОСТИ
+      // 1. Сначала сбрасываем анимацию и "нормализуем" текущий угол
+      wheelSVG.style.transition = 'none';
+      const normalizedRotation = currentRotation % 360;
+      wheelSVG.style.transform = `rotate(${normalizedRotation}deg)`;
+      
+      // Этот трюк заставляет браузер применить изменения немедленно
+      void wheelSVG.offsetWidth;
+
+      // 2. Рассчитываем новый поворот от текущей, чистой позиции
       const rotationToTarget = 360 - (targetIndex * angleStep + angleStep / 2);
       const fullSpins = rint(5, 8) * 360;
-      const finalRotation = fullSpins + rotationToTarget;
+      // Мы добавляем новый поворот к уже нормализованному углу
+      const finalRotation = normalizedRotation + fullSpins + rotationToTarget;
       
-      const newTotalRotation = currentRotation + finalRotation;
-      wheelSVG.style.transform = `rotate(${newTotalRotation}deg)`;
+      // 3. Возвращаем анимацию и запускаем вращение
+      wheelSVG.style.transition = 'transform 5s cubic-bezier(0.2, 0.9, 0.3, 1)';
+      wheelSVG.style.transform = `rotate(${finalRotation}deg)`;
       
       await new Promise(resolve => setTimeout(resolve, 5000));
       
-      // ИСПРАВЛЕНО: Сохраняем ПОЛНЫЙ угол для следующего вращения
-      currentRotation = newTotalRotation;
+      // 4. Сохраняем ПОЛНЫЙ угол для следующего вращения
+      currentRotation = finalRotation;
       
       toast(`Результат: ${PRIZES[targetIndex].text}`);
       consumeFreeSpinIfAny();
