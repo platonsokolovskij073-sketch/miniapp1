@@ -125,7 +125,6 @@ body{
 .simple-slot .top-pointers{position:absolute; left:8px; right:8px; top:2px; height:0; display:grid; grid-template-columns:repeat(3,1fr); pointer-events:none}
 .simple-slot .ptr{margin:0 auto; width:0;height:0; border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:10px solid #ffb86b; filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}
 
-/* ——— CUPS (ИЗМЕНЕНО) ——— */
 .cups-ui{display:flex; gap:10px; margin-top:8px}
 .cup{position:absolute; width:var(--cup-w); height:var(--cup-h); will-change:transform; z-index:2; transition:transform .22s ease; border-radius:24px; transform-style:preserve-3d}
 .cup::before{
@@ -135,12 +134,11 @@ body{
   box-shadow: inset 0 10px 18px rgba(255,255,255,.25), inset 0 -12px 22px rgba(0,0,0,.12);
   border-radius: 28px / 22px;
   clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
-  background-color: #dfeaff; /* цвет по умолчанию */
+  background-color: #dfeaff;
 }
-/* Разные цвета для стаканов */
-.cup.cup--color1::before { background-color: #c39aff; } /* violet */
-.cup.cup--color2::before { background-color: #ffb86b; } /* orange */
-.cup.cup--color3::before { background-color: #6b95ff; } /* blue */
+.cup.cup--color1::before { background-color: #c39aff; }
+.cup.cup--color2::before { background-color: #ffb86b; }
+.cup.cup--color3::before { background-color: #6b95ff; }
 
 .cup::after{
   content:""; position:absolute; left:50%; transform:translateX(-50%);
@@ -154,10 +152,11 @@ body{
   will-change:transform; z-index:1; transition:transform .22s ease, opacity .12s ease;
 }
 
-/* ——— WHEEL (ПОЛНАЯ ПЕРЕРАБОТКА) ——— */
+/* ——— WHEEL (ИЗМЕНЕНО) ——— */
 .wheel-wrapper{
   position:relative; width: 250px; height: 250px;
-  margin: auto; display:grid; place-items:center;
+  margin: auto; margin-top:5px; /* Сдвиг для вмещения указателя */
+  display:grid; place-items:center;
 }
 .wheel-pointer{
   position:absolute; top: -4px;
@@ -168,14 +167,11 @@ body{
   transform-origin: bottom center;
   filter: drop-shadow(0 4px 6px rgba(0,0,0,.5));
 }
-/* Анимация "клика" стрелки */
 @keyframes flapper-click {
   0%, 100% { transform: rotate(0deg); }
   50% { transform: rotate(15deg) scale(1.1); }
 }
-.wheel-pointer.clicking {
-  animation: flapper-click 0.1s ease-in-out;
-}
+.wheel-pointer.clicking { animation: flapper-click 0.1s ease-in-out; }
 .wheel-container{
   position:absolute; width:100%; height:100%;
   border-radius:50%;
@@ -227,10 +223,11 @@ body{
           <button class="btn ghost" data-tab-go="ref">🤝 Рефералка</button>
         </div>
         <div class="banners" style="margin-top:12px">
-          <a class="banner" id="banner1" href="https://t.me/your_channel" target="_blank" rel="noopener" style="background-image:url('assets/photo1.jpg')">
+          <!-- ИЗМЕНЕННЫЕ ССЫЛКИ -->
+          <a class="banner" id="banner1" href="https://t.me/starify777" target="_blank" rel="noopener" style="background-image:url('assets/photo1.jpg')">
             <div class="tag">Наш Telegram‑канал</div>
           </a>
-          <a class="banner" id="banner2" href="https://t.me/your_chat" target="_blank" rel="noopener" style="background-image:url('assets/photo2.jpg')">
+          <a class="banner" id="banner2" href="https://t.me/starify7777" target="_blank" rel="noopener" style="background-image:url('assets/photo2.jpg')">
             <div class="tag">Наш Telegram‑чат</div>
           </a>
         </div>
@@ -497,7 +494,6 @@ function mountSlot(){
   document.getElementById('spinBtn').onclick=spin;
 }
 
-/* ——— CUPS (ИЗМЕНЕНО) ——— */
 function mountCups(){
   markGame('cups');
   gameArea.innerHTML = `<div class="card"><div class="stage"></div><div class="cups-ui"><button class="btn" data-action="mix">Начать</button></div></div>`;
@@ -506,10 +502,7 @@ function mountCups(){
   
   const cupColors = ['cup--color1', 'cup--color2', 'cup--color3'];
   const cups = cupColors.map(colorClass => {
-    const c = document.createElement('div');
-    c.className = `cup ${colorClass}`;
-    stage.appendChild(c);
-    return c;
+    const c = document.createElement('div'); c.className = `cup ${colorClass}`; stage.appendChild(c); return c;
   });
   
   const baseY=150, upY=72, ballY=baseY+18;
@@ -521,7 +514,6 @@ function mountCups(){
     cupsAtPos.forEach((cup,pos)=>{ cup.style.transform=`translate(${xs[pos]}px, ${raised?upY:baseY}px) translate(-50%,-50%)`; });
     ball.style.transform=`translate(${xs[ballPosIndex]}px, ${ballY}px) translate(-50%,-50%)`;
   }
-  
   async function swapPos(a,b,ms=200){
     const xs=posX(); [cupsAtPos[a], cupsAtPos[b]]=[cupsAtPos[b], cupsAtPos[a]];
     cupsAtPos.forEach((cup,pos)=>{ cup.style.transition=`transform ${ms}ms ease`; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
@@ -529,23 +521,18 @@ function mountCups(){
     ball.style.transition=`transform ${ms}ms ease`; ball.style.transform=`translate(${xs[ballPosIndex]}px, ${ballY}px) translate(-50%,-50%)`;
     await new Promise(r=>setTimeout(r,ms+18));
   }
-
   async function startRound(){
     await anim.run(async()=>{
       ballPosIndex=1; placeAll(true); await new Promise(r=>setTimeout(r,500));
       const xs=posX();
       cupsAtPos.forEach((cup,pos)=>{ cup.style.transition='transform .2s ease'; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
       await new Promise(r=>setTimeout(r,200)); ball.style.opacity='0';
-
       for(let i=0;i<rint(14,22);i++){ await swapPos(rint(0,1), rint(1,2), rint(160,230)); }
-      
       const guessPos = await new Promise(res=>cupsAtPos.forEach((cup,pos)=>{ cup.style.cursor='pointer'; cup.onclick=()=>res(pos); }));
       cupsAtPos.forEach(c=>{ c.onclick=null; c.style.cursor='default'; });
-      
       ball.style.opacity='1';
       cupsAtPos.forEach((cup,pos)=>{ cup.style.transition='transform .2s ease'; cup.style.transform=`translate(${xs[pos]}px, ${upY}px) translate(-50%,-50%)`; });
       await new Promise(r=>setTimeout(r,200));
-      
       toast(guessPos===ballPosIndex ? 'Верно! 🎉' : 'Мимо');
       consumeFreeSpinIfAny();
     });
@@ -556,13 +543,12 @@ function mountCups(){
 /* ——— WHEEL (ИЗМЕНЕНО) ——— */
 function mountWheel() {
   markGame('wheel');
-  gameArea.innerHTML = `<div class="card"><div class="stage" style="overflow:visible;"><div class="wheel-wrapper"><div class="wheel-pointer"></div><div class="wheel-container"><svg class="wheel-svg" viewBox="0 0 200 200"></svg></div><div class="wheel-center"></div></div></div><div style="display:grid; place-items:center;"><button class="btn" data-action="spinwheel" style="margin-top:10px;">Крутить</button><div class="free-badge" style="margin-top:6px;">🎁 Осталось: <b data-free-counter>0</b></div></div></div>`;
+  gameArea.innerHTML = `<div class="card"><div class="stage"><div class="wheel-wrapper"><div class="wheel-pointer"></div><div class="wheel-container"><svg class="wheel-svg" viewBox="0 0 200 200"></svg></div><div class="wheel-center"></div></div></div><div style="display:grid; place-items:center;"><button class="btn" data-action="spinwheel" style="margin-top:10px;">Крутить</button><div class="free-badge" style="margin-top:6px;">🎁 Осталось: <b data-free-counter>0</b></div></div></div>`;
   updateFreeBadge();
 
   const wheelSVG = gameArea.querySelector('.wheel-svg');
   const pointer = gameArea.querySelector('.wheel-pointer');
   let currentRotation = 0;
-  let clickInterval;
 
   const PRIZES = [
     { text: '+10 ⭐', color: '#ff7a18' }, { text: '+50 ⭐', color: '#9c5cff' },
@@ -570,8 +556,7 @@ function mountWheel() {
     { text: 'x2', color: '#c39aff' }, { text: '+25 ⭐', color: '#ff7a18' },
     { text: 'Ничего', color: '#4a415a' }, { text: 'Джекпот', color: '#e5c100' }
   ];
-  const numSegments = PRIZES.length;
-  const angleStep = 360 / numSegments;
+  const numSegments = PRIZES.length, angleStep = 360 / numSegments;
   const center = 100, radius = 100;
 
   function polarToCartesian(r, angle) {
@@ -579,53 +564,58 @@ function mountWheel() {
     return { x: center + r * Math.cos(a), y: center + r * Math.sin(a) };
   }
   
-  // Рисуем колесо с секторами, текстом и колышками
   PRIZES.forEach((prize, i) => {
     const startAngle = i * angleStep, endAngle = startAngle + angleStep;
-    const start = polarToCartesian(radius, endAngle);
-    const end = polarToCartesian(radius, startAngle);
+    const start = polarToCartesian(radius, endAngle), end = polarToCartesian(radius, startAngle);
     const d = `M ${start.x} ${start.y} A ${radius} ${radius} 0 0 0 ${end.x} ${end.y} L ${center} ${center} Z`;
-    
     wheelSVG.innerHTML += `<path d="${d}" fill="${prize.color}" stroke="rgba(0,0,0,0.2)" stroke-width="1"></path>`;
     wheelSVG.innerHTML += `<text x="100" y="35" transform="rotate(${startAngle + angleStep/2}, 100, 100)" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">${prize.text}</text>`;
-    
-    const pegPos = polarToCartesian(radius-10, startAngle + angleStep/2);
+    const pegPos = polarToCartesian(radius - 10, startAngle); // Колышек на границе
     wheelSVG.innerHTML += `<circle cx="${pegPos.x}" cy="${pegPos.y}" r="3" fill="rgba(255,255,255,0.3)"></circle>`;
   });
+
+  function getRotationDegrees(element) {
+    const matrix = window.getComputedStyle(element).transform;
+    if (matrix === 'none') return 0;
+    const [a, b] = matrix.match(/matrix\(([^)]+)\)/)[1].split(', ').slice(0, 2);
+    return Math.round(Math.atan2(b, a) * (180 / Math.PI));
+  }
   
   async function spinWheel() {
     await anim.run(async () => {
-      clearInterval(clickInterval);
-      
       const targetIndex = rint(0, numSegments - 1);
-      const targetAngle = targetIndex * angleStep + angleStep / 2;
       
-      // Идеальный расчет для остановки
-      const finalRotation = (rint(5, 8) * 360) + (360 - targetAngle);
+      // ТОЧНЫЙ РАСЧЕТ УГЛА: указываем на центр целевого сектора
+      const rotationToTarget = 360 - (targetIndex * angleStep + angleStep / 2);
+      const fullSpins = rint(5, 8) * 360;
+      const finalRotation = fullSpins + rotationToTarget;
+      
       const newTotalRotation = currentRotation + finalRotation;
-      
       wheelSVG.style.transform = `rotate(${newTotalRotation}deg)`;
       
-      // Анимация "кликов" стрелки
+      // Анимация "кликов" через requestAnimationFrame
+      const animationStartTime = performance.now();
       let lastPassedPeg = -1;
-      clickInterval = setInterval(() => {
-        const currentWheelAngle = (parseFloat(wheelSVG.style.transform.replace(/[^0-9.-]/g, '')) || 0) % 360;
-        const pointerTipAngle = (360 - currentWheelAngle) % 360;
-        const currentPeg = Math.floor(pointerTipAngle / angleStep);
-        if(currentPeg !== lastPassedPeg){
+      function animatePointerClick(now) {
+        if (now - animationStartTime > 5000) return; // Останавливаем
+        
+        const liveRotation = getRotationDegrees(wheelSVG);
+        const normalizedRotation = (liveRotation % 360 + 360) % 360;
+        const currentPeg = Math.floor(normalizedRotation / angleStep);
+        
+        if (currentPeg !== lastPassedPeg) {
           pointer.classList.remove('clicking');
           void pointer.offsetWidth; // трюк для перезапуска анимации
           pointer.classList.add('clicking');
           lastPassedPeg = currentPeg;
         }
-      }, 50);
-
-      await new Promise(resolve => setTimeout(()=>{
-        clearInterval(clickInterval);
-        resolve();
-      }, 5000));
+        requestAnimationFrame(animatePointerClick);
+      }
+      requestAnimationFrame(animatePointerClick);
       
-      currentRotation = newTotalRotation;
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      
+      currentRotation = newTotalRotation % 360; // Сохраняем только остаток
       toast(`Результат: ${PRIZES[targetIndex].text}`);
       consumeFreeSpinIfAny();
     });
