@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0b0a12; --bg2:#140f1f; --text:#f7f4ff; --muted:#b7abc9;
+  --bg:#0b0a12; --bg2:#2a1a3d; --text:#f7f4ff; --muted:#b7abc9;
   --line:rgba(255,255,255,.10); --card:rgba(255,255,255,.06);
   --orange:#ff7a18; --orange2:#ffb86b; --violet:#9c5cff; --violet2:#c39aff;
   --danger:#ff3b6b; --ok:#35ffb1; --shadow:0 20px 40px rgba(0,0,0,.35);
@@ -26,13 +26,13 @@ html.nocopy, html.nocopy body, html.nocopy *:not(input):not(textarea){
   -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;
 }
 html.nocopy ::selection{background:transparent}
-html,body{height:100%}
+html,body{height:100%; overflow:hidden;}
 *{box-sizing:border-box}
 
 body{
   margin:0; font-family:"Inter",system-ui,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
-  /* убрал яркие радиальные переливы: ровный фон */
-  background:linear-gradient(180deg,var(--bg),var(--bg2));
+  /* Возвращен более насыщенный градиент */
+  background:linear-gradient(180deg, var(--bg2), var(--bg));
   display:flex; flex-direction:column; overscroll-behavior:none;
 }
 
@@ -44,7 +44,7 @@ body{
   backdrop-filter:blur(14px) saturate(140%); -webkit-backdrop-filter:blur(14px) saturate(140%);
   border-bottom:1px solid var(--line);
 }
-.page{flex:1; display:flex; flex-direction:column}
+.page{flex:1; display:flex; flex-direction:column; overflow-y:auto;}
 .container{
   width:100%; max-width:920px; margin:0 auto;
   padding:14px 14px 90px; display:none; animation:fade .25s ease forwards;
@@ -105,7 +105,7 @@ body{
 .bigbtn{display:flex; gap:12px}
 .bigbtn .btn{flex:1; font-size:15px}
 
-/* bottom nav — убрал некрасивый переход */
+/* bottom nav */
 .nav{
   position:sticky; bottom:0; z-index:10;
   display:grid; grid-template-columns:repeat(6,1fr); gap:8px; padding:10px;
@@ -124,13 +124,13 @@ body{
 .gbtn{position:relative}
 .gbtn.active{outline:2px solid #ffb86b; box-shadow:0 0 0 6px rgba(255,186,107,.15)}
 
-/* игровое окно — ровный фон */
+/* игровое окно */
 .stage{
   position:relative; height:260px; border-radius:16px; background:rgba(255,255,255,.05);
   border:1px solid var(--line); overflow:hidden; touch-action:none;
 }
 
-/* ——— HOME banners (замени пути ниже в стилях inline) ——— */
+/* ——— HOME banners ——— */
 .banners{display:grid; gap:12px}
 @media(min-width:560px){ .banners{grid-template-columns:1fr 1fr} }
 .banner{
@@ -160,25 +160,27 @@ body{
 .simple-slot .ptr{margin:0 auto; width:0;height:0; border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:10px solid #ffb86b; filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}
 .resultline{height:2px; width:100%; background:linear-gradient(90deg, transparent, #ffb86b, transparent); opacity:.7}
 
-/* ——— CUPS ——— */
+/* ——— CUPS (ИЗМЕНЕНО) ——— */
 .cups-ui{display:flex; gap:10px; margin-top:8px}
 .cup{position:absolute; width:var(--cup-w); height:var(--cup-h); will-change:transform; z-index:2; transition:transform .22s ease; border-radius:24px; transform-style:preserve-3d}
 .cup::before{
   content:"";
-  position:absolute; inset:4px 10px 8px; 
+  position:absolute; inset:4px 10px 8px;
   background:linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.3));
   border:1px solid rgba(0,0,0,.22);
   box-shadow: inset 0 10px 18px rgba(255,255,255,.25), inset 0 -12px 22px rgba(0,0,0,.12);
-  border-radius:28px / 22px;
-  /* верх уже, низ шире */
-  clip-path: polygon(42% 10%, 58% 10%, 90% 94%, 10% 94%);
+  border-radius: 28px / 22px;
+  /* Стакан шире сверху */
+  clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
   background-color: var(--cup-color);
 }
-/* два ободка у горлышка */
-.cup .rim{position:absolute; left:50%; transform:translateX(-50%); height:6px; border-radius:12px;
-  background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.2)); border:1px solid rgba(0,0,0,.15); box-shadow:0 2px 4px rgba(0,0,0,.15)}
-.cup .rim.r1{top:8px;  width:54%}
-.cup .rim.r2{top:14px; width:64%}
+/* Ободок внизу стакана */
+.cup .rim{
+  position:absolute; left:50%; transform:translateX(-50%);
+  bottom: 6px; width: 90%; height: 5px; border-radius: 12px;
+  background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.2));
+  border:1px solid rgba(0,0,0,.15); box-shadow:0 2px 4px rgba(0,0,0,.15)
+}
 .cup::after{ /* тень снизу */
   content:""; position:absolute; left:50%; transform:translateX(-50%);
   width:78%; height:8px; bottom:4px; border-radius:50%;
@@ -191,7 +193,7 @@ body{
   will-change:transform; z-index:1; transition:transform .22s ease, opacity .12s ease;
 }
 
-/* ——— WHEEL ——— */
+/* ——— WHEEL (ИЗМЕНЕНО) ——— */
 .wheelbox{position:relative; display:grid; place-items:center}
 .pointer{
   position:absolute; top:-12px; left:50%; transform:translateX(-50%);
@@ -201,13 +203,17 @@ body{
 }
 .wheel{
   width:240px;height:240px;border-radius:50%; border:1px solid var(--line);
-  background:conic-gradient(#ff7a18 0 45deg,#9c5cff 45deg 90deg,#ffb86b 90deg 135deg,#c39aff 135deg 180deg,#ff7a18 180deg 225deg,#9c5cff 225deg 270deg,#ffb86b 270deg 315deg,#c39aff 315deg 360deg); 
+  background:conic-gradient(#ff7a18 0 45deg,#9c5cff 45deg 90deg,#ffb86b 90deg 135deg,#c39aff 135deg 180deg,#ff7a18 180deg 225deg,#9c5cff 225deg 270deg,#ffb86b 270deg 315deg,#c39aff 315deg 360deg);
   box-shadow:inset 0 0 22px rgba(0,0,0,.35);
   display:grid; place-items:center; will-change:transform; position:relative; z-index:1;
 }
 .wheel .labels{position:absolute; inset:0; display:grid; place-items:center; font-size:13px; color:#120914; font-weight:800; opacity:.95; pointer-events:none}
 .wlabel{position:absolute; transform-origin:50% 100%; top:50%; left:50%}
-.wlabel > span{display:inline-block} /* контр‑поворот текста */
+/* Контр-поворот текста и ограничение ширины */
+.wlabel > span{
+  display:inline-block; max-width: 65px;
+  text-align: center; word-break: break-word;
+}
 
 /* сетка кнопок игр */
 .games-grid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
@@ -541,7 +547,7 @@ document.getElementById('proceed').onclick=()=>{
 
 /* ——— Игровой лок ——— */
 const gameArea=document.getElementById('gameArea');
-const symbols=['🎃','🕷️','🕸️','🦇','🍬','7️⃣']; // (чуть переставил, не влияет)
+const symbols=['🎃','🕷️','🕸️','🦇','🍬','7️⃣'];
 const rint=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const easeOut=t=>1-Math.pow(1-t,3);
 
@@ -642,7 +648,7 @@ function mountSlot(){
   document.getElementById('spinBtn').onclick=spinOnce;
 }
 
-/* ——— CUPS ——— */
+/* ——— CUPS (ИЗМЕНЕНО) ——— */
 function mountCups(){
   markGame('cups');
   gameArea.innerHTML='';
@@ -654,13 +660,13 @@ function mountCups(){
 
   const ball=document.createElement('div'); ball.className='ball-sm';
   stage.appendChild(ball);
-  const cups=[0,1,2].map(()=>{ 
+  const cups=[0,1,2].map(()=>{
     const c=document.createElement('div'); c.className='cup';
-    const r1=document.createElement('div'); r1.className='rim r1';
-    const r2=document.createElement('div'); r2.className='rim r2';
-    c.append(r1,r2);
-    stage.appendChild(c); 
-    return c; 
+    // Добавлен один ободок
+    const rim = document.createElement('div'); rim.className='rim';
+    c.append(rim);
+    stage.appendChild(c);
+    return c;
   });
 
   card.append(stage, ui); gameArea.appendChild(card);
@@ -679,7 +685,7 @@ function mountCups(){
 
   function swapPos(a,b,ms=200){
     return new Promise(res=>{
-      const xs=posX(); 
+      const xs=posX();
       const cupA=cupsAtPos[a], cupB=cupsAtPos[b];
       cupsAtPos[a]=cupB; cupsAtPos[b]=cupA;
 
@@ -714,13 +720,11 @@ function mountCups(){
       ballPosIndex=1; placeAll(true);
       await new Promise(r=>setTimeout(r,500));
 
-      // опустить стаканы (без переворотов), спрятать шар
       const xs=posX();
       cupsAtPos.forEach((cup,pos)=>{ cup.style.transition='transform .2s ease'; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
       await new Promise(r=>setTimeout(r,200));
       ball.style.opacity='0';
 
-      // честная мешанина 14–22 шагов
       const steps=rint(14,22);
       for(let i=0;i<steps;i++){
         if(Math.random()<0.55) await swapPos(rint(0,2), rint(0,2), rint(160,230));
@@ -732,7 +736,6 @@ function mountCups(){
       });
       cupsAtPos.forEach(c=>{ c.onclick=null; c.style.cursor='default'; });
 
-      // поднять и показать шар
       ball.style.opacity='1';
       cupsAtPos.forEach((cup,pos)=>{
         cup.style.transition='transform .2s ease';
@@ -749,7 +752,7 @@ function mountCups(){
   btn.onclick=startRound;
 }
 
-/* ——— WHEEL (стрелка сверху, корректный расчёт сектора) ——— */
+/* ——— WHEEL (ИЗМЕНЕНО) ——— */
 function mountWheel(){
   markGame('wheel');
   gameArea.innerHTML='';
@@ -774,18 +777,18 @@ function mountWheel(){
   const SEG = Array.from({length:8}, ()=> Math.random()<0.4 ? 'Ничего' : `+${rint(15,100)} ⭐`);
   const n=SEG.length, step=360/n;
 
-  // подписи по кругу с контр‑поворотом
   SEG.forEach((txt,i)=>{
     const lbl=document.createElement('div');
     lbl.className='wlabel';
     const ang=i*step + step/2;
-    lbl.style.transform=`translate(-50%,-50%) rotate(${ang}deg) translateY(-92px)`;
-    const sp=document.createElement('span'); sp.textContent=txt; // контр‑вращаем самим js
+    // Сдвигаем надписи ближе к центру
+    lbl.style.transform=`translate(-50%,-50%) rotate(${ang}deg) translateY(-85px)`;
+    const sp=document.createElement('span'); sp.textContent=txt;
     lbl.appendChild(sp);
     labels.appendChild(lbl);
   });
 
-  let angle=0; // угол колеса (cw)
+  let angle=0;
   wheel.style.transform=`rotate(0deg)`;
   function mod360(a){ a%=360; if(a<0) a+=360; return a; }
   function setTextCounter(){
@@ -793,26 +796,16 @@ function mountWheel(){
   }
   setTextCounter();
 
-  function closestIndexByAngle() {
-    // выбираем тот сектор, центр которого ближе всего к стрелке (90°)
-    const centers = Array.from({length:n}, (_,i)=> mod360(i*step + step/2 + angle));
-    let best=0, bestDiff=1e9;
-    for(let i=0;i<n;i++){
-      let diff = Math.abs(mod360(centers[i]-90));
-      diff = Math.min(diff, 360-diff);
-      if(diff<bestDiff){ bestDiff=diff; best=i; }
-    }
-    return best;
-  }
-
   async function spinWheel(){
     await anim.run('wheel', async()=>{
-      const target = rint(0,n-1);             // победный сектор (вычислим физику так, чтобы стрелка туда попала)
-      const dir = Math.random()<0.5 ? 1 : -1; // 1 — по, -1 — против
+      // 1. Заранее определяем выигрышный сектор
+      const target = rint(0,n-1);
+      const dir = Math.random()<0.5 ? 1 : -1;
       const turns = 5 + Math.random()*2;
 
       const cur = mod360(angle);
-      const desired = mod360(90 - (target*step + step/2));      // хотим на 12 часов центр target
+      // 2. Рассчитываем конечный угол, чтобы центр сектора target оказался под стрелкой (на 90 градусах)
+      const desired = mod360(90 - (target*step + step/2));
       const deltaCW  = (desired - cur + 360) % 360;
       const deltaCCW = (cur - desired + 360) % 360;
       const delta = dir===1 ? deltaCW : deltaCCW;
@@ -821,6 +814,7 @@ function mountWheel(){
       const end=start + dir*(turns*360 + delta);
       const dur=1600 + rint(0,600);
 
+      // 3. Запускаем анимацию
       await new Promise(res=>{
         const t0=performance.now();
         const loop=(now)=>{
@@ -834,9 +828,8 @@ function mountWheel(){
         requestAnimationFrame(loop);
       });
 
-      // финальная проверка по факту положения стрелки
-      const idx = closestIndexByAngle();
-      toast(`Результат: ${SEG[idx]}`);
+      // 4. Показываем результат, который был определен в самом начале. Гарантированно верный.
+      toast(`Результат: ${SEG[target]}`);
       consumeFreeSpinIfAny();
     });
   }
@@ -858,7 +851,6 @@ document.getElementById('copyRef').onclick=async()=>{
   try{ await navigator.clipboard.writeText(document.getElementById('refLink').value); toast('Ссылка скопирована'); }
   catch{ toast('Скопируй вручную'); }
 };
-document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>openTab(t.dataset.tab));
 document.getElementById('closeBtn').onclick=()=>tg?.close?.();
 
 tg?.ready?.(); tg?.expand?.(); applyTheme();
