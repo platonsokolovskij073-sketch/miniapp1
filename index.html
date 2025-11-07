@@ -542,7 +542,6 @@ function mountCups(){
       const xs=posX();
       cupsAtPos.forEach((cup,pos)=>{ cup.style.transition='transform .2s ease'; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
       await new Promise(r=>setTimeout(r,200)); ball.style.opacity='0';
-      
       for(let i=0;i<rint(14,22);i++){ await swapPos(rint(0,1), rint(1,2), rint(160,230)); }
       
       if (Math.random() < 0.3) {
@@ -604,12 +603,14 @@ function mountWheel() {
   async function spinWheel() {
     await anim.run(async () => {
       const targetIndex = rint(0, numSegments - 1);
-      const rotationToTarget = 360 - (targetIndex * angleStep + angleStep / 2);
+      
+      // Определяем конечную позицию
+      const targetAngle = 360 - (targetIndex * angleStep + angleStep / 2);
       const fullSpins = rint(5, 8) * 360;
-      const totalRotationNeeded = fullSpins + rotationToTarget;
-
+      
       const startRotation = currentRotation;
-      const endRotation = startRotation + totalRotationNeeded;
+      const endRotation = startRotation + fullSpins + ((targetAngle - (startRotation % 360) + 360) % 360);
+      
       const duration = 5000;
       const startTime = performance.now();
 
@@ -631,7 +632,7 @@ function mountWheel() {
         requestAnimationFrame(animate);
       });
       
-      currentRotation = endRotation;
+      currentRotation = endRotation; // Обновляем текущий угол
       
       toast(`Результат: ${PRIZES[targetIndex].text}`);
       consumeFreeSpinIfAny();
