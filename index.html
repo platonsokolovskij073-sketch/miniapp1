@@ -15,10 +15,10 @@
   --danger:#ff3b6b; --ok:#35ffb1; --shadow:0 20px 40px rgba(0,0,0,.35);
 
   /* слот */
-  --sym:56px;        /* высота строки символа */
+  --sym:56px;
 
   /* стаканы */
-  --cup-w: 92px; --cup-h: 86px; --cup-color:#eef2ff;
+  --cup-w: 92px; --cup-h: 86px; --cup-color:#dfeaff; /* светло‑голубые */
 }
 
 /* анти‑копи */
@@ -31,10 +31,8 @@ html,body{height:100%}
 
 body{
   margin:0; font-family:"Inter",system-ui,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
-  background:
-    radial-gradient(900px 400px at 110% -10%, rgba(156,92,255,.22), transparent 60%),
-    radial-gradient(1200px 600px at -10% 10%, rgba(255,122,24,.18), transparent 60%),
-    linear-gradient(180deg,var(--bg),var(--bg2));
+  /* убрал яркие радиальные переливы: ровный фон */
+  background:linear-gradient(180deg,var(--bg),var(--bg2));
   display:flex; flex-direction:column; overscroll-behavior:none;
 }
 
@@ -42,7 +40,7 @@ body{
 .header{
   position:sticky; top:0; z-index:10;
   padding:14px 16px; display:flex; align-items:center; gap:12px;
-  background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.2));
+  background:rgba(0,0,0,.55);
   backdrop-filter:blur(14px) saturate(140%); -webkit-backdrop-filter:blur(14px) saturate(140%);
   border-bottom:1px solid var(--line);
 }
@@ -107,11 +105,11 @@ body{
 .bigbtn{display:flex; gap:12px}
 .bigbtn .btn{flex:1; font-size:15px}
 
-/* bottom nav */
+/* bottom nav — убрал некрасивый переход */
 .nav{
   position:sticky; bottom:0; z-index:10;
   display:grid; grid-template-columns:repeat(6,1fr); gap:8px; padding:10px;
-  background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.55));
+  background:rgba(0,0,0,.55);
   backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
   border-top:1px solid var(--line);
 }
@@ -132,7 +130,7 @@ body{
   border:1px solid var(--line); overflow:hidden; touch-action:none;
 }
 
-/* ——— HOME banners (пути к изображениям ниже в #banner1/#banner2) ——— */
+/* ——— HOME banners (замени пути ниже в стилях inline) ——— */
 .banners{display:grid; gap:12px}
 @media(min-width:560px){ .banners{grid-template-columns:1fr 1fr} }
 .banner{
@@ -168,20 +166,21 @@ body{
 .cup::before{
   content:"";
   position:absolute; inset:4px 10px 8px; 
-  background:linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.3));
+  background:linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.3));
   border:1px solid rgba(0,0,0,.22);
   box-shadow: inset 0 10px 18px rgba(255,255,255,.25), inset 0 -12px 22px rgba(0,0,0,.12);
   border-radius:28px / 22px;
-  /* ВЕРХ УЗКИЙ, НИЗ ШИРОКИЙ */
-  clip-path: polygon(35% 8%, 65% 8%, 92% 94%, 8% 94%);
+  /* верх уже, низ шире */
+  clip-path: polygon(42% 10%, 58% 10%, 90% 94%, 10% 94%);
   background-color: var(--cup-color);
-  transform-origin:50% 50%;
 }
-.cup.flip::before{ animation: cupFlip .22s ease both; }
-@keyframes cupFlip{ 0%{ transform: rotateX(0deg) } 100%{ transform: rotateX(360deg) } }
-.cup::after{
-  content:"";
-  position:absolute; left:50%; transform:translateX(-50%);
+/* два ободка у горлышка */
+.cup .rim{position:absolute; left:50%; transform:translateX(-50%); height:6px; border-radius:12px;
+  background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.2)); border:1px solid rgba(0,0,0,.15); box-shadow:0 2px 4px rgba(0,0,0,.15)}
+.cup .rim.r1{top:8px;  width:54%}
+.cup .rim.r2{top:14px; width:64%}
+.cup::after{ /* тень снизу */
+  content:""; position:absolute; left:50%; transform:translateX(-50%);
   width:78%; height:8px; bottom:4px; border-radius:50%;
   background:radial-gradient(closest-side, rgba(0,0,0,.35), transparent 70%);
 }
@@ -208,12 +207,15 @@ body{
 }
 .wheel .labels{position:absolute; inset:0; display:grid; place-items:center; font-size:13px; color:#120914; font-weight:800; opacity:.95; pointer-events:none}
 .wlabel{position:absolute; transform-origin:50% 100%; top:50%; left:50%}
-.wlabel > span{display:inline-block} /* для контр‑поворота текста */
+.wlabel > span{display:inline-block} /* контр‑поворот текста */
 
-/* сетка кнопок игр: 2 сверху, «Колесо» снизу по центру */
+/* сетка кнопок игр */
 .games-grid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
 .games-grid .span2{ grid-column: 1 / span 2; display:flex; justify-content:center }
 .games-grid .span2 .btn{ min-width:180px }
+
+/* badge бесплатных прокрутов */
+.free-badge{font-size:12px; padding:6px 8px; border-radius:10px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:#ffd36b}
 
 /* daily bonus */
 .bonus-bar{display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-top:8px}
@@ -250,7 +252,7 @@ body{
           <button class="btn ghost" data-tab-go="ref">🤝 Рефералка</button>
         </div>
 
-        <!-- Ниже — баннеры. Поменяй пути к своим фото тут: -->
+        <!-- Баннеры. Поменяй пути к своим фото тут: -->
         <div class="banners" style="margin-top:12px">
           <a class="banner" id="banner1" href="https://t.me/your_channel" target="_blank" rel="noopener"
              style="background-image:url('assets/photo1.jpg')">
@@ -314,6 +316,7 @@ body{
     <section class="container" id="games">
       <div class="card">
         <h3>Мини‑игры</h3>
+        <div class="row" style="margin-top:6px"><span class="free-badge">🎁 Бесплатных прокрутов: <b data-free-counter>0</b></span></div>
 
         <div class="games-grid" style="margin-top:8px">
           <button class="btn gbtn" data-game="slot">🎰 Слот</button>
@@ -327,18 +330,18 @@ body{
       <div id="gameArea" class="grid" style="margin-top:6px"></div>
     </section>
 
-    <!-- BONUS (отдельная вкладка) -->
+    <!-- BONUS -->
     <section class="container" id="bonus">
       <div class="card">
         <h3>Ежедневный бонус</h3>
-        <p>Заходи каждый день — получай звёзды. Серия из 7 дней.</p>
+        <p>Заходи каждый день — получай <b>1 бесплатный прокрут</b> (накапливаются). Серия из 7 дней.</p>
         <div class="hr"></div>
         <div class="row" style="margin-top:8px">
           <div class="badge">Прогресс</div>
           <button class="btn" id="dailyBtn">Забрать</button>
         </div>
         <div class="bonus-bar" id="bonusBar" style="margin-bottom:6px"></div>
-        <div class="tile"><div>Награды</div><div>15, 20, 25, 30, 40, 60, 100 ⭐</div></div>
+        <div class="tile"><div>Бесплатных прокрутов</div><div><b data-free-counter>0</b></div></div>
       </div>
     </section>
 
@@ -372,7 +375,7 @@ body{
     </section>
   </div>
 
-  <!-- NAV (добавлен Бонус перед Профилем) -->
+  <!-- NAV (добавлен Бонус) -->
   <nav class="nav">
     <button class="tab active" data-tab="home">🏠<span>Дом</span></button>
     <button class="tab" data-tab="shop">🛒<span>Магазин</span></button>
@@ -404,17 +407,20 @@ function applyTheme(){
   }catch{}
 })();
 
-/* balances (демо через localStorage) */
+/* balances + free spins (демо через localStorage) */
 const getInt = k => parseInt(localStorage.getItem(k)||'0',10) || 0;
 const setInt = (k,v) => localStorage.setItem(k, String(v));
 function refreshBalances(){
   document.getElementById('gameBal').textContent = `${getInt('game_balance')} ⭐`;
   document.getElementById('refBal').textContent  = `${getInt('ref_balance')} ⭐`;
 }
-refreshBalances();
+function updateFreeBadge(){
+  const n = getInt('free_spins');
+  document.querySelectorAll('[data-free-counter]').forEach(el=>el.textContent=n);
+}
+refreshBalances(); updateFreeBadge();
 
-/* Ежедневный бонус (вкладка BONUS) */
-const rewards=[15,20,25,30,40,60,100];
+/* Ежедневный бонус: каждый день +1 бесплатный прокрут (накапливается) */
 const ymd = (d=new Date()) => d.toISOString().slice(0,10);
 const ymdYesterday = () => {const d=new Date(); d.setDate(d.getDate()-1); return ymd(d);};
 function renderBonus(){
@@ -438,10 +444,11 @@ document.getElementById('dailyBtn').onclick=()=>{
   if(last===ymdYesterday()) streak=Math.min(7, streak+1); else streak=1;
   setInt('daily_streak', streak);
   localStorage.setItem('daily_last', ymd());
-  const reward=rewards[streak-1]||rewards[rewards.length-1];
-  setInt('game_balance', getInt('game_balance')+reward);
-  refreshBalances(); renderBonus();
-  toast(`+${reward} ⭐ за день ${streak}`);
+
+  // +1 бесплатный прокрут
+  setInt('free_spins', getInt('free_spins') + 1);
+  updateFreeBadge(); renderBonus();
+  toast('🎁 Бесплатный прокрут начислен');
 };
 
 /* Toast + вкладки */
@@ -499,7 +506,6 @@ document.getElementById('buyCustomStars').onclick=()=>{
   const qty=parseInt(document.getElementById('customStars').value,10) || null;
   goCheckout({type:'stars', label:'Звёзды', qty});
 };
-/* username check */
 function validUser(u){ return /^@[a-zA-Z0-9_]{2,32}$/.test(u); }
 document.getElementById('proceed').onclick=()=>{
   const u=(document.getElementById('username').value||'').trim();
@@ -535,7 +541,7 @@ document.getElementById('proceed').onclick=()=>{
 
 /* ——— Игровой лок ——— */
 const gameArea=document.getElementById('gameArea');
-const symbols=['🎃','🕷️','🦇','🕸️','🍬','7️⃣'];
+const symbols=['🎃','🕷️','🕸️','🦇','🍬','7️⃣']; // (чуть переставил, не влияет)
 const rint=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const easeOut=t=>1-Math.pow(1-t,3);
 
@@ -559,7 +565,17 @@ function markGame(kind){
   document.querySelectorAll('.gbtn').forEach(b=>b.classList.toggle('active', b.dataset.game===kind));
 }
 
-/* ——— SLOT (одна центральная линия) ——— */
+/* расход бесплатного прокрута */
+function consumeFreeSpinIfAny(){
+  const n = getInt('free_spins');
+  if(n>0){
+    setInt('free_spins', n-1);
+    updateFreeBadge();
+    toast('🎁 Бесплатный прокрут использован');
+  }
+}
+
+/* ——— SLOT ——— */
 function mountSlot(){
   markGame('slot');
   gameArea.innerHTML='';
@@ -575,11 +591,12 @@ function mountSlot(){
   wrap.appendChild(slot);
 
   const spinbar=document.createElement('div'); spinbar.style.display='grid'; spinbar.style.placeItems='center'; spinbar.style.marginTop='10px';
-  spinbar.innerHTML=`<button class="btn" id="spinBtn" data-action="spin">Крутить</button>`;
+  spinbar.innerHTML=`<button class="btn" id="spinBtn" data-action="spin">Крутить</button> <div class="free-badge" style="margin-top:6px">🎁 Осталось: <b data-free-counter>0</b></div>`;
   const out=document.createElement('span'); out.className='badge'; out.id='slotOut'; out.style.marginTop='6px'; out.textContent='Удачи!';
 
   card.append(wrap, spinbar, out);
   gameArea.appendChild(card);
+  updateFreeBadge();
 
   const stack=Array(30).fill(0).flatMap(()=>symbols);
   const reelHTML = stack.map(s=>`<div class="symbol">${s}</div>`).join('');
@@ -590,10 +607,10 @@ function mountSlot(){
 
   function spinRoller(el, duration){
     const N=symbols.length;
-    const k=rint(0, N-1);              // хотим видеть k в СРЕДНЕЙ строке
+    const k=rint(0, N-1);              // символ в средней строке
     const cycles=rint(10,15);
     const base=cycles*N*itemH;
-    const offset = ((k-1+N)%N)*itemH;  // средняя линия
+    const offset = ((k-1+N)%N)*itemH;
     const target=base + offset;
     const t0=performance.now();
     return new Promise(res=>{
@@ -602,10 +619,8 @@ function mountSlot(){
         const accel = Math.min(1, p*2);
         const ease = accel<0.7 ? accel*accel*1.3 : easeOut(p);
         const y = ease*target;
-        const rest = Math.round(y); // без «дрожи»
-        el.style.transform=`translate3d(0,-${rest}px,0)`;
-        if(p<1) requestAnimationFrame(step);
-        else { res(k); }
+        el.style.transform=`translate3d(0,-${Math.round(y)}px,0)`;
+        if(p<1) requestAnimationFrame(step); else res(k);
       }
       requestAnimationFrame(step);
     });
@@ -621,12 +636,13 @@ function mountSlot(){
       ]);
       const a=symbols[i1], b=symbols[i2], c=symbols[i3];
       out.textContent = (a===b && b===c) ? `Победа! ${a}${b}${c}` : `${a} | ${b} | ${c}`;
+      consumeFreeSpinIfAny();
     });
   }
   document.getElementById('spinBtn').onclick=spinOnce;
 }
 
-/* ——— CUPS (один цвет, шар всегда с «своим» стаканом) ——— */
+/* ——— CUPS ——— */
 function mountCups(){
   markGame('cups');
   gameArea.innerHTML='';
@@ -638,7 +654,14 @@ function mountCups(){
 
   const ball=document.createElement('div'); ball.className='ball-sm';
   stage.appendChild(ball);
-  const cups=[0,1,2].map(()=>{ const c=document.createElement('div'); c.className='cup'; stage.appendChild(c); return c; });
+  const cups=[0,1,2].map(()=>{ 
+    const c=document.createElement('div'); c.className='cup';
+    const r1=document.createElement('div'); r1.className='rim r1';
+    const r2=document.createElement('div'); r2.className='rim r2';
+    c.append(r1,r2);
+    stage.appendChild(c); 
+    return c; 
+  });
 
   card.append(stage, ui); gameArea.appendChild(card);
 
@@ -646,7 +669,7 @@ function mountCups(){
   const posX=()=>{ const W=stage.clientWidth; const center=W/2; const gap=Math.min(160, Math.max(110, (W-220)/2)); return [center-gap, center, center+gap]; };
 
   let cupsAtPos=[cups[0], cups[1], cups[2]];
-  let ballPosIndex=1; // старт по центру
+  let ballPosIndex=1;
 
   function placeAll(raised){
     const xs=posX();
@@ -688,25 +711,22 @@ function mountCups(){
 
   async function startRound(){
     await anim.run('cups', async()=>{
-      // показать шар
       ballPosIndex=1; placeAll(true);
-      await new Promise(r=>setTimeout(r,600));
+      await new Promise(r=>setTimeout(r,500));
 
-      // опустить стаканы с флипом, спрятать шар
+      // опустить стаканы (без переворотов), спрятать шар
       const xs=posX();
-      cupsAtPos.forEach(c=>{ c.classList.add('flip'); c.style.transition='transform .22s ease'; c.style.transform=`translate(${xs[cupsAtPos.indexOf(c)]}px, ${baseY}px) translate(-50%,-50%)`; });
-      setTimeout(()=>cupsAtPos.forEach(c=>c.classList.remove('flip')),240);
-      await new Promise(r=>setTimeout(r,240));
+      cupsAtPos.forEach((cup,pos)=>{ cup.style.transition='transform .2s ease'; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
+      await new Promise(r=>setTimeout(r,200));
       ball.style.opacity='0';
 
-      // честная мешанина (без флипов), шар едет со «своим» стаканом
+      // честная мешанина 14–22 шагов
       const steps=rint(14,22);
       for(let i=0;i<steps;i++){
         if(Math.random()<0.55) await swapPos(rint(0,2), rint(0,2), rint(160,230));
         else                   await cycle3(Math.random()<.5?'left':'right', rint(180,240));
       }
 
-      // выбор пользователя
       const guessPos = await new Promise(resolve=>{
         cupsAtPos.forEach((cup,pos)=>{ cup.style.cursor='pointer'; cup.onclick=()=>resolve(pos); });
       });
@@ -715,12 +735,13 @@ function mountCups(){
       // поднять и показать шар
       ball.style.opacity='1';
       cupsAtPos.forEach((cup,pos)=>{
-        cup.style.transition='transform .22s ease';
+        cup.style.transition='transform .2s ease';
         cup.style.transform=`translate(${xs[pos]}px, ${upY}px) translate(-50%,-50%)`;
       });
-      await new Promise(r=>setTimeout(r,220));
+      await new Promise(r=>setTimeout(r,200));
 
       toast(guessPos===ballPosIndex ? 'Верно! 🎉' : 'Мимо');
+      consumeFreeSpinIfAny();
     });
   }
 
@@ -728,7 +749,7 @@ function mountCups(){
   btn.onclick=startRound;
 }
 
-/* ——— WHEEL (стрелка сверху, текст не переворачивается, честное совпадение) ——— */
+/* ——— WHEEL (стрелка сверху, корректный расчёт сектора) ——— */
 function mountWheel(){
   markGame('wheel');
   gameArea.innerHTML='';
@@ -743,42 +764,55 @@ function mountWheel(){
 
   const btn=document.createElement('button'); btn.className='btn'; btn.dataset.action='spinwheel'; btn.textContent='Крутить';
   btn.style.marginTop='10px';
-  card.append(stage, btn);
+  const info=document.createElement('div'); info.className='free-badge'; info.style.marginTop='6px'; info.innerHTML='🎁 Осталось: <b data-free-counter>0</b>';
+  const controls=document.createElement('div'); controls.style.display='grid'; controls.style.placeItems='center'; controls.append(btn,info);
+
+  card.append(stage, controls);
   gameArea.appendChild(card);
+  updateFreeBadge();
 
   const SEG = Array.from({length:8}, ()=> Math.random()<0.4 ? 'Ничего' : `+${rint(15,100)} ⭐`);
   const n=SEG.length, step=360/n;
 
-  // подписи по кругу (каждая с внутренним span — будем контр‑вращать текст)
+  // подписи по кругу с контр‑поворотом
   SEG.forEach((txt,i)=>{
     const lbl=document.createElement('div');
     lbl.className='wlabel';
     const ang=i*step + step/2;
-    lbl.style.transform=`translate(-50%,-50%) rotate(${ang}deg) translateY(-92px) rotate(${-ang}deg)`;
-    const sp=document.createElement('span'); sp.textContent=txt;
+    lbl.style.transform=`translate(-50%,-50%) rotate(${ang}deg) translateY(-92px)`;
+    const sp=document.createElement('span'); sp.textContent=txt; // контр‑вращаем самим js
     lbl.appendChild(sp);
     labels.appendChild(lbl);
   });
 
-  let angle=0; // текущий поворот (cw)
+  let angle=0; // угол колеса (cw)
+  wheel.style.transform=`rotate(0deg)`;
+  function mod360(a){ a%=360; if(a<0) a+=360; return a; }
   function setTextCounter(){
-    const spans=labels.querySelectorAll('span');
-    spans.forEach(s=>s.style.transform=`rotate(${-angle}deg)`);
+    labels.querySelectorAll('span').forEach(s=>s.style.transform=`rotate(${-angle}deg)`);
   }
   setTextCounter();
-  wheel.style.transform=`rotate(0deg)`;
 
-  const mod360 = a => { a%=360; if(a<0) a+=360; return a; };
+  function closestIndexByAngle() {
+    // выбираем тот сектор, центр которого ближе всего к стрелке (90°)
+    const centers = Array.from({length:n}, (_,i)=> mod360(i*step + step/2 + angle));
+    let best=0, bestDiff=1e9;
+    for(let i=0;i<n;i++){
+      let diff = Math.abs(mod360(centers[i]-90));
+      diff = Math.min(diff, 360-diff);
+      if(diff<bestDiff){ bestDiff=diff; best=i; }
+    }
+    return best;
+  }
 
   async function spinWheel(){
     await anim.run('wheel', async()=>{
-      const target = rint(0,n-1);                // какой сектор хотим получить
-      const dir = Math.random()<0.5 ? 1 : -1;    // 1 — по часовой, -1 — против
+      const target = rint(0,n-1);             // победный сектор (вычислим физику так, чтобы стрелка туда попала)
+      const dir = Math.random()<0.5 ? 1 : -1; // 1 — по, -1 — против
       const turns = 5 + Math.random()*2;
 
-      // текущее положение «относительно стрелки сверху (90°)»
       const cur = mod360(angle);
-      const desired = mod360(90 - (target*step + step/2));
+      const desired = mod360(90 - (target*step + step/2));      // хотим на 12 часов центр target
       const deltaCW  = (desired - cur + 360) % 360;
       const deltaCCW = (cur - desired + 360) % 360;
       const delta = dir===1 ? deltaCW : deltaCCW;
@@ -789,25 +823,21 @@ function mountWheel(){
 
       await new Promise(res=>{
         const t0=performance.now();
-        function loop(now){
+        const loop=(now)=>{
           const p=Math.min(1,(now-t0)/dur);
           const e = 1-Math.pow(1-p,3);
           angle = start + (end-start)*e;
           wheel.style.transform=`rotate(${angle}deg)`;
-          setTextCounter(); // держим текст горизонтально
+          setTextCounter();
           if(p<1) requestAnimationFrame(loop); else res();
-        }
+        };
         requestAnimationFrame(loop);
       });
 
-      // определяем сектор по стрелке сверху:
-      // берём угол сектора под стрелкой: phi = (90 - angle) по модулю 360,
-      // затем выбираем ближайший центр сектора (смещение на step/2).
-      const phi = mod360(90 - angle);
-      let idx = Math.floor((phi + step/2 - 0.0001)/step) % n; // «где больше половины»
-      if(idx<0) idx += n;
-
+      // финальная проверка по факту положения стрелки
+      const idx = closestIndexByAngle();
       toast(`Результат: ${SEG[idx]}`);
+      consumeFreeSpinIfAny();
     });
   }
   btn.onclick=spinWheel;
@@ -821,13 +851,14 @@ function showGame(kind){
   if(kind==='wheel') mountWheel();
 }
 document.querySelectorAll('[data-game]').forEach(b=>b.onclick=()=>showGame(b.dataset.game));
-showGame('slot'); // старт по умолчанию
+showGame('slot'); // старт
 
-/* копирование + закрыть */
+/* копирование + закрыть + вкладки */
 document.getElementById('copyRef').onclick=async()=>{
   try{ await navigator.clipboard.writeText(document.getElementById('refLink').value); toast('Ссылка скопирована'); }
   catch{ toast('Скопируй вручную'); }
 };
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>openTab(t.dataset.tab));
 document.getElementById('closeBtn').onclick=()=>tg?.close?.();
 
 tg?.ready?.(); tg?.expand?.(); applyTheme();
