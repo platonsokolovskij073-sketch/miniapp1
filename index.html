@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" class="nocopy"><!-- класс включает анти‑копи по умолчанию -->
+<html lang="ru" class="nocopy">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -15,14 +15,11 @@
   --danger:#ff3b6b; --ok:#35ffb1; --shadow:0 20px 40px rgba(0,0,0,.35);
 }
 
-/* ---------- АНТИ-КОПИ (жёстко) ---------- */
-/* MDN по user-select / overscroll-behavior / rAF см. цитаты в ответе */
+/* Анти‑копи */
 html.nocopy, html.nocopy body, html.nocopy *:not(input):not(textarea){
-  -webkit-user-select:none; user-select:none;
-  -webkit-touch-callout:none;
+  -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;
 }
 html.nocopy ::selection{background:transparent}
-html.nocopy body{ -webkit-tap-highlight-color: transparent; }
 html,body{height:100%}
 *{box-sizing:border-box}
 
@@ -33,10 +30,9 @@ body{
     radial-gradient(1200px 600px at -10% 10%, rgba(255,122,24,.18), transparent 60%),
     linear-gradient(180deg,var(--bg),var(--bg2));
   display:flex; flex-direction:column;
-  overscroll-behavior: none; /* избегаем «протаскивания» страницы поверх сцен */
+  overscroll-behavior:none;
 }
 
-/* --- Layout / spacing --- */
 .header{
   position:sticky; top:0; z-index:10;
   padding:14px 16px; display:flex; align-items:center; gap:12px;
@@ -47,8 +43,7 @@ body{
 .page{flex:1; display:flex; flex-direction:column}
 .container{
   width:100%; max-width:860px; margin:0 auto;
-  padding:14px 14px 90px;
-  display:none; animation:fade .25s ease forwards;
+  padding:14px 14px 90px; display:none; animation:fade .25s ease forwards;
 }
 .container.active{display:block}
 
@@ -73,7 +68,6 @@ body{
 .row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
 .tile{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px; border-radius:14px; background:rgba(255,255,255,.06); border:1px solid var(--line)}
 
-/* --- Inputs --- */
 .input{
   width:100%; padding:12px 12px; border-radius:14px;
   border:1px solid var(--line); background:rgba(255,255,255,.06);
@@ -89,20 +83,19 @@ body{
   transform:translateY(-1px);
 }
 
-/* --- Buttons --- */
 .btn{
   appearance:none; border:0; cursor:pointer; padding:12px 14px; border-radius:14px; font-weight:800;
   color:#1b0b00; background:linear-gradient(135deg, var(--orange), var(--orange2));
-  box-shadow:0 12px 26px rgba(255,122,24,.35); transition:transform .12s,filter .2s, box-shadow .2s;
+  box-shadow:0 12px 26px rgba(255,122,24,.35); transition:transform .12s,filter .2s, box-shadow .2s, opacity .2s;
 }
 .btn:active{transform:scale(.98)}
 .btn.purple{background:linear-gradient(135deg, var(--violet), var(--violet2)); color:#0c0216; box-shadow:0 12px 26px rgba(156,92,255,.35)}
 .btn.ghost{background:transparent; color:var(--text); border:1px solid var(--line); box-shadow:none}
+.btn[disabled]{opacity:.5; pointer-events:none}
 .badge{font-size:12px; padding:6px 8px; border-radius:10px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:var(--muted)}
 .bigbtn{display:flex; gap:12px}
 .bigbtn .btn{flex:1; font-size:15px}
 
-/* --- Bottom nav --- */
 .nav{
   position:sticky; bottom:0; z-index:10;
   display:grid; grid-template-columns:repeat(5,1fr); gap:8px; padding:10px;
@@ -117,17 +110,16 @@ body{
 .tab span{opacity:.85; font-size:11px}
 .tab.active{background:linear-gradient(135deg, rgba(255,122,24,.18), rgba(156,92,255,.18))}
 
-/* --- Stage (игровое окно) --- */
+/* Сцена игр */
 .stage{
   position:relative; height:240px; border-radius:16px; background:rgba(255,255,255,.06);
-  border:1px solid var(--line); overflow:hidden; /* критично! */
-  touch-action: none; /* без случайных жестов/скролла поверх сцены */
+  border:1px solid var(--line); overflow:hidden; touch-action:none;
 }
-.hoop{position:absolute; right:18px; top:38px; font-size:36px; filter:drop-shadow(0 4px 6px rgba(0,0,0,.4))}
+.hoop{position:absolute; right:22px; top:48px; font-size:28px; filter:drop-shadow(0 4px 6px rgba(0,0,0,.4))}
 .ball,.dart,.bowl{position:absolute; will-change:transform}
 .ball{font-size:44px}
 .bowl{font-size:44px}
-.pin{position:absolute; font-size:32px; will-change:transform}
+.pin{position:absolute; font-size:32px; will-change:transform; transform-origin:50% 100%}
 .target{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
   width:170px; height:170px; border-radius:50%;
   background:
@@ -135,7 +127,7 @@ body{
   box-shadow:0 0 0 6px #ffffff22 inset, 0 10px 30px rgba(0,0,0,.25);
 }
 
-/* --- Slot --- */
+/* Slot */
 .slot-wrap{display:grid; place-items:center; gap:10px}
 .slot{width:300px; height:120px; border-radius:16px; overflow:hidden;
   background:rgba(0,0,0,.35); border:1px solid var(--line); box-shadow:var(--shadow);
@@ -143,8 +135,8 @@ body{
 .reel{position:relative; overflow:hidden; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,.08); display:grid; place-items:center}
 .roller{position:absolute; left:0; right:0; top:0; will-change:transform}
 .symbol{height:48px; display:grid; place-items:center; font-size:36px;}
+.symbol.blank{opacity:.15}
 
-/* Toast */
 .toast{position:fixed; left:50%; bottom:120px; transform:translateX(-50%) translateY(20px); background:rgba(0,0,0,.8);
   border:1px solid var(--line); color:#fff; padding:10px 14px; border-radius:12px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; font-size:13px}
 .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
@@ -232,7 +224,6 @@ body{
         </div>
       </div>
 
-      <!-- Game container -->
       <div id="gameArea" class="grid" style="margin-top:6px"></div>
     </section>
 
@@ -261,7 +252,6 @@ body{
     </section>
   </div>
 
-  <!-- NAV -->
   <nav class="nav">
     <button class="tab active" data-tab="home">🏠<span>Дом</span></button>
     <button class="tab" data-tab="shop">🛒<span>Магазин</span></button>
@@ -273,9 +263,7 @@ body{
   <div class="toast" id="toast">Готово!</div>
 
 <script>
-/* -----------------------------------------------------------
-   Telegram + темы
------------------------------------------------------------ */
+/* Telegram + тема */
 const tg = window.Telegram?.WebApp;
 function applyTheme(){
   if(!tg) return;
@@ -294,17 +282,17 @@ function applyTheme(){
   }catch{}
 })();
 
-/* -----------------------------------------------------------
-   Утилиты UI
------------------------------------------------------------ */
+/* UI */
 const toast=(m='Готово!')=>{const el=document.getElementById('toast'); el.textContent=m; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),1100);};
-function openTab(id){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id)); document.querySelectorAll('.container').forEach(s=>s.classList.toggle('active',s.id===id));}
+function openTab(id){
+  if(anim.busy) return; // запрет переключения, пока идёт анимация в любой игре
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));
+  document.querySelectorAll('.container').forEach(s=>s.classList.toggle('active',s.id===id));
+}
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>openTab(t.dataset.tab));
 document.querySelectorAll('[data-tab-go]').forEach(b=>b.onclick=()=>openTab(b.dataset.tabGo));
 
-/* -----------------------------------------------------------
-   Магазин
------------------------------------------------------------ */
+/* Магазин */
 const starsQuick=[500,1000,2500,5000];
 const plans=[{name:'1 месяц',plan:'1m'},{name:'3 месяца',plan:'3m'},{name:'6 месяцев',plan:'6m'},{name:'12 месяцев',plan:'12m'}];
 
@@ -352,50 +340,54 @@ document.getElementById('proceed').onclick=()=>{
   toast(`Заявка: ${checkoutState.label} → ${u}${qty}`);
 };
 
-/* -----------------------------------------------------------
-   АНТИ-КОПИ (JS защита)
-   - Блокировка copy/cut, контекстного меню, selectstart
-   - Блок hotkeys: Ctrl/Cmd+C/X/A/S/P/U
-   См. MDN: user-select, copy event, preventDefault, rAF. :contentReference[oaicite:1]{index=1}
------------------------------------------------------------ */
+/* Анти‑копи JS */
 (function antiCopy(){
-  const allowSelectionOnInputs = false; // если true — разрешит выделение внутри <input>/<textarea>
+  const allowSelectionOnInputs=false;
   document.addEventListener('contextmenu', e=>e.preventDefault(), {passive:false});
   document.addEventListener('copy', e=>{ e.preventDefault(); toast('Копирование отключено'); }, {passive:false});
   document.addEventListener('cut',  e=>{ e.preventDefault(); }, {passive:false});
   document.addEventListener('selectstart', e=>{
     if(allowSelectionOnInputs){
-      const t=e.target;
-      if(t && (t.tagName==='INPUT' || t.tagName==='TEXTAREA')) return;
+      const t=e.target; if(t && (t.tagName==='INPUT'||t.tagName==='TEXTAREA')) return;
     }
     e.preventDefault();
   }, {passive:false});
-
   document.addEventListener('keydown', e=>{
     const k=e.key?.toLowerCase?.()||'';
     if((e.ctrlKey||e.metaKey) && ['c','x','a','s','p','u'].includes(k)){ e.preventDefault(); }
   });
 })();
 
-/* -----------------------------------------------------------
-   Игры: движок, клампинг, пресеты
------------------------------------------------------------ */
+/* -------- Игровой движок/лок -------- */
 const gameArea=document.getElementById('gameArea');
-const symbols=['🎃','🕷️','🦇','🕸️','🍬','7️⃣'];
-
-/* Матем. утилиты */
+const symbols=['🎃','🕷️','🦇','🕸️','🍬','7️⃣','']; // последний — пустой
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 const rand=(a,b)=>Math.random()*(b-a)+a;
 const rint=(a,b)=>Math.floor(rand(a,b+1));
 const easeOut=t=>1-Math.pow(1-t,3);
 
-/* Общий «спрайт» */
+const anim={
+  busy:false, current:null,
+  async run(name, fn){
+    if(this.busy) return; // 1 игра = 1 анимация
+    this.busy=true; this.current=name;
+    setGameControlsDisabled(true);
+    try{ await fn(); }finally{
+      this.busy=false; this.current=null; setGameControlsDisabled(false);
+    }
+  }
+};
+function setGameControlsDisabled(dis){
+  // блокируем: кнопки выбора игр + кнопки действий в текущей игре
+  document.querySelectorAll('[data-game]').forEach(b=>b.disabled=dis);
+  document.querySelectorAll('[data-action]').forEach(b=>b.disabled=dis);
+  document.querySelectorAll('.tab').forEach(t=>t.disabled=dis);
+}
 function makeSprite(el, stage){
   const W = ()=>stage.clientWidth, H=()=>stage.clientHeight;
   const rect=()=>el.getBoundingClientRect();
   const size=()=>({w:rect().width||40,h:rect().height||40});
   let x=0,y=0;
-
   function setPos(nx,ny){
     const {w,h}=size();
     x=clamp(nx, 0, W()-w);
@@ -407,39 +399,7 @@ function makeSprite(el, stage){
   return {set:setPos, get};
 }
 
-/* Массовые прогоны */
-function makeControls(container, startOnce){
-  const bar=document.createElement('div');
-  bar.className='row';
-  bar.style.marginTop='8px';
-  bar.innerHTML=`
-    <div class="badge">Автозапуск</div>
-    <div style="display:flex; gap:8px">
-      <button class="btn ghost" data-run="1">▶ 1</button>
-      <button class="btn ghost" data-run="10">▶×10</button>
-      <button class="btn ghost" data-run="100">▶×100</button>
-      <button class="btn" data-stop>⏹ Стоп</button>
-    </div>`;
-  container.appendChild(bar);
-
-  let stop=false;
-  bar.querySelector('[data-stop]').onclick=()=>{ stop=true; toast('Остановлено'); };
-
-  bar.querySelectorAll('[data-run]').forEach(btn=>{
-    btn.onclick=async()=>{
-      stop=false;
-      const times=parseInt(btn.dataset.run,10);
-      for(let i=0;i<times;i++){
-        if(stop) break;
-        await startOnce();
-        await new Promise(r=>setTimeout(r,150)); // маленькая пауза между ранами
-      }
-      if(!stop) toast(`Готово: ${times} запуск(ов)`);
-    };
-  });
-}
-
-/* ---------- SLOT ---------- */
+/* ---------- SLOT (быстрый спин, финал пустой) ---------- */
 function mountSlot(){
   gameArea.innerHTML='';
   const wrap=document.createElement('div'); wrap.className='card slot-wrap';
@@ -449,308 +409,337 @@ function mountSlot(){
       <div class="reel"><div class="roller" id="sl_r2"></div></div>
       <div class="reel"><div class="roller" id="sl_r3"></div></div>
     </div>
-    <div class="row"><button class="btn" id="spinBtn">Spin</button></div>
-    <span class="badge" id="slotOut">Удачи!</span>`;
+    <div class="row"><button class="btn" id="spinBtn" data-action="spin">Быстрый спин</button></div>
+    <span class="badge" id="slotOut"></span>`;
   gameArea.appendChild(wrap);
-  ['sl_r1','sl_r2','sl_r3'].forEach(id=>{
-    const r=document.getElementById(id);
-    r.innerHTML = symbols.concat(symbols, symbols).map(s=>`<div class="symbol">${s}</div>`).join('');
-  });
+
+  // ленты: дублируем, добавляем пустой символ (class="blank")
+  const reelHTML = symbols.concat(symbols, symbols).map(s=>{
+    return s ? `<div class="symbol">${s}</div>` : `<div class="symbol blank"></div>`;
+  }).join('');
+  ['sl_r1','sl_r2','sl_r3'].forEach(id=>document.getElementById(id).innerHTML=reelHTML);
 
   const rollers=[document.getElementById('sl_r1'),document.getElementById('sl_r2'),document.getElementById('sl_r3')];
   const itemH=48;
-  function spinRoller(el, duration, extraCycles=6){
-    const cycles=extraCycles+Math.floor(Math.random()*4);
-    const total=cycles*symbols.length*itemH + (Math.floor(Math.random()*symbols.length))*itemH;
+  function fastSpin(el, duration){
+    // очень быстрый спин: резкий разгон и короткая остановка
+    const cycles=rint(10,16);
+    const endIndex = symbols.length-1; // пустой символ
+    const total=cycles*symbols.length*itemH + endIndex*itemH;
     const t0=performance.now();
     return new Promise(res=>{
       function step(now){
-        const p=clamp((now-t0)/duration,0,1);
-        const y=easeOut(p)*total;
+        const t=(now-t0)/duration;
+        const p=t<0?0:(t>1?1:t);
+        // кривые: резкий старт, короткая тормозилка
+        const ease = p<0.6 ? (p*p*3) : easeOut(p);
+        const y = ease*total;
         el.style.transform=`translateY(-${y}px)`;
         if(p<1) requestAnimationFrame(step);
         else {
-          // точная фиксация на ячейке
           const rest = Math.round(y/itemH)*itemH;
           el.style.transform=`translateY(-${rest}px)`;
-          res((rest/itemH)%symbols.length);
+          res(endIndex);
         }
       }
       requestAnimationFrame(step);
     });
   }
+
   async function spinOnce(){
-    const out=document.getElementById('slotOut'); out.textContent='Крутим...';
-    const i1=await spinRoller(rollers[0], 820, rint(6,8));
-    const i2=await spinRoller(rollers[1], 940, rint(6,9));
-    const i3=await spinRoller(rollers[2], 1040, rint(6,10));
-    const a=symbols[i1], b=symbols[i2], c=symbols[i3];
-    out.textContent = (a===b && b===c) ? 'Победа! 🎉' : 'Почти!';
+    const out=document.getElementById('slotOut'); out.textContent='';
+    await anim.run('slot', async()=>{
+      const i1=fastSpin(rollers[0], 420);
+      const i2=fastSpin(rollers[1], 460);
+      const i3=fastSpin(rollers[2], 500);
+      await Promise.all([i1,i2,i3]);
+      // итоги — ничего не выводим (пусто), по твоей просьбе
+      out.textContent='';
+    });
   }
   document.getElementById('spinBtn').onclick=spinOnce;
-
-  makeControls(wrap, spinOnce);
 }
 
-/* ---------- BASKETBALL (физика + клампинг) ---------- */
+/* ---------- BASKETBALL (детект касания кольца) ---------- */
 function mountBasket(){
   gameArea.innerHTML='';
   const card=document.createElement('div'); card.className='card';
   const stage=document.createElement('div'); stage.className='stage';
-  const hoop=document.createElement('div'); hoop.className='hoop'; hoop.textContent='🟧';
+  const hoop=document.createElement('div'); hoop.className='hoop'; hoop.textContent='🟧'; // визуал
   const ball=document.createElement('div'); ball.className='ball'; ball.textContent='🏀';
-  stage.append(hoop,ball); card.appendChild(stage); gameArea.appendChild(card);
+  const btn=document.createElement('button'); btn.className='btn'; btn.dataset.action='shoot'; btn.textContent='Бросок';
+  btn.style.marginTop='10px';
 
-  const sprite=makeSprite(ball, stage);
+  stage.append(hoop,ball); card.append(stage,btn); gameArea.appendChild(card);
 
-  function runOnce(){
-    return new Promise(resolve=>{
-      const S = sprite.get(); // размеры на старте
-      const startX=12, startY=S.H-64; sprite.set(startX,startY);
+  const spr=makeSprite(ball, stage);
 
-      // цель — район кольца с небольшим шумом (иногда промах)
-      const goalX = S.W-58 + rand(-6,6);
-      const goalY = 68 + rand(-10,10);
-      const miss = Math.random() < 0.42;
-      const targetX = miss ? goalX + rand(-40,40) : goalX;
-      const targetY = miss ? goalY + rand(10,40)  : goalY;
+  // геометрия кольца
+  function hoopGeom(){
+    const W=stage.clientWidth, H=stage.clientHeight;
+    const r=18; // радиус датчика «обода»
+    const cx=W-42, cy=78; // центр кольца
+    return {cx,cy,r,W,H};
+  }
 
-      // баллистика: подбираем время полёта T и начальные скорости
-      const g=1600; // px/s^2 (вниз)
-      const T=rand(0.75,1.15);
-      let vx=(targetX-startX)/T;
-      let vy=(targetY-startY - 0.5*g*T*T)/T;
-
-      // «мир»: отскоки от пола/стен
-      let tPrev=performance.now();
-      let bounced=0;
-      const maxTime=3200; const t0=tPrev;
-
+  async function throwOnce(){
+    await anim.run('basket', async()=>{
+      const g=1700;
+      const {W,H,cx,cy,r} = (()=>{ const g=hoopGeom(); return {W:g.W,H:g.H,cx:g.cx,cy:g.cy,r:g.r}; })();
+      // стартовая позиция
+      spr.set(14, H-68);
+      let {x,y,w,h}=spr.get();
+      let vx = rand(420,560);      // скорость по X
+      let vy = rand(-1200,-900);   // начальная по Y
+      const t0=performance.now();
+      let lastY=y;
+      let hit=false, miss=false;
       function loop(now){
-        const dt=Math.min(32, now - tPrev)/1000; tPrev=now;
+        const dt=Math.min(32, now-(loop.tPrev||now))/1000; loop.tPrev=now;
 
-        // интегрируем
         vy += g*dt;
-        let nx = sprite.get().x + vx*dt;
-        let ny = sprite.get().y + vy*dt;
+        x += vx*dt;
+        y += vy*dt;
 
-        // клампинг + отскоки
-        const {w,h,W,H} = sprite.get();
-        if(nx <= 0){ nx=0; vx = Math.abs(vx)*0.85; bounced++; }
-        if(nx >= W - w){ nx=W-w; vx = -Math.abs(vx)*0.85; bounced++; }
-        if(ny >= H - h){ ny=H-h; vy = -Math.abs(vy)*0.62; vx *= 0.96; bounced++; }
-        if(ny <= 0){ ny=0; vy = Math.abs(vy)*0.62; bounced++; }
+        // клампинг + отражения
+        const S=spr.get();
+        if(x<=0){ x=0; vx=Math.abs(vx)*0.85; }
+        if(x>=S.W-S.w){ x=S.W-S.w; vx=-Math.abs(vx)*0.85; }
+        if(y>=S.H-S.h){ y=S.H-S.h; vy=-Math.abs(vy)*0.55; vx*=0.96; }
+        if(y<=0){ y=0; vy=Math.abs(vy)*0.55; }
 
-        sprite.set(nx,ny);
+        spr.set(x,y);
 
-        // чек «попал»: если прошёл через область кольца сверху вниз
-        const hit = !miss && (Math.abs(nx - (S.W-58))<22) && (ny<goalY+10) && vy>0;
-        if(hit){
-          ball.textContent='✨';
-          setTimeout(()=>resolve(),250);
-          return;
+        // детект попадания: пересечение центра мяча с кольцом сверху вниз
+        const cxBall = x+w*0.5, cyBall = y+h*0.5;
+        const dist = Math.hypot(cxBall - cx, cyBall - cy);
+        const goingDown = (cyBall > lastY); lastY = cyBall;
+
+        if(!hit && dist <= (r+10) && goingDown){
+          hit=true; toast('Победа!'); ball.textContent='✨';
+          setTimeout(()=>{},120);
+          return end();
         }
 
-        // условия завершения
-        const elapsed=now - t0;
-        const speed=Math.hypot(vx,vy);
-        if(elapsed>maxTime || (bounced>6 && speed<60)){
-          setTimeout(resolve,150);
-          return;
+        // промах: мяч прошёл правее кольца и упал на пол
+        if(!hit && cxBall > cx+30 && cyBall > cy+80 && Math.abs(vy)<40){
+          miss=true; toast('Мимо');
+          return end();
         }
+
+        if((now-t0)>3500) return end();
         requestAnimationFrame(loop);
       }
-      requestAnimationFrame(loop);
+      function end(){ resolve(); }
+      const resolve = (()=>{
+        let done=false;
+        return ()=>{ if(done) return; done=true; };
+      })();
+      await new Promise(res=>{
+        const _end=()=>{ res(); };
+        (function wrapEnd(){
+          const orig=end;
+          end=function(){ orig(); _end(); };
+        })();
+        requestAnimationFrame(loop);
+      });
     });
   }
 
-  makeControls(card, runOnce);
-  runOnce(); // первый запуск
+  btn.onclick=throwOnce;
 }
 
-/* ---------- BOWLING (кегли остаются в сцене) ---------- */
+/* ---------- BOWLING (новая постановка) ---------- */
 function mountBowling(){
   gameArea.innerHTML='';
   const card=document.createElement('div'); card.className='card';
   const stage=document.createElement('div'); stage.className='stage';
   const ball=document.createElement('div'); ball.className='bowl'; ball.textContent='🎳';
-  stage.appendChild(ball);
+  const btn=document.createElement('button'); btn.className='btn'; btn.dataset.action='roll'; btn.textContent='Бросок';
+  btn.style.marginTop='10px';
 
-  // сетка кеглей 4-3-2-1 (10 шт)
-  const pins=[];
-  const baseX=180, baseY=34, gap=28;
-  let idx=0;
-  for(let row=0; row<4; row++){
-    const inRow = 4-row;
-    for(let c=0;c<inRow;c++){
-      const p=document.createElement('div'); p.className='pin'; p.textContent='🎳';
-      p.style.left=(baseX + c*gap + row*gap*0.5)+'px';
-      p.style.top=(baseY + row*gap)+'px';
-      stage.appendChild(p); pins.push(p);
-      idx++;
-    }
-  }
-  card.appendChild(stage); gameArea.appendChild(card);
+  stage.append(ball); card.append(stage,btn); gameArea.appendChild(card);
 
   const sBall=makeSprite(ball, stage);
-  const physPins = pins.map(p=>({el:p, spr:makeSprite(p,stage), vx:0, vy:0, active:false}));
 
-  function runOnce(){
-    return new Promise(resolve=>{
-      // старт шара слева внизу
+  // раскладка кеглей: треугольник 4‑3‑2‑1, всё строго внутри сцены
+  const pins=[];
+  function layoutPins(){
+    // очищаем старые
+    pins.splice(0,pins.length);
+    stage.querySelectorAll('.pin').forEach(n=>n.remove());
+
+    const W=stage.clientWidth, H=stage.clientHeight;
+    const baseX = W-180, baseY = 58, gap=28;
+    for(let row=0; row<4; row++){
+      const inRow = 4-row;
+      for(let c=0;c<inRow;c++){
+        const p=document.createElement('div'); p.className='pin'; p.textContent='🎳';
+        stage.appendChild(p);
+        const spr=makeSprite(p, stage);
+        const px = baseX + c*gap + row*gap*0.5;
+        const py = baseY + row*gap;
+        spr.set(px,py);
+        pins.push({el:p, spr, vx:0, vy:0, rot:0, active:false});
+      }
+    }
+  }
+  layoutPins();
+  window.addEventListener('resize', layoutPins);
+
+  async function rollOnce(){
+    await anim.run('bowling', async()=>{
+      const g = 1900, floorRest=0.5, wallRest=0.6;
+      // старт шара
       const H=stage.clientHeight;
-      sBall.set(8, H-68);
+      let vx = rand(360, 520);
+      let vy = rand(-180, -40);
+      sBall.set(10, H-72);
+      let {x,y,w,h,W} = sBall.get();
 
-      let vx = rand(360, 520); // px/s
-      let vy = rand(-60, 30);
-      const g = 1900;
-      let tPrev=performance.now();
-      let done=false;
-      const started=performance.now();
+      // сброс кеглей
+      pins.forEach(p=>{ const pos=p.spr.get(); p.vx=0; p.vy=0; p.rot=0; p.active=false; p.el.style.opacity='1'; p.spr.set(pos.x,pos.y); });
 
-      const pinBox = {x: 180-10, y: 20, w: 160, h: 130};
+      const start=performance.now();
+      let last = start;
 
-      function loop(now){
-        if(done) return;
-        const dt=Math.min(32, now - tPrev)/1000; tPrev=now;
+      await new Promise(res=>{
+        function loop(now){
+          const dt=Math.min(32, now-last)/1000; last=now;
 
-        // обновление шара
-        let B=sBall.get();
-        vy += g*dt;
-        let nx=B.x + vx*dt;
-        let ny=B.y + vy*dt;
+          // шар
+          vy += g*dt;
+          x += vx*dt; y += vy*dt;
 
-        // клампинг шара
-        if(nx > B.W - B.w){ nx = B.W - B.w; vx*=-0.6; }
-        if(nx < 0){ nx=0; vx*=-0.6; }
-        if(ny > B.H - B.h){ ny=B.H-B.h; vy*=-0.45; vx*=0.98; }
+          // границы для шара
+          const B=sBall.get();
+          if(x<=0){ x=0; vx=Math.abs(vx)*wallRest; }
+          if(x>=B.W-B.w){ x=B.W-B.w; vx=-Math.abs(vx)*wallRest; }
+          if(y>=B.H-B.h){ y=B.H-B.h; vy=-Math.abs(vy)*floorRest; vx*=0.98; }
+          if(y<=0){ y=0; vy=Math.abs(vy)*floorRest; }
+          sBall.set(x,y);
 
-        sBall.set(nx,ny);
-        B=sBall.get();
+          // столкновения шар ↔ кегли
+          const bc={x:x+w*0.5, y:y+h*0.5, r:20};
+          pins.forEach(p=>{
+            const P=p.spr.get();
+            const pc={x:P.x+P.w*0.5, y:P.y+P.h*0.5, r:16};
+            const dx=pc.x-bc.x, dy=pc.y-bc.y;
+            const dist=Math.hypot(dx,dy);
+            if(dist<(pc.r+bc.r)){
+              // толчок кегли
+              const ang=Math.atan2(dy,dx);
+              const force = 700 + Math.random()*500;
+              p.vx += Math.cos(ang)*force;
+              p.vy += Math.sin(ang)*force - 300;
+              p.active=true;
 
-        // триггер столкновений с кеглями
-        const ballCenter={x:B.x+B.w*0.5, y:B.y+B.h*0.5};
-        const entersPins = (ballCenter.x > pinBox.x && ballCenter.x < pinBox.x+pinBox.w);
-        if(entersPins){
-          physPins.forEach((pp,i)=>{
-            if(!pp.active){
-              const P=pp.spr.get();
-              const dx=(P.x+P.w*0.5) - ballCenter.x;
-              const dy=(P.y+P.h*0.5) - ballCenter.y;
-              const dist=Math.hypot(dx,dy);
-              if(dist<54){ // «удар»
-                const force = 620 + Math.random()*420;
-                const ang = Math.atan2(dy,dx);
-                pp.vx = Math.cos(ang)*force;
-                pp.vy = Math.sin(ang)*force - 200;
-                pp.active=true;
-              }
+              // отталкивание шара (чуть-чуть)
+              vx -= Math.cos(ang)*160;
+              vy -= Math.sin(ang)*160;
             }
           });
-        }
 
-        // физика кеглей (всегда в сцене)
-        physPins.forEach(pp=>{
-          const P=pp.spr.get();
-          if(pp.active){
-            pp.vy += g*dt;
-            let px=P.x + pp.vx*dt;
-            let py=P.y + pp.vy*dt;
+          // физика кеглей
+          pins.forEach(p=>{
+            if(!p.active) return;
+            const P=p.spr.get();
+            p.vy += g*dt;
+            let px=P.x + p.vx*dt;
+            let py=P.y + p.vy*dt;
 
-            if(px<0){ px=0; pp.vx=Math.abs(pp.vx)*0.58; }
-            if(px>P.W-P.w){ px=P.W-P.w; pp.vx=-Math.abs(pp.vx)*0.58; }
-            if(py>P.H-P.h){ py=P.H-P.h; pp.vy=-Math.abs(pp.vy)*0.45; pp.vx*=0.96; }
-            if(py<0){ py=0; pp.vy=Math.abs(pp.vy)*0.45; }
+            // границы
+            if(px<=0){ px=0; p.vx=Math.abs(p.vx)*0.55; }
+            if(px>=P.W-P.w){ px=P.W-P.w; p.vx=-Math.abs(p.vx)*0.55; }
+            if(py>=P.H-P.h){ py=P.H-P.h; p.vy=-Math.abs(p.vy)*0.42; p.vx*=0.96; }
+            if(py<=0){ py=0; p.vy=Math.abs(p.vy)*0.42; }
 
-            // лёгкий поворот + затухание
-            pp.el.style.transition='transform .0s';
-            pp.spr.set(px,py);
+            // демпфирование
+            p.vx*=0.995; p.vy*=0.995;
+            p.rot += (Math.hypot(p.vx,p.vy)*dt)*0.02;
+            p.el.style.transformOrigin='50% 100%';
+            p.el.style.transform=`translate(${px}px,${py}px) rotate(${p.rot}rad)`;
+            p.spr.set(px,py);
+          });
+
+          // условия окончания
+          const ballSpeed = Math.hypot(vx,vy);
+          const pinsActive = pins.filter(p=>Math.hypot(p.vx,p.vy)>70).length;
+          if((now-start)>3800 && ballSpeed<80 && pinsActive===0){
+            res();
+            return;
           }
-        });
-
-        // завершение: шар докатился, кегли утихли
-        const speed = Math.hypot(vx,vy);
-        const activePins = physPins.filter(p=>p.active && (Math.hypot(p.vx,p.vy)>60)).length;
-        if((now-started)>3500 && speed<80 && activePins===0){
-          done=true; setTimeout(resolve,120);
-          return;
+          requestAnimationFrame(loop);
         }
         requestAnimationFrame(loop);
-      }
-      requestAnimationFrame(loop);
+      });
     });
   }
 
-  makeControls(card, runOnce);
-  runOnce();
+  btn.onclick=rollOnce;
 }
 
-/* ---------- DARTS (в центр мишени, без выхода) ---------- */
+/* ---------- DARTS ---------- */
 function mountDarts(){
   gameArea.innerHTML='';
   const card=document.createElement('div'); card.className='card';
   const stage=document.createElement('div'); stage.className='stage';
   const target=document.createElement('div'); target.className='target';
   const dart=document.createElement('div'); dart.className='dart'; dart.textContent='🪁'; dart.style.fontSize='38px';
-  stage.append(target,dart); card.appendChild(stage); gameArea.appendChild(card);
+  const btn=document.createElement('button'); btn.className='btn'; btn.dataset.action='throw'; btn.textContent='Бросок';
+  btn.style.marginTop='10px';
 
+  stage.append(target,dart); card.append(stage,btn); gameArea.appendChild(card);
   const spr=makeSprite(dart,stage);
 
-  function runOnce(){
-    return new Promise(resolve=>{
+  async function throwOnce(){
+    await anim.run('darts', async()=>{
       const S=spr.get();
       const cx=S.W/2-10, cy=S.H/2-10;
       spr.set(-42, 26);
-
       const bull = Math.random()<0.5;
-      const endX = bull? cx : cx + rand(-40,40);
-      const endY = bull? cy : cy + rand(-24,24);
-
-      const dur = rand(650, 950);
-      const t0=performance.now();
-
-      function loop(now){
-        const p=clamp((now-t0)/dur,0,1);
-        const wobble = (1-p)*Math.sin(p*10)* (bull? 8 : 16);
-        const x = -42 + p*(endX+42);
-        const y = 26 + (endY-26)*p + (bull? 0 : wobble);
-        spr.set(x,y);
-        dart.style.transform += ` rotate(18deg)`;
-        if(p<1) requestAnimationFrame(loop);
-        else { dart.textContent = '🎯'; setTimeout(resolve,160); }
-      }
-      requestAnimationFrame(loop);
+      const endX = bull? cx : cx + rand(-44,44);
+      const endY = bull? cy : cy + rand(-28,28);
+      const dur = rand(600, 850);
+      await new Promise(res=>{
+        const t0=performance.now();
+        function loop(now){
+          const p=clamp((now-t0)/dur,0,1);
+          const wobble = (1-p)*Math.sin(p*12)* (bull? 6 : 14);
+          const x = -42 + p*(endX+42);
+          const y = 26 + (endY-26)*p + (bull? 0 : wobble);
+          spr.set(x,y);
+          dart.style.transform += ` rotate(18deg)`;
+          if(p<1){ requestAnimationFrame(loop); } else { dart.textContent='🎯'; res(); }
+        }
+        requestAnimationFrame(loop);
+      });
     });
   }
-
-  makeControls(card, runOnce);
-  runOnce();
+  btn.onclick=throwOnce;
 }
 
-/* ---------- ПЕРЕКЛЮЧАТЕЛЬ ИГР ---------- */
+/* Переключатель игр (запрещаем смену, если идёт анимация) */
 function showGame(kind){
+  if(anim.busy) return;
   if(kind==='slot') mountSlot();
   if(kind==='basket') mountBasket();
   if(kind==='bowling') mountBowling();
   if(kind==='darts') mountDarts();
 }
 document.querySelectorAll('[data-game]').forEach(b=>b.onclick=()=>showGame(b.dataset.game));
-showGame('slot'); // default
+showGame('slot'); // по умолчанию
 
-/* -----------------------------------------------------------
-   Прочее
------------------------------------------------------------ */
+/* Прочее */
 document.getElementById('copyRef').onclick=async()=>{
-  try{
-    await navigator.clipboard.writeText(document.getElementById('refLink').value);
-    toast('Ссылка скопирована');
-  }catch{ toast('Скопируй вручную'); }
+  try{ await navigator.clipboard.writeText(document.getElementById('refLink').value); toast('Ссылка скопирована'); }
+  catch{ toast('Скопируй вручную'); }
 };
 document.getElementById('closeBtn').onclick=()=>tg?.close?.();
 
 tg?.ready?.(); tg?.expand?.(); applyTheme();
 
-/* SHOP proceed (как было) */
+/* CHECKOUT дубль (как было) */
 document.getElementById('proceed').onclick=()=>{
   const u=(document.getElementById('username').value.trim()||'@username');
   const qty=document.getElementById('amount').parentElement.style.display==='none' ? '' : ` • ${document.getElementById('amount').value||checkoutState.qty||0} ⭐`;
