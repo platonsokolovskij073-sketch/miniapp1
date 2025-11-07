@@ -171,7 +171,6 @@ body{
 }
 .wheel-svg{
   width:100%; height:100%;
-  /* Анимация будет управляться через JS для точности */
 }
 .wheel-center{
   position:absolute; width: 50px; height: 50px;
@@ -537,11 +536,22 @@ function mountCups(){
   }
   async function startRound(){
     await anim.run(async()=>{
-      ballPosIndex=1; placeAll(true); await new Promise(r=>setTimeout(r,500));
+      ballPosIndex=1; placeAll(true);
+      const initialColorOrder = [...cupColorClasses];
+      await new Promise(r=>setTimeout(r,500));
       const xs=posX();
       cupsAtPos.forEach((cup,pos)=>{ cup.style.transition='transform .2s ease'; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
       await new Promise(r=>setTimeout(r,200)); ball.style.opacity='0';
+      
       for(let i=0;i<rint(14,22);i++){ await swapPos(rint(0,1), rint(1,2), rint(160,230)); }
+      
+      if (Math.random() < 0.3) {
+        toast('Возврат!');
+        cupColorClasses = initialColorOrder;
+        applyColors();
+        await new Promise(r => setTimeout(r, 300));
+      }
+
       const guessPos = await new Promise(res=>cupsAtPos.forEach((cup,pos)=>{ cup.style.cursor='pointer'; cup.onclick=()=>res(pos); }));
       cupsAtPos.forEach(c=>{ c.onclick=null; c.style.cursor='default'; });
       ball.style.opacity='1';
@@ -589,33 +599,39 @@ function mountWheel() {
     wheelSVG.innerHTML += `<text x="100" y="35" transform="rotate(${startAngle + angleStep/2}, 100, 100)" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">${prize.text}</text>`;
   });
   
+  const easeOut = t => 1 - Math.pow(1 - t, 4);
+
   async function spinWheel() {
     await anim.run(async () => {
       const targetIndex = rint(0, numSegments - 1);
-      
-      // ИСПРАВЛЕННЫЙ РАСЧЕТ УГЛА ДЛЯ 100% ТОЧНОСТИ
-      // 1. Сначала сбрасываем анимацию и "нормализуем" текущий угол
-      wheelSVG.style.transition = 'none';
-      const normalizedRotation = currentRotation % 360;
-      wheelSVG.style.transform = `rotate(${normalizedRotation}deg)`;
-      
-      // Этот трюк заставляет браузер применить изменения немедленно
-      void wheelSVG.offsetWidth;
-
-      // 2. Рассчитываем новый поворот от текущей, чистой позиции
       const rotationToTarget = 360 - (targetIndex * angleStep + angleStep / 2);
       const fullSpins = rint(5, 8) * 360;
-      // Мы добавляем новый поворот к уже нормализованному углу
-      const finalRotation = normalizedRotation + fullSpins + rotationToTarget;
+      const totalRotationNeeded = fullSpins + rotationToTarget;
+
+      const startRotation = currentRotation;
+      const endRotation = startRotation + totalRotationNeeded;
+      const duration = 5000;
+      const startTime = performance.now();
+
+      await new Promise(resolve => {
+        function animate(now) {
+          const elapsed = now - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easedProgress = easeOut(progress);
+
+          const frameRotation = startRotation + (endRotation - startRotation) * easedProgress;
+          wheelSVG.style.transform = `rotate(${frameRotation}deg)`;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            resolve();
+          }
+        }
+        requestAnimationFrame(animate);
+      });
       
-      // 3. Возвращаем анимацию и запускаем вращение
-      wheelSVG.style.transition = 'transform 5s cubic-bezier(0.2, 0.9, 0.3, 1)';
-      wheelSVG.style.transform = `rotate(${finalRotation}deg)`;
-      
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      
-      // 4. Сохраняем ПОЛНЫЙ угол для следующего вращения
-      currentRotation = finalRotation;
+      currentRotation = endRotation;
       
       toast(`Результат: ${PRIZES[targetIndex].text}`);
       consumeFreeSpinIfAny();
