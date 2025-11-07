@@ -13,15 +13,9 @@
   --line:rgba(255,255,255,.10); --card:rgba(255,255,255,.06);
   --orange:#ff7a18; --orange2:#ffb86b; --violet:#9c5cff; --violet2:#c39aff;
   --danger:#ff3b6b; --ok:#35ffb1; --shadow:0 20px 40px rgba(0,0,0,.35);
-
-  /* слот */
-  --sym:56px;
-
-  /* стаканы */
-  --cup-w: 92px; --cup-h: 86px; --cup-color:#dfeaff;
+  --sym:56px; --cup-w: 92px; --cup-h: 86px;
 }
 
-/* анти‑копи и сброс скроллбаров */
 html.nocopy, html.nocopy body, html.nocopy *:not(input):not(textarea){
   -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;
 }
@@ -34,11 +28,9 @@ body{
   background:linear-gradient(180deg, var(--bg2), var(--bg));
   display:flex; flex-direction:column; overscroll-behavior:none;
 }
-
-/* header/nav */
 .header{
-  position:sticky; top:0; z-index:10;
-  padding:14px 16px; display:flex; align-items:center; gap:12px;
+  position:sticky; top:0; z-index:10; padding:14px 16px;
+  display:flex; align-items:center; gap:12px;
   background:rgba(0,0,0,.55);
   backdrop-filter:blur(14px) saturate(140%); -webkit-backdrop-filter:blur(14px) saturate(140%);
   border-bottom:1px solid var(--line);
@@ -49,20 +41,19 @@ body{
   padding:14px 14px 90px; display:none; animation:fade .25s ease forwards;
 }
 .container.active{display:block}
-
-.logo{width:36px; height:36px; border-radius:12px; display:grid; place-items:center; font-weight:800;
+.logo{
+  width:36px; height:36px; border-radius:12px; display:grid; place-items:center; font-weight:800;
   background:conic-gradient(from 0deg, var(--orange2), var(--orange), var(--violet), var(--orange2));
-  color:#150b00; box-shadow:var(--shadow)}
+  color:#150b00; box-shadow:var(--shadow);
+}
 .title{font-weight:800; letter-spacing:.3px}
 .subtitle{font-size:12px; color:var(--muted)}
-
 .grid{display:grid; gap:12px}
 .grid.cols-2{grid-template-columns:1fr}
 @media (min-width:560px){ .grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))} }
-
 .card{
-  background:var(--card); border:1px solid var(--line); border-radius:18px; padding:14px; box-shadow:var(--shadow);
-  transition:.25s transform,.25s background,.25s box-shadow;
+  background:var(--card); border:1px solid var(--line); border-radius:18px; padding:14px;
+  box-shadow:var(--shadow); transition:.25s transform;
 }
 .card:hover{transform:translateY(-2px)}
 .card h3{margin:.2rem 0 .4rem; font-size:16px}
@@ -70,27 +61,15 @@ body{
 .hr{height:1px; background:var(--line); margin:8px 0 2px}
 .row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
 .tile{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px; border-radius:14px; background:rgba(255,255,255,.06); border:1px solid var(--line)}
-
-/* inputs & buttons */
 .input{
   width:100%; padding:12px 12px; border-radius:14px;
   border:1px solid var(--line); background:rgba(255,255,255,.06);
-  color:var(--text); outline:none; background-clip:padding-box;
-  transition:border-color .2s, box-shadow .2s, transform .1s;
+  color:var(--text); outline:none;
 }
-.input[type=number]::-webkit-outer-spin-button,
-.input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0 }
-.input[type=number]{ -moz-appearance:textfield }
-.input:focus{
-  border-color: rgba(255,186,107,.6);
-  box-shadow:0 0 0 6px rgba(255,122,24,.15);
-  transform:translateY(-1px);
-}
+.input:focus{ border-color: rgba(255,186,107,.6); box-shadow:0 0 0 6px rgba(255,122,24,.15); }
 .btn{
   appearance:none; border:0; cursor:pointer; padding:12px 14px; border-radius:14px; font-weight:800;
-  color:#1b0b00;
-  background:linear-gradient(135deg, var(--orange), var(--orange2));
-  background-size: 200% 200%;
+  color:#1b0b00; background:linear-gradient(135deg, var(--orange), var(--orange2));
   box-shadow:0 12px 26px rgba(255,122,24,.35);
   transition:transform .12s,filter .2s, box-shadow .2s, opacity .2s, background-position .4s ease;
 }
@@ -103,14 +82,10 @@ body{
 .badge{font-size:12px; padding:6px 8px; border-radius:10px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:var(--muted)}
 .bigbtn{display:flex; gap:12px}
 .bigbtn .btn{flex:1; font-size:15px}
-
-/* bottom nav */
 .nav{
-  position:sticky; bottom:0; z-index:10;
-  display:grid; grid-template-columns:repeat(6,1fr); gap:8px; padding:10px;
-  background:rgba(0,0,0,.55);
-  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-  border-top:1px solid var(--line);
+  position:sticky; bottom:0; z-index:10; display:grid; grid-template-columns:repeat(6,1fr);
+  gap:8px; padding:10px; background:rgba(0,0,0,.55);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-top:1px solid var(--line);
 }
 .tab{
   appearance:none; border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff;
@@ -118,28 +93,20 @@ body{
 }
 .tab span{opacity:.85; font-size:11px}
 .tab.active{background:linear-gradient(135deg, rgba(255,122,24,.18), rgba(156,92,255,.18))}
-
-/* активная игра подсветка */
 .gbtn{position:relative}
 .gbtn.active{outline:2px solid #ffb86b; box-shadow:0 0 0 6px rgba(255,186,107,.15)}
-
-/* игровое окно */
 .stage{
   position:relative; height:260px; border-radius:16px; background:rgba(255,255,255,.05);
   border:1px solid var(--line); overflow:hidden; touch-action:none;
 }
-
-/* ——— HOME banners ——— */
 .banners{display:grid; gap:12px}
 @media(min-width:560px){ .banners{grid-template-columns:1fr 1fr} }
 .banner{
   position:relative; border-radius:16px; overflow:hidden; border:1px solid var(--line);
-  background-size:cover; background-position:center;
-  height:140px; display:grid; place-items:center; color:#fff; box-shadow:var(--shadow)
+  background-size:cover; background-position:center; height:140px;
+  display:grid; place-items:center; color:#fff; box-shadow:var(--shadow)
 }
 .banner .tag{position:absolute; left:12px; top:12px; padding:6px 8px; border-radius:10px; background:rgba(0,0,0,.5); border:1px solid var(--line); font-size:12px}
-
-/* ——— SLOT ——— */
 .slot-wrap{display:grid; place-items:center; gap:10px}
 .simple-slot{
   position:relative; width:310px; border-radius:16px; overflow:hidden;
@@ -162,23 +129,19 @@ body{
 .cups-ui{display:flex; gap:10px; margin-top:8px}
 .cup{position:absolute; width:var(--cup-w); height:var(--cup-h); will-change:transform; z-index:2; transition:transform .22s ease; border-radius:24px; transform-style:preserve-3d}
 .cup::before{
-  content:"";
-  position:absolute; inset:4px 10px 8px;
-  /* Прозрачность чуть понижена (стали более матовыми) */
+  content:""; position:absolute; inset:4px 10px 8px;
   background:linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.45));
   border:1px solid rgba(0,0,0,.22);
   box-shadow: inset 0 10px 18px rgba(255,255,255,.25), inset 0 -12px 22px rgba(0,0,0,.12);
   border-radius: 28px / 22px;
   clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
-  background-color: var(--cup-color);
+  background-color: #dfeaff; /* цвет по умолчанию */
 }
-.cup .rim{
-  position:absolute; left:50%; transform:translateX(-50%);
-  /* Ободок поднят чуть выше */
-  bottom: 10px; width: 90%; height: 5px; border-radius: 12px;
-  background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.2));
-  border:1px solid rgba(0,0,0,.15); box-shadow:0 2px 4px rgba(0,0,0,.15)
-}
+/* Разные цвета для стаканов */
+.cup.cup--color1::before { background-color: #c39aff; } /* violet */
+.cup.cup--color2::before { background-color: #ffb86b; } /* orange */
+.cup.cup--color3::before { background-color: #6b95ff; } /* blue */
+
 .cup::after{
   content:""; position:absolute; left:50%; transform:translateX(-50%);
   width:78%; height:8px; bottom:4px; border-radius:50%;
@@ -205,13 +168,20 @@ body{
   transform-origin: bottom center;
   filter: drop-shadow(0 4px 6px rgba(0,0,0,.5));
 }
+/* Анимация "клика" стрелки */
+@keyframes flapper-click {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(15deg) scale(1.1); }
+}
+.wheel-pointer.clicking {
+  animation: flapper-click 0.1s ease-in-out;
+}
 .wheel-container{
   position:absolute; width:100%; height:100%;
   border-radius:50%;
   box-shadow: inset 0 0 20px rgba(0,0,0,.5), 0 0 0 6px rgba(255,255,255,.08);
   border: 1px solid var(--line);
 }
-/* CSS-переход для плавной анимации */
 .wheel-svg{
   width:100%; height:100%;
   transition: transform 5s cubic-bezier(0.2, 0.9, 0.3, 1);
@@ -224,20 +194,13 @@ body{
   box-shadow: 0 0 10px rgba(0,0,0,.5);
 }
 
-/* сетка кнопок игр */
 .games-grid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
 .games-grid .span2{ grid-column: 1 / span 2; display:flex; justify-content:center }
 .games-grid .span2 .btn{ min-width:180px }
-
-/* badge бесплатных прокрутов */
 .free-badge{font-size:12px; padding:6px 8px; border-radius:10px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:#ffd36b}
-
-/* daily bonus */
 .bonus-bar{display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-top:8px}
 .bonus-day{height:28px; border-radius:12px; border:1px solid var(--line); display:grid; place-items:center; font-size:12px; color:#fff9; background:rgba(255,255,255,.04)}
 .bonus-day.on{ background:linear-gradient(135deg, rgba(255,122,24,.35), rgba(156,92,255,.35)); color:#120914; font-weight:800 }
-
-/* toast */
 .toast{position:fixed; left:50%; bottom:120px; transform:translateX(-50%) translateY(20px); background:rgba(0,0,0,.8);
   border:1px solid var(--line); color:#fff; padding:10px 14px; border-radius:12px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; font-size:13px}
 .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
@@ -255,7 +218,6 @@ body{
   </div>
 
   <div class="page">
-    <!-- HOME -->
     <section class="container active" id="home">
       <div class="card">
         <h3>Добро пожаловать в Starify 🎰</h3>
@@ -265,19 +227,15 @@ body{
           <button class="btn ghost" data-tab-go="ref">🤝 Рефералка</button>
         </div>
         <div class="banners" style="margin-top:12px">
-          <a class="banner" id="banner1" href="https://t.me/your_channel" target="_blank" rel="noopener"
-             style="background-image:url('assets/photo1.jpg')">
+          <a class="banner" id="banner1" href="https://t.me/your_channel" target="_blank" rel="noopener" style="background-image:url('assets/photo1.jpg')">
             <div class="tag">Наш Telegram‑канал</div>
           </a>
-          <a class="banner" id="banner2" href="https://t.me/your_chat" target="_blank" rel="noopener"
-             style="background-image:url('assets/photo2.jpg')">
+          <a class="banner" id="banner2" href="https://t.me/your_chat" target="_blank" rel="noopener" style="background-image:url('assets/photo2.jpg')">
             <div class="tag">Наш Telegram‑чат</div>
           </a>
         </div>
       </div>
     </section>
-
-    <!-- SHOP -->
     <section class="container" id="shop">
       <div class="card">
         <h3>Магазин</h3>
@@ -303,8 +261,6 @@ body{
         </div>
       </div>
     </section>
-
-    <!-- CHECKOUT -->
     <section class="container" id="checkout">
       <div class="card">
         <h3>Оформление</h3>
@@ -318,8 +274,6 @@ body{
         </div>
       </div>
     </section>
-
-    <!-- GAMES -->
     <section class="container" id="games">
       <div class="card">
         <h3>Мини‑игры</h3>
@@ -334,8 +288,6 @@ body{
       </div>
       <div id="gameArea" class="grid" style="margin-top:6px"></div>
     </section>
-
-    <!-- BONUS -->
     <section class="container" id="bonus">
       <div class="card">
         <h3>Ежедневный бонус</h3>
@@ -349,8 +301,6 @@ body{
         <div class="tile"><div>Бесплатных прокрутов</div><div><b data-free-counter>0</b></div></div>
       </div>
     </section>
-
-    <!-- REF -->
     <section class="container" id="ref">
       <div class="card">
         <h3>Реферальная программа</h3>
@@ -362,8 +312,6 @@ body{
         </div>
       </div>
     </section>
-
-    <!-- PROFILE -->
     <section class="container" id="profile">
       <div class="card">
         <h3>Профиль</h3>
@@ -379,7 +327,6 @@ body{
       </div>
     </section>
   </div>
-
   <nav class="nav">
     <button class="tab active" data-tab="home">🏠<span>Дом</span></button>
     <button class="tab" data-tab="shop">🛒<span>Магазин</span></button>
@@ -388,11 +335,9 @@ body{
     <button class="tab" data-tab="bonus">🎁<span>Бонус</span></button>
     <button class="tab" data-tab="profile">👤<span>Профиль</span></button>
   </nav>
-
   <div class="toast" id="toast">Готово!</div>
 
 <script>
-/* Telegram + тема */
 const tg = window.Telegram?.WebApp;
 function applyTheme(){
   if(!tg) return;
@@ -411,7 +356,6 @@ function applyTheme(){
   }catch{}
 })();
 
-/* balances + free spins (демо через localStorage) */
 const getInt = k => parseInt(localStorage.getItem(k)||'0',10) || 0;
 const setInt = (k,v) => localStorage.setItem(k, String(v));
 function refreshBalances(){
@@ -424,7 +368,6 @@ function updateFreeBadge(){
 }
 refreshBalances(); updateFreeBadge();
 
-/* Ежедневный бонус */
 const ymd = (d=new Date()) => d.toISOString().slice(0,10);
 const ymdYesterday = () => {const d=new Date(); d.setDate(d.getDate()-1); return ymd(d);};
 function renderBonus(){
@@ -448,197 +391,129 @@ document.getElementById('dailyBtn').onclick=()=>{
   if(last===ymdYesterday()) streak=Math.min(7, streak+1); else streak=1;
   setInt('daily_streak', streak);
   localStorage.setItem('daily_last', ymd());
-
   setInt('free_spins', getInt('free_spins') + 1);
   updateFreeBadge(); renderBonus();
   toast('🎁 Бесплатный прокрут начислен');
 };
 
-/* Toast + вкладки */
 const toast=(m='Готово!')=>{const el=document.getElementById('toast'); el.textContent=m; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),1200);};
 function openTab(id){
   if(anim.busy) return;
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));
   document.querySelectorAll('.container').forEach(s=>s.classList.toggle('active',s.id===id));
 }
-document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>openTab(t.dataset.tab));
-document.querySelectorAll('[data-tab-go]').forEach(b=>b.onclick=()=>openTab(b.dataset.tabGo));
+document.querySelectorAll('.tab, [data-tab-go]').forEach(b=>b.onclick=()=>openTab(b.dataset.tab||b.dataset.tabGo));
 
-/* Магазин */
 const starsQuick=[500,1000,2500,5000];
 const plans=[{name:'3 месяца',plan:'3m'},{name:'6 месяцев',plan:'6m'},{name:'12 месяцев',plan:'12m'}];
-const elStarsQuick=document.getElementById('starsQuick');
-starsQuick.forEach(q=>{
-  const c=document.createElement('div'); c.className='tile';
-  c.innerHTML=`<div>⭐ ${q.toLocaleString('ru-RU')}</div><button class="btn" data-buy-stars="${q}">Купить</button>`;
-  elStarsQuick.appendChild(c);
-});
-const elPlans=document.getElementById('premiumPlans');
-plans.forEach(p=>{
-  const c=document.createElement('div'); c.className='tile';
-  c.innerHTML=`<div>${p.name}</div><button class="btn purple" data-buy-premium="${p.plan}">Приобрести</button>`;
-  elPlans.appendChild(c);
-});
-let checkoutState={type:null, label:'', qty:null, plan:null};
+document.getElementById('starsQuick').innerHTML = starsQuick.map(q=>`<div class="tile"><div>⭐ ${q.toLocaleString('ru-RU')}</div><button class="btn" data-buy-stars="${q}">Купить</button></div>`).join('');
+document.getElementById('premiumPlans').innerHTML = plans.map(p=>`<div class="tile"><div>${p.name}</div><button class="btn purple" data-buy-premium="${p.plan}">Приобрести</button></div>`).join('');
+let checkoutState={};
 function goCheckout(state){
   checkoutState=state;
-  const what=document.getElementById('checkoutWhat');
-  const amount=document.getElementById('amount');
-  const btn=document.getElementById('proceed');
+  const what=document.getElementById('checkoutWhat'), amount=document.getElementById('amount');
   if(state.type==='stars'){
     what.textContent=`Покупка звёзд: ${state.qty? state.qty+' ⭐' : 'укажите количество ниже'}`;
-    amount.value = state.qty || ''; amount.placeholder="Количество звёзд";
-    amount.parentElement.style.display=''; btn.textContent='Оформить';
+    amount.value = state.qty || ''; amount.parentElement.style.display='';
   } else {
     what.textContent=`Оформление Telegram Premium: ${state.plan}`;
     amount.value=''; amount.parentElement.style.display='none';
-    btn.textContent='Приобрести';
   }
   openTab('checkout'); document.getElementById('username').focus();
 }
 document.addEventListener('click',(e)=>{
-  const s=e.target.closest('[data-buy-stars]'); const p=e.target.closest('[data-buy-premium]');
-  if(s){ goCheckout({type:'stars', label:'Звёзды', qty:parseInt(s.dataset.buyStars,10)}); }
-  if(p){ goCheckout({type:'premium', label:'Premium', plan:p.dataset.buyPremium}); }
+  const s=e.target.closest('[data-buy-stars]'), p=e.target.closest('[data-buy-premium]');
+  if(s){ goCheckout({type:'stars', qty:parseInt(s.dataset.buyStars,10)}); }
+  if(p){ goCheckout({type:'premium', plan:p.dataset.buyPremium}); }
 });
-document.getElementById('buyCustomStars').onclick=()=>{
-  const qty=parseInt(document.getElementById('customStars').value,10) || null;
-  goCheckout({type:'stars', label:'Звёзды', qty});
-};
-function validUser(u){ return /^@[a-zA-Z0-9_]{2,32}$/.test(u); }
+document.getElementById('buyCustomStars').onclick=()=>goCheckout({type:'stars', qty:parseInt(document.getElementById('customStars').value,10) || null});
 document.getElementById('proceed').onclick=()=>{
   const u=(document.getElementById('username').value||'').trim();
-  if(!validUser(u)){ toast('Введи @username'); return; }
+  if(!/^@[a-zA-Z0-9_]{2,32}$/.test(u)){ toast('Введи @username'); return; }
   if(checkoutState.type==='stars'){
     const qty = parseInt(document.getElementById('amount').value||checkoutState.qty||0,10);
     if(!qty || qty<1){ toast('Укажи количество звёзд'); return; }
     toast(`Заявка: Звёзды → ${u} • ${qty} ⭐`);
-  }else if(checkoutState.type==='premium'){
-    toast(`Заявка: Premium → ${u} • ${checkoutState.plan}`);
-  }else{ toast('Выбери товар'); }
+  }else if(checkoutState.type==='premium'){ toast(`Заявка: Premium → ${u} • ${checkoutState.plan}`); }
 };
 
-/* анти‑копи js */
 (function antiCopy(){
   document.addEventListener('contextmenu', e=>e.preventDefault(), {passive:false});
   document.addEventListener('copy', e=>{ e.preventDefault(); toast('Копирование отключено'); }, {passive:false});
-  document.addEventListener('cut',  e=>{ e.preventDefault(); }, {passive:false});
-  document.addEventListener('selectstart', e=>{
-    const t=e.target; if(t && (t.tagName==='INPUT'||t.tagName==='TEXTAREA')) return;
-    e.preventDefault();
-  }, {passive:false});
-  document.addEventListener('keydown', e=>{
-    const k=e.key?.toLowerCase?.()||'';
-    if((e.ctrlKey||e.metaKey) && ['c','x','a','s','p','u'].includes(k)){ e.preventDefault(); }
-  });
+  document.addEventListener('selectstart', e=>{ if(!e.target.matches('input, textarea')) e.preventDefault(); }, {passive:false});
 })();
 
-/* ——— Игровой лок ——— */
 const gameArea=document.getElementById('gameArea');
 const rint=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const anim={
-  busy:false, current:null,
-  async run(name, fn){
-    if(this.busy) return;
-    this.busy=true; this.current=name;
-    setControlsDisabled(true);
+  busy:false,
+  async run(fn){
+    if(this.busy) return; this.busy=true;
+    document.querySelectorAll('[data-game], [data-action], .tab').forEach(b=>b.disabled=true);
     try{ await fn(); }finally{
-      this.busy=false; this.current=null; setControlsDisabled(false);
+      this.busy=false;
+      document.querySelectorAll('[data-game], [data-action], .tab').forEach(b=>b.disabled=false);
     }
   }
 };
-function setControlsDisabled(dis){
-  document.querySelectorAll('[data-game], [data-action], .tab').forEach(b=>b.disabled=dis);
-}
-function markGame(kind){
-  document.querySelectorAll('.gbtn').forEach(b=>b.classList.toggle('active', b.dataset.game===kind));
-}
+function markGame(kind){ document.querySelectorAll('.gbtn').forEach(b=>b.classList.toggle('active', b.dataset.game===kind)); }
 function consumeFreeSpinIfAny(){
   const n = getInt('free_spins');
-  if(n>0){
-    setInt('free_spins', n-1);
-    updateFreeBadge();
-    toast('🎁 Бесплатный прокрут использован');
-  }
+  if(n>0){ setInt('free_spins', n-1); updateFreeBadge(); toast('🎁 Бесплатный прокрут использован'); }
 }
 
-/* ——— SLOT ——— */
 function mountSlot(){
   markGame('slot');
-  gameArea.innerHTML='';
-  const card=document.createElement('div'); card.className='card';
-  const wrap=document.createElement('div'); wrap.className='slot-wrap';
-  const slot=document.createElement('div'); slot.className='simple-slot';
-  slot.innerHTML=`
-    <div class="top-pointers"><div class="ptr"></div><div class="ptr"></div><div class="ptr"></div></div>
-    <div class="vline l1"></div><div class="vline l2"></div>
-    <div class="reel"><div class="roller" id="sl_r1"></div></div>
-    <div class="reel"><div class="roller" id="sl_r2"></div></div>
-    <div class="reel"><div class="roller" id="sl_r3"></div></div>`;
-  wrap.appendChild(slot);
-  const spinbar=document.createElement('div'); spinbar.style.cssText='display:grid;place-items:center;margin-top:10px;';
-  spinbar.innerHTML=`<button class="btn" id="spinBtn" data-action="spin">Крутить</button> <div class="free-badge" style="margin-top:6px">🎁 Осталось: <b data-free-counter>0</b></div>`;
-  const out=document.createElement('span'); out.className='badge'; out.id='slotOut'; out.style.marginTop='6px'; out.textContent='Удачи!';
-  card.append(wrap, spinbar, out);
-  gameArea.appendChild(card);
+  gameArea.innerHTML=`<div class="card"><div class="slot-wrap"><div class="simple-slot"><div class="top-pointers"><div class="ptr"></div><div class="ptr"></div><div class="ptr"></div></div><div class="vline l1"></div><div class="vline l2"></div><div class="reel"><div class="roller" id="sl_r1"></div></div><div class="reel"><div class="roller" id="sl_r2"></div></div><div class="reel"><div class="roller" id="sl_r3"></div></div></div></div><div style="display:grid;place-items:center;margin-top:10px;"><button class="btn" id="spinBtn" data-action="spin">Крутить</button><div class="free-badge" style="margin-top:6px">🎁 Осталось: <b data-free-counter>0</b></div></div><span class="badge" id="slotOut" style="margin-top:6px;display:block;text-align:center;">Удачи!</span></div>`;
   updateFreeBadge();
 
-  const symbols=['🎃','🕷️','🕸️','🦇','🍬','7️⃣'];
-  const stack=Array(30).fill(0).flatMap(()=>symbols);
-  const reelHTML = stack.map(s=>`<div class="symbol">${s}</div>`).join('');
-  ['sl_r1','sl_r2','sl_r3'].forEach(id=>document.getElementById(id).innerHTML=reelHTML);
-  const rollers=[document.getElementById('sl_r1'),document.getElementById('sl_r2'),document.getElementById('sl_r3')];
-  const itemH=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sym'));
+  const symbols=['🎃','🕷️','🕸️','🦇','🍬','7️⃣'], N=symbols.length;
+  const itemH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sym'));
+  const rollers = ['sl_r1','sl_r2','sl_r3'].map(id=>{
+    const el = document.getElementById(id);
+    el.innerHTML = Array(30).fill(0).flatMap(()=>symbols).map(s=>`<div class="symbol">${s}</div>`).join('');
+    return el;
+  });
   const easeOut=t=>1-Math.pow(1-t,3);
 
-  function spinRoller(el, duration){
-    const N=symbols.length;
-    const k=rint(0, N-1);
-    const target= (rint(10,15)*N + ((k-1+N)%N)) * itemH;
-    const t0=performance.now();
-    return new Promise(res=>{
-      function step(now){
-        const p=Math.min(1,(now-t0)/duration);
-        const y = easeOut(p)*target;
-        el.style.transform=`translate3d(0,-${Math.round(y)}px,0)`;
-        if(p<1) requestAnimationFrame(step); else res(k);
-      }
-      requestAnimationFrame(step);
-    });
-  }
-  async function spinOnce(){
-    await anim.run('slot', async()=>{
-      out.textContent='Крутим...';
-      const [i1,i2,i3] = await Promise.all([
-        spinRoller(rollers[0], 720), spinRoller(rollers[1], 800), spinRoller(rollers[2], 880),
-      ]);
-      const [a,b,c]=[symbols[i1], symbols[i2], symbols[i3]];
-      out.textContent = (a===b && b===c) ? `Победа! ${a}${b}${c}` : `${a} | ${b} | ${c}`;
+  async function spin(){
+    await anim.run(async()=>{
+      document.getElementById('slotOut').textContent='Крутим...';
+      const results = await Promise.all(rollers.map((r,i)=>new Promise(res=>{
+        const k=rint(0, N-1), target=(rint(10,15)*N + ((k-1+N)%N)) * itemH;
+        const t0=performance.now(), dur=720+i*80;
+        const step=(now)=>{
+          const p=Math.min(1,(now-t0)/dur);
+          r.style.transform=`translate3d(0,-${Math.round(easeOut(p)*target)}px,0)`;
+          if(p<1) requestAnimationFrame(step); else res(k);
+        };
+        requestAnimationFrame(step);
+      })));
+      const [a,b,c] = results.map(i=>symbols[i]);
+      document.getElementById('slotOut').textContent = (a===b && b===c) ? `Победа! ${a}${b}${c}` : `${a} | ${b} | ${c}`;
       consumeFreeSpinIfAny();
     });
   }
-  document.getElementById('spinBtn').onclick=spinOnce;
+  document.getElementById('spinBtn').onclick=spin;
 }
 
-/* ——— CUPS ——— */
+/* ——— CUPS (ИЗМЕНЕНО) ——— */
 function mountCups(){
   markGame('cups');
-  gameArea.innerHTML='';
-  const card=document.createElement('div'); card.className='card';
-  const stage=document.createElement('div'); stage.className='stage';
-  const ui=document.createElement('div'); ui.className='cups-ui';
-  const btn=document.createElement('button'); btn.className='btn'; btn.dataset.action='mix'; btn.textContent='Начать';
-  ui.appendChild(btn);
-  const ball=document.createElement('div'); ball.className='ball-sm';
-  stage.appendChild(ball);
-  const cups=[0,1,2].map(()=>{
-    const c=document.createElement('div'); c.className='cup';
-    c.innerHTML = '<div class="rim"></div>'; stage.appendChild(c); return c;
+  gameArea.innerHTML = `<div class="card"><div class="stage"></div><div class="cups-ui"><button class="btn" data-action="mix">Начать</button></div></div>`;
+  const stage = gameArea.querySelector('.stage');
+  const ball = document.createElement('div'); ball.className='ball-sm'; stage.appendChild(ball);
+  
+  const cupColors = ['cup--color1', 'cup--color2', 'cup--color3'];
+  const cups = cupColors.map(colorClass => {
+    const c = document.createElement('div');
+    c.className = `cup ${colorClass}`;
+    stage.appendChild(c);
+    return c;
   });
-  card.append(stage, ui); gameArea.appendChild(card);
-
+  
   const baseY=150, upY=72, ballY=baseY+18;
-  const posX=()=>{ const W=stage.clientWidth; const center=W/2; const gap=Math.min(160, Math.max(110, (W-220)/2)); return [center-gap, center, center+gap]; };
+  const posX=()=>(W=stage.clientWidth, C=W/2, G=Math.min(160, Math.max(110, (W-220)/2)), [C-G, C, C+G]);
   let cupsAtPos=[...cups], ballPosIndex=1;
 
   function placeAll(raised){
@@ -646,166 +521,126 @@ function mountCups(){
     cupsAtPos.forEach((cup,pos)=>{ cup.style.transform=`translate(${xs[pos]}px, ${raised?upY:baseY}px) translate(-50%,-50%)`; });
     ball.style.transform=`translate(${xs[ballPosIndex]}px, ${ballY}px) translate(-50%,-50%)`;
   }
-  function swapPos(a,b,ms=200){
-    return new Promise(res=>{
-      const xs=posX(); [cupsAtPos[a], cupsAtPos[b]]=[cupsAtPos[b], cupsAtPos[a]];
-      cupsAtPos.forEach((cup,pos)=>{ cup.style.transition=`transform ${ms}ms ease`; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
-      if(ballPosIndex===a) ballPosIndex=b; else if(ballPosIndex===b) ballPosIndex=a;
-      ball.style.transition=`transform ${ms}ms ease`; ball.style.transform=`translate(${xs[ballPosIndex]}px, ${ballY}px) translate(-50%,-50%)`;
-      setTimeout(res,ms+18);
-    });
+  
+  async function swapPos(a,b,ms=200){
+    const xs=posX(); [cupsAtPos[a], cupsAtPos[b]]=[cupsAtPos[b], cupsAtPos[a]];
+    cupsAtPos.forEach((cup,pos)=>{ cup.style.transition=`transform ${ms}ms ease`; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
+    if(ballPosIndex===a) ballPosIndex=b; else if(ballPosIndex===b) ballPosIndex=a;
+    ball.style.transition=`transform ${ms}ms ease`; ball.style.transform=`translate(${xs[ballPosIndex]}px, ${ballY}px) translate(-50%,-50%)`;
+    await new Promise(r=>setTimeout(r,ms+18));
   }
+
   async function startRound(){
-    await anim.run('cups', async()=>{
+    await anim.run(async()=>{
       ballPosIndex=1; placeAll(true); await new Promise(r=>setTimeout(r,500));
       const xs=posX();
       cupsAtPos.forEach((cup,pos)=>{ cup.style.transition='transform .2s ease'; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
       await new Promise(r=>setTimeout(r,200)); ball.style.opacity='0';
 
-      for(let i=0;i<rint(14,22);i++){ await swapPos(rint(0,2), rint(0,2), rint(160,230)); }
+      for(let i=0;i<rint(14,22);i++){ await swapPos(rint(0,1), rint(1,2), rint(160,230)); }
+      
       const guessPos = await new Promise(res=>cupsAtPos.forEach((cup,pos)=>{ cup.style.cursor='pointer'; cup.onclick=()=>res(pos); }));
       cupsAtPos.forEach(c=>{ c.onclick=null; c.style.cursor='default'; });
-
+      
       ball.style.opacity='1';
       cupsAtPos.forEach((cup,pos)=>{ cup.style.transition='transform .2s ease'; cup.style.transform=`translate(${xs[pos]}px, ${upY}px) translate(-50%,-50%)`; });
       await new Promise(r=>setTimeout(r,200));
+      
       toast(guessPos===ballPosIndex ? 'Верно! 🎉' : 'Мимо');
       consumeFreeSpinIfAny();
     });
   }
-  placeAll(true); btn.onclick=startRound;
+  placeAll(true); gameArea.querySelector('[data-action="mix"]').onclick=startRound;
 }
 
-/* ——— WHEEL (ПОЛНАЯ ПЕРЕРАБОТКА) ——— */
+/* ——— WHEEL (ИЗМЕНЕНО) ——— */
 function mountWheel() {
   markGame('wheel');
-  gameArea.innerHTML = '';
-  const card = document.createElement('div'); card.className = 'card';
-  const stage = document.createElement('div'); stage.className = 'stage';
-  stage.style.overflow = 'visible'; // для тени указателя
-
-  // Создаем структуру колеса
-  stage.innerHTML = `
-    <div class="wheel-wrapper">
-      <div class="wheel-pointer"></div>
-      <div class="wheel-container">
-        <svg class="wheel-svg" viewBox="0 0 200 200"></svg>
-      </div>
-      <div class="wheel-center"></div>
-    </div>`;
-
-  const btn = document.createElement('button');
-  btn.className = 'btn'; btn.dataset.action = 'spinwheel'; btn.textContent = 'Крутить';
-  btn.style.marginTop = '10px';
-  const info = document.createElement('div');
-  info.className = 'free-badge'; info.style.marginTop = '6px';
-  info.innerHTML = '🎁 Осталось: <b data-free-counter>0</b>';
-  const controls = document.createElement('div');
-  controls.style.cssText = 'display:grid; place-items:center;';
-  controls.append(btn, info);
-
-  card.append(stage, controls);
-  gameArea.appendChild(card);
+  gameArea.innerHTML = `<div class="card"><div class="stage" style="overflow:visible;"><div class="wheel-wrapper"><div class="wheel-pointer"></div><div class="wheel-container"><svg class="wheel-svg" viewBox="0 0 200 200"></svg></div><div class="wheel-center"></div></div></div><div style="display:grid; place-items:center;"><button class="btn" data-action="spinwheel" style="margin-top:10px;">Крутить</button><div class="free-badge" style="margin-top:6px;">🎁 Осталось: <b data-free-counter>0</b></div></div></div>`;
   updateFreeBadge();
 
-  const wheelSVG = stage.querySelector('.wheel-svg');
+  const wheelSVG = gameArea.querySelector('.wheel-svg');
+  const pointer = gameArea.querySelector('.wheel-pointer');
   let currentRotation = 0;
+  let clickInterval;
 
-  // Более интересный и сбалансированный набор призов
   const PRIZES = [
     { text: '+10 ⭐', color: '#ff7a18' }, { text: '+50 ⭐', color: '#9c5cff' },
     { text: 'Ничего', color: '#4a415a' }, { text: '+100 ⭐', color: '#ffb86b' },
     { text: 'x2', color: '#c39aff' }, { text: '+25 ⭐', color: '#ff7a18' },
     { text: 'Ничего', color: '#4a415a' }, { text: 'Джекпот', color: '#e5c100' }
   ];
-
   const numSegments = PRIZES.length;
   const angleStep = 360 / numSegments;
-  const radius = 100;
-  const center = 100;
+  const center = 100, radius = 100;
 
-  // Функция для отрисовки секторов и текста в SVG
-  function drawWheel() {
-    wheelSVG.innerHTML = '';
-    PRIZES.forEach((prize, i) => {
-      const startAngle = i * angleStep;
-      const endAngle = startAngle + angleStep;
-      const start = polarToCartesian(center, center, radius, endAngle);
-      const end = polarToCartesian(center, center, radius, startAngle);
-      const largeArcFlag = angleStep > 180 ? '1' : '0';
-
-      // Создаем SVG-путь (сектор)
-      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      const d = `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 0 ${end.x} ${end.y} L ${center} ${center} Z`;
-      path.setAttribute('d', d);
-      path.setAttribute('fill', prize.color);
-      path.setAttribute('stroke', 'rgba(0,0,0,0.2)');
-      path.setAttribute('stroke-width', '1');
-      wheelSVG.appendChild(path);
-
-      // Создаем текст
-      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.setAttribute('x', '100');
-      text.setAttribute('y', '35'); // Расстояние от центра
-      text.setAttribute('transform', `rotate(${startAngle + angleStep / 2}, 100, 100)`);
-      text.setAttribute('text-anchor', 'middle');
-      text.setAttribute('fill', '#fff');
-      text.setAttribute('font-size', '12');
-      text.setAttribute('font-weight', '800');
-      text.textContent = prize.text;
-      wheelSVG.appendChild(text);
-    });
+  function polarToCartesian(r, angle) {
+    const a = (angle - 90) * Math.PI / 180;
+    return { x: center + r * Math.cos(a), y: center + r * Math.sin(a) };
   }
-
-  function polarToCartesian(cx, cy, r, angleInDegrees) {
-    const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
-    return {
-      x: cx + (r * Math.cos(angleInRadians)),
-      y: cy + (r * Math.sin(angleInRadians))
-    };
-  }
-
-  drawWheel(); // Первичная отрисовка
-
+  
+  // Рисуем колесо с секторами, текстом и колышками
+  PRIZES.forEach((prize, i) => {
+    const startAngle = i * angleStep, endAngle = startAngle + angleStep;
+    const start = polarToCartesian(radius, endAngle);
+    const end = polarToCartesian(radius, startAngle);
+    const d = `M ${start.x} ${start.y} A ${radius} ${radius} 0 0 0 ${end.x} ${end.y} L ${center} ${center} Z`;
+    
+    wheelSVG.innerHTML += `<path d="${d}" fill="${prize.color}" stroke="rgba(0,0,0,0.2)" stroke-width="1"></path>`;
+    wheelSVG.innerHTML += `<text x="100" y="35" transform="rotate(${startAngle + angleStep/2}, 100, 100)" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">${prize.text}</text>`;
+    
+    const pegPos = polarToCartesian(radius-10, startAngle + angleStep/2);
+    wheelSVG.innerHTML += `<circle cx="${pegPos.x}" cy="${pegPos.y}" r="3" fill="rgba(255,255,255,0.3)"></circle>`;
+  });
+  
   async function spinWheel() {
-    await anim.run('wheel', async () => {
-      // 1. Определяем выигрышный сектор
+    await anim.run(async () => {
+      clearInterval(clickInterval);
+      
       const targetIndex = rint(0, numSegments - 1);
-      const prize = PRIZES[targetIndex];
+      const targetAngle = targetIndex * angleStep + angleStep / 2;
+      
+      // Идеальный расчет для остановки
+      const finalRotation = (rint(5, 8) * 360) + (360 - targetAngle);
+      const newTotalRotation = currentRotation + finalRotation;
+      
+      wheelSVG.style.transform = `rotate(${newTotalRotation}deg)`;
+      
+      // Анимация "кликов" стрелки
+      let lastPassedPeg = -1;
+      clickInterval = setInterval(() => {
+        const currentWheelAngle = (parseFloat(wheelSVG.style.transform.replace(/[^0-9.-]/g, '')) || 0) % 360;
+        const pointerTipAngle = (360 - currentWheelAngle) % 360;
+        const currentPeg = Math.floor(pointerTipAngle / angleStep);
+        if(currentPeg !== lastPassedPeg){
+          pointer.classList.remove('clicking');
+          void pointer.offsetWidth; // трюк для перезапуска анимации
+          pointer.classList.add('clicking');
+          lastPassedPeg = currentPeg;
+        }
+      }, 50);
 
-      // 2. Рассчитываем конечный угол вращения
-      const partialRotation = 360 - (targetIndex * angleStep); // Угол для остановки на нужном секторе
-      const randomOffset = (Math.random() - 0.5) * (angleStep * 0.8); // Небольшое случайное смещение для реализма
-      const fullSpins = rint(5, 8) * 360; // Количество полных оборотов
-      const finalRotation = fullSpins + partialRotation + randomOffset;
-
-      // 3. Запускаем анимацию через CSS
-      wheelSVG.style.transform = `rotate(${currentRotation + finalRotation}deg)`;
-
-      // Обновляем текущее вращение для следующего спина
-      currentRotation += finalRotation;
-
-      // 4. Ждем завершения анимации
-      await new Promise(resolve => setTimeout(resolve, 5000)); // Длительность transition
-
-      toast(`Результат: ${prize.text}`);
+      await new Promise(resolve => setTimeout(()=>{
+        clearInterval(clickInterval);
+        resolve();
+      }, 5000));
+      
+      currentRotation = newTotalRotation;
+      toast(`Результат: ${PRIZES[targetIndex].text}`);
       consumeFreeSpinIfAny();
     });
   }
-  btn.onclick = spinWheel;
+  gameArea.querySelector('[data-action="spinwheel"]').onclick = spinWheel;
 }
 
-/* переключатель игр */
 function showGame(kind){
   if(anim.busy) return;
-  if(kind==='slot')  mountSlot();
-  if(kind==='cups')  mountCups();
-  if(kind==='wheel') mountWheel();
+  const gameMounts = { slot: mountSlot, cups: mountCups, wheel: mountWheel };
+  if(gameMounts[kind]) gameMounts[kind]();
 }
 document.querySelectorAll('[data-game]').forEach(b=>b.onclick=()=>showGame(b.dataset.game));
 showGame('slot');
 
-/* копирование + закрыть + вкладки */
 document.getElementById('copyRef').onclick=async()=>{
   try{ await navigator.clipboard.writeText(document.getElementById('refLink').value); toast('Ссылка скопирована'); }
   catch{ toast('Скопируй вручную'); }
