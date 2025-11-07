@@ -15,7 +15,7 @@
   --danger:#ff3b6b; --ok:#35ffb1; --shadow:0 20px 40px rgba(0,0,0,.35);
 
   /* слот */
-  --sym:56px; /* высота строки символа */
+  --sym:56px;        /* высота строки символа */
 
   /* стаканы */
   --cup-w: 92px; --cup-h: 86px; --cup-color:#eef2ff;
@@ -110,7 +110,7 @@ body{
 /* bottom nav */
 .nav{
   position:sticky; bottom:0; z-index:10;
-  display:grid; grid-template-columns:repeat(5,1fr); gap:8px; padding:10px;
+  display:grid; grid-template-columns:repeat(6,1fr); gap:8px; padding:10px;
   background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.55));
   backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
   border-top:1px solid var(--line);
@@ -126,23 +126,21 @@ body{
 .gbtn{position:relative}
 .gbtn.active{outline:2px solid #ffb86b; box-shadow:0 0 0 6px rgba(255,186,107,.15)}
 
-/* игровое окно */
+/* игровое окно — ровный фон */
 .stage{
-  position:relative; height:260px; border-radius:16px; background:rgba(255,255,255,.06);
+  position:relative; height:260px; border-radius:16px; background:rgba(255,255,255,.05);
   border:1px solid var(--line); overflow:hidden; touch-action:none;
 }
 
-/* ——— HOME banners ——— */
+/* ——— HOME banners (пути к изображениям ниже в #banner1/#banner2) ——— */
 .banners{display:grid; gap:12px}
 @media(min-width:560px){ .banners{grid-template-columns:1fr 1fr} }
 .banner{
   position:relative; border-radius:16px; overflow:hidden; border:1px solid var(--line);
-  background:linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  background-size:cover; background-position:center;
   height:140px; display:grid; place-items:center; color:#fff; box-shadow:var(--shadow)
 }
-.banner .ph{width:100%; height:100%; display:grid; place-items:center; font-weight:800; letter-spacing:.5px; color:#fff8; font-size:22px}
 .banner .tag{position:absolute; left:12px; top:12px; padding:6px 8px; border-radius:10px; background:rgba(0,0,0,.5); border:1px solid var(--line); font-size:12px}
-.banner .tools{position:absolute; right:10px; bottom:10px; display:flex; gap:8px}
 
 /* ——— SLOT ——— */
 .slot-wrap{display:grid; place-items:center; gap:10px}
@@ -174,7 +172,8 @@ body{
   border:1px solid rgba(0,0,0,.22);
   box-shadow: inset 0 10px 18px rgba(255,255,255,.25), inset 0 -12px 22px rgba(0,0,0,.12);
   border-radius:28px / 22px;
-  clip-path: polygon(12% 8%, 88% 8%, 78% 94%, 22% 94%); /* перевёрнутая трапеция */
+  /* ВЕРХ УЗКИЙ, НИЗ ШИРОКИЙ */
+  clip-path: polygon(35% 8%, 65% 8%, 92% 94%, 8% 94%);
   background-color: var(--cup-color);
   transform-origin:50% 50%;
 }
@@ -183,7 +182,7 @@ body{
 .cup::after{
   content:"";
   position:absolute; left:50%; transform:translateX(-50%);
-  width:74%; height:8px; bottom:4px; border-radius:50%;
+  width:78%; height:8px; bottom:4px; border-radius:50%;
   background:radial-gradient(closest-side, rgba(0,0,0,.35), transparent 70%);
 }
 .ball-sm{
@@ -196,19 +195,20 @@ body{
 /* ——— WHEEL ——— */
 .wheelbox{position:relative; display:grid; place-items:center}
 .pointer{
-  position:absolute; top:-10px; left:50%; transform:translateX(-50%);
-  width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-bottom:14px solid #ffd36b;
-  filter:drop-shadow(0 2px 6px rgba(255,210,107,.6)) drop-shadow(0 0 10px rgba(255,210,107,.45));
-  z-index:2;
+  position:absolute; top:-12px; left:50%; transform:translateX(-50%);
+  width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-bottom:16px solid #ffd36b;
+  filter:drop-shadow(0 2px 6px rgba(255,210,107,.7)) drop-shadow(0 0 10px rgba(255,210,107,.5));
+  z-index:3;
 }
 .wheel{
   width:240px;height:240px;border-radius:50%; border:1px solid var(--line);
   background:conic-gradient(#ff7a18 0 45deg,#9c5cff 45deg 90deg,#ffb86b 90deg 135deg,#c39aff 135deg 180deg,#ff7a18 180deg 225deg,#9c5cff 225deg 270deg,#ffb86b 270deg 315deg,#c39aff 315deg 360deg); 
-  box-shadow: inset 0 0 22px rgba(0,0,0,.35);
+  box-shadow:inset 0 0 22px rgba(0,0,0,.35);
   display:grid; place-items:center; will-change:transform; position:relative; z-index:1;
 }
 .wheel .labels{position:absolute; inset:0; display:grid; place-items:center; font-size:13px; color:#120914; font-weight:800; opacity:.95; pointer-events:none}
 .wlabel{position:absolute; transform-origin:50% 100%; top:50%; left:50%}
+.wlabel > span{display:inline-block} /* для контр‑поворота текста */
 
 /* сетка кнопок игр: 2 сверху, «Колесо» снизу по центру */
 .games-grid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
@@ -243,46 +243,24 @@ body{
       <div class="card">
         <h3>Добро пожаловать в Starify 🎰</h3>
 
-        <!-- СНАЧАЛА быстрые кнопки -->
+        <!-- Сначала быстрые кнопки -->
         <div class="bigbtn" style="margin-top:8px">
           <button class="btn" data-tab-go="shop">🛒 Магазин</button>
           <button class="btn purple" data-tab-go="games">🎲 Игры</button>
           <button class="btn ghost" data-tab-go="ref">🤝 Рефералка</button>
         </div>
 
-        <!-- Ниже — БАННЕРЫ с возможностью подгрузить свои фото -->
+        <!-- Ниже — баннеры. Поменяй пути к своим фото тут: -->
         <div class="banners" style="margin-top:12px">
-          <div class="banner" id="banner1">
+          <a class="banner" id="banner1" href="https://t.me/your_channel" target="_blank" rel="noopener"
+             style="background-image:url('assets/photo1.jpg')">
             <div class="tag">Наш Telegram‑канал</div>
-            <div class="ph">Photo1</div>
-            <div class="tools">
-              <label class="btn" style="font-size:12px; padding:8px 10px; cursor:pointer">
-                Загрузить
-                <input id="upload1" type="file" accept="image/*" style="display:none">
-              </label>
-              <button class="btn ghost" id="reset1" style="font-size:12px; padding:8px 10px">Сбросить</button>
-            </div>
-          </div>
-          <div class="banner" id="banner2">
+          </a>
+          <a class="banner" id="banner2" href="https://t.me/your_chat" target="_blank" rel="noopener"
+             style="background-image:url('assets/photo2.jpg')">
             <div class="tag">Наш Telegram‑чат</div>
-            <div class="ph">Photo2</div>
-            <div class="tools">
-              <label class="btn" style="font-size:12px; padding:8px 10px; cursor:pointer">
-                Загрузить
-                <input id="upload2" type="file" accept="image/*" style="display:none">
-              </label>
-              <button class="btn ghost" id="reset2" style="font-size:12px; padding:8px 10px">Сбросить</button>
-            </div>
-          </div>
+          </a>
         </div>
-
-        <!-- Ежедневный бонус -->
-        <div class="hr" style="margin-top:12px"></div>
-        <div class="row" style="margin-top:8px">
-          <div class="badge">Ежедневный бонус (7 дней)</div>
-          <button class="btn" id="dailyBtn">Забрать</button>
-        </div>
-        <div class="bonus-bar" id="bonusBar"></div>
       </div>
     </section>
 
@@ -349,6 +327,21 @@ body{
       <div id="gameArea" class="grid" style="margin-top:6px"></div>
     </section>
 
+    <!-- BONUS (отдельная вкладка) -->
+    <section class="container" id="bonus">
+      <div class="card">
+        <h3>Ежедневный бонус</h3>
+        <p>Заходи каждый день — получай звёзды. Серия из 7 дней.</p>
+        <div class="hr"></div>
+        <div class="row" style="margin-top:8px">
+          <div class="badge">Прогресс</div>
+          <button class="btn" id="dailyBtn">Забрать</button>
+        </div>
+        <div class="bonus-bar" id="bonusBar" style="margin-bottom:6px"></div>
+        <div class="tile"><div>Награды</div><div>15, 20, 25, 30, 40, 60, 100 ⭐</div></div>
+      </div>
+    </section>
+
     <!-- REF -->
     <section class="container" id="ref">
       <div class="card">
@@ -379,11 +372,13 @@ body{
     </section>
   </div>
 
+  <!-- NAV (добавлен Бонус перед Профилем) -->
   <nav class="nav">
     <button class="tab active" data-tab="home">🏠<span>Дом</span></button>
     <button class="tab" data-tab="shop">🛒<span>Магазин</span></button>
     <button class="tab" data-tab="games">🎲<span>Игры</span></button>
     <button class="tab" data-tab="ref">🤝<span>Рефералка</span></button>
+    <button class="tab" data-tab="bonus">🎁<span>Бонус</span></button>
     <button class="tab" data-tab="profile">👤<span>Профиль</span></button>
   </nav>
 
@@ -410,57 +405,29 @@ function applyTheme(){
 })();
 
 /* balances (демо через localStorage) */
-function getInt(k){ return parseInt(localStorage.getItem(k)||'0',10) || 0; }
-function setInt(k,v){ localStorage.setItem(k, String(v)); }
+const getInt = k => parseInt(localStorage.getItem(k)||'0',10) || 0;
+const setInt = (k,v) => localStorage.setItem(k, String(v));
 function refreshBalances(){
   document.getElementById('gameBal').textContent = `${getInt('game_balance')} ⭐`;
   document.getElementById('refBal').textContent  = `${getInt('ref_balance')} ⭐`;
 }
 refreshBalances();
 
-/* banners: загрузка своих фото */
-function loadBanner(id, key){
-  const el=document.getElementById(id);
-  const ph=el.querySelector('.ph');
-  const data=localStorage.getItem(key);
-  if(data){
-    el.style.backgroundImage=`url(${data})`;
-    el.style.backgroundSize='cover';
-    el.style.backgroundPosition='center';
-    ph.style.display='none';
-  } else {
-    el.style.backgroundImage='none';
-    ph.style.display='grid';
-  }
-}
-['banner1','banner2'].forEach((id,i)=>loadBanner(id, 'banner'+(i+1)));
-document.getElementById('upload1').addEventListener('change', e=>readBanner(e,'banner1','banner1'));
-document.getElementById('upload2').addEventListener('change', e=>readBanner(e,'banner2','banner2'));
-document.getElementById('reset1').onclick=()=>{ localStorage.removeItem('banner1'); loadBanner('banner1','banner1'); toast('Сброшено'); };
-document.getElementById('reset2').onclick=()=>{ localStorage.removeItem('banner2'); loadBanner('banner2','banner2'); toast('Сброшено'); };
-function readBanner(ev, id, key){
-  const f=ev.target.files?.[0]; if(!f) return;
-  const reader=new FileReader();
-  reader.onload=()=>{ localStorage.setItem(key, reader.result); loadBanner(id,key); toast('Фото установлено'); };
-  reader.readAsDataURL(f);
-}
-
-/* Ежедневный бонус (7 дней) */
+/* Ежедневный бонус (вкладка BONUS) */
 const rewards=[15,20,25,30,40,60,100];
-function ymd(d=new Date()){ return d.toISOString().slice(0,10); }
-function ymdYesterday(){
-  const d=new Date(); d.setDate(d.getDate()-1); return ymd(d);
-}
+const ymd = (d=new Date()) => d.toISOString().slice(0,10);
+const ymdYesterday = () => {const d=new Date(); d.setDate(d.getDate()-1); return ymd(d);};
 function renderBonus(){
-  const bar=document.getElementById('bonusBar'); bar.innerHTML='';
+  const bar=document.getElementById('bonusBar'); if(!bar) return;
+  bar.innerHTML='';
   const streak=getInt('daily_streak'); // 0..7
   for(let i=0;i<7;i++){
-    const d=document.createElement('div'); d.className='bonus-day'+(i<streak?' on':''); d.textContent=(i+1);
-    bar.appendChild(d);
+    const d=document.createElement('div');
+    d.className='bonus-day'+(i<streak?' on':''); d.textContent=i+1; bar.appendChild(d);
   }
-  const last=localStorage.getItem('daily_last');
   const btn=document.getElementById('dailyBtn');
-  if(last===ymd()) { btn.disabled=true; btn.textContent='Уже забрано'; }
+  const last=localStorage.getItem('daily_last');
+  if(last===ymd()){ btn.disabled=true; btn.textContent='Уже забрано'; }
   else { btn.disabled=false; btn.textContent='Забрать'; }
 }
 renderBonus();
@@ -592,7 +559,7 @@ function markGame(kind){
   document.querySelectorAll('.gbtn').forEach(b=>b.classList.toggle('active', b.dataset.game===kind));
 }
 
-/* ——— SLOT (строго одна линия) ——— */
+/* ——— SLOT (одна центральная линия) ——— */
 function mountSlot(){
   markGame('slot');
   gameArea.innerHTML='';
@@ -614,7 +581,6 @@ function mountSlot(){
   card.append(wrap, spinbar, out);
   gameArea.appendChild(card);
 
-  // наполнение — длинные ленты, чтобы никогда не «пустело»
   const stack=Array(30).fill(0).flatMap(()=>symbols);
   const reelHTML = stack.map(s=>`<div class="symbol">${s}</div>`).join('');
   ['sl_r1','sl_r2','sl_r3'].forEach(id=>document.getElementById(id).innerHTML=reelHTML);
@@ -636,7 +602,7 @@ function mountSlot(){
         const accel = Math.min(1, p*2);
         const ease = accel<0.7 ? accel*accel*1.3 : easeOut(p);
         const y = ease*target;
-        const rest = Math.round(y); // пиксель-в-пиксель, чтобы не дрожало
+        const rest = Math.round(y); // без «дрожи»
         el.style.transform=`translate3d(0,-${rest}px,0)`;
         if(p<1) requestAnimationFrame(step);
         else { res(k); }
@@ -660,7 +626,7 @@ function mountSlot(){
   document.getElementById('spinBtn').onclick=spinOnce;
 }
 
-/* ——— CUPS (одного цвета, честно, флип только при опускании) ——— */
+/* ——— CUPS (один цвет, шар всегда с «своим» стаканом) ——— */
 function mountCups(){
   markGame('cups');
   gameArea.innerHTML='';
@@ -731,17 +697,16 @@ function mountCups(){
       cupsAtPos.forEach(c=>{ c.classList.add('flip'); c.style.transition='transform .22s ease'; c.style.transform=`translate(${xs[cupsAtPos.indexOf(c)]}px, ${baseY}px) translate(-50%,-50%)`; });
       setTimeout(()=>cupsAtPos.forEach(c=>c.classList.remove('flip')),240);
       await new Promise(r=>setTimeout(r,240));
-      ball.style.opacity='0'; // скрыт под стаканами
+      ball.style.opacity='0';
 
-      // честная мешанина 14–22 шагов (без флипов, шар ездит со стаканом)
+      // честная мешанина (без флипов), шар едет со «своим» стаканом
       const steps=rint(14,22);
       for(let i=0;i<steps;i++){
-        const pick=Math.random();
-        if(pick<0.5)      await swapPos(rint(0,2), rint(0,2), rint(160,230));
-        else              await cycle3(Math.random()<.5?'left':'right', rint(180,240));
+        if(Math.random()<0.55) await swapPos(rint(0,2), rint(0,2), rint(160,230));
+        else                   await cycle3(Math.random()<.5?'left':'right', rint(180,240));
       }
 
-      // выбор пользователя по текущим позициям
+      // выбор пользователя
       const guessPos = await new Promise(resolve=>{
         cupsAtPos.forEach((cup,pos)=>{ cup.style.cursor='pointer'; cup.onclick=()=>resolve(pos); });
       });
@@ -763,7 +728,7 @@ function mountCups(){
   btn.onclick=startRound;
 }
 
-/* ——— WHEEL (одно, корректное совпадение со стрелкой) ——— */
+/* ——— WHEEL (стрелка сверху, текст не переворачивается, честное совпадение) ——— */
 function mountWheel(){
   markGame('wheel');
   gameArea.innerHTML='';
@@ -783,57 +748,65 @@ function mountWheel(){
 
   const SEG = Array.from({length:8}, ()=> Math.random()<0.4 ? 'Ничего' : `+${rint(15,100)} ⭐`);
   const n=SEG.length, step=360/n;
+
+  // подписи по кругу (каждая с внутренним span — будем контр‑вращать текст)
   SEG.forEach((txt,i)=>{
     const lbl=document.createElement('div');
     lbl.className='wlabel';
     const ang=i*step + step/2;
     lbl.style.transform=`translate(-50%,-50%) rotate(${ang}deg) translateY(-92px) rotate(${-ang}deg)`;
-    lbl.textContent=txt; labels.appendChild(lbl);
+    const sp=document.createElement('span'); sp.textContent=txt;
+    lbl.appendChild(sp);
+    labels.appendChild(lbl);
   });
 
-  let angle=0; // текущий угол (clockwise)
+  let angle=0; // текущий поворот (cw)
+  function setTextCounter(){
+    const spans=labels.querySelectorAll('span');
+    spans.forEach(s=>s.style.transform=`rotate(${-angle}deg)`);
+  }
+  setTextCounter();
   wheel.style.transform=`rotate(0deg)`;
 
-  function mod360(a){ a%=360; if(a<0) a+=360; return a; }
+  const mod360 = a => { a%=360; if(a<0) a+=360; return a; };
 
   async function spinWheel(){
     await anim.run('wheel', async()=>{
-      // случайное направление и цель (сектор)
-      const target = rint(0,n-1);
-      const dir = Math.random()<0.5 ? 1 : -1; // cw / ccw
+      const target = rint(0,n-1);                // какой сектор хотим получить
+      const dir = Math.random()<0.5 ? 1 : -1;    // 1 — по часовой, -1 — против
       const turns = 5 + Math.random()*2;
 
-      // хотим закончить так, чтобы центр target был на 12 часов:
-      // finalPhase ≡ 90° - (target*step + step/2)
-      const curPhase = mod360(angle);
-      const targetPhase = mod360(90 - (target*step + step/2));
-
-      const deltaCW  = (targetPhase - curPhase + 360) % 360;
-      const deltaCCW = (curPhase - targetPhase + 360) % 360;
+      // текущее положение «относительно стрелки сверху (90°)»
+      const cur = mod360(angle);
+      const desired = mod360(90 - (target*step + step/2));
+      const deltaCW  = (desired - cur + 360) % 360;
+      const deltaCCW = (cur - desired + 360) % 360;
       const delta = dir===1 ? deltaCW : deltaCCW;
 
-      const total = dir * (turns*360 + delta);
-      const start=angle; const end=start + total;
+      const start=angle;
+      const end=start + dir*(turns*360 + delta);
       const dur=1600 + rint(0,600);
 
       await new Promise(res=>{
         const t0=performance.now();
         function loop(now){
           const p=Math.min(1,(now-t0)/dur);
-          const e = 1-Math.pow(1-p,3); // плавное замедление без перерасчётов
+          const e = 1-Math.pow(1-p,3);
           angle = start + (end-start)*e;
           wheel.style.transform=`rotate(${angle}deg)`;
+          setTextCounter(); // держим текст горизонтально
           if(p<1) requestAnimationFrame(loop); else res();
         }
         requestAnimationFrame(loop);
       });
 
-      // точно вычисляем итоговый сектор по стрелке
-      const finalPhase = mod360(angle);
-      // какой это сектор? при фазе f сегмент i, удовлетворя (i*step + step/2 + finalPhase) ≡ 90
-      // => i ≡ round((90 - step/2 - finalPhase)/step)
-      let idx = Math.round((90 - step/2 - finalPhase)/step);
-      idx = ((idx % n)+n)%n;
+      // определяем сектор по стрелке сверху:
+      // берём угол сектора под стрелкой: phi = (90 - angle) по модулю 360,
+      // затем выбираем ближайший центр сектора (смещение на step/2).
+      const phi = mod360(90 - angle);
+      let idx = Math.floor((phi + step/2 - 0.0001)/step) % n; // «где больше половины»
+      if(idx<0) idx += n;
+
       toast(`Результат: ${SEG[idx]}`);
     });
   }
