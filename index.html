@@ -118,13 +118,8 @@ body{
 .reel{position:relative; overflow:hidden; border-radius:12px; border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.06),rgba(255,255,255,.03)); height:calc(var(--sym)*3)}
 .roller{position:absolute; left:0; right:0; top:0; will-change:transform}
 .symbol{height:var(--sym); display:grid; place-items:center; font-size:42px; line-height:1}
-.simple-slot .vline{position:absolute; top:8px; bottom:8px; width:2px; border-radius:2px;
-  background:linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.02)); box-shadow:0 0 8px rgba(255,255,255,.06)}
-.simple-slot .vline.l1{ left: calc(33.333% - 1px); }
-.simple-slot .vline.l2{ left: calc(66.666% - 3px); }
-.simple-slot .top-pointers{position:absolute; left:8px; right:8px; top:2px; height:0; display:grid; grid-template-columns:repeat(3,1fr); pointer-events:none}
-.simple-slot .ptr{margin:0 auto; width:0;height:0; border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:10px solid #ffb86b; filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}
 
+/* ——— CUPS (ИЗМЕНЕНО) ——— */
 .cups-ui{display:flex; gap:10px; margin-top:8px}
 .cup{position:absolute; width:var(--cup-w); height:var(--cup-h); will-change:transform; z-index:2; transition:transform .22s ease; border-radius:24px; transform-style:preserve-3d}
 .cup::before{
@@ -456,7 +451,7 @@ function consumeFreeSpinIfAny(){
 
 function mountSlot(){
   markGame('slot');
-  gameArea.innerHTML=`<div class="card"><div class="slot-wrap"><div class="simple-slot"><div class="top-pointers"><div class="ptr"></div><div class="ptr"></div><div class="ptr"></div></div><div class="vline l1"></div><div class="vline l2"></div><div class="reel"><div class="roller" id="sl_r1"></div></div><div class="reel"><div class="roller" id="sl_r2"></div></div><div class="reel"><div class="roller" id="sl_r3"></div></div></div></div><div style="display:grid;place-items:center;margin-top:10px;"><button class="btn" id="spinBtn" data-action="spin">Крутить</button><div class="free-badge" style="margin-top:6px">🎁 Осталось: <b data-free-counter>0</b></div></div><span class="badge" id="slotOut" style="margin-top:6px;display:block;text-align:center;">Удачи!</span></div>`;
+  gameArea.innerHTML=`<div class="card"><div class="slot-wrap"><div class="simple-slot"><div class="reel"><div class="roller" id="sl_r1"></div></div><div class="reel"><div class="roller" id="sl_r2"></div></div><div class="reel"><div class="roller" id="sl_r3"></div></div></div></div><div style="display:grid;place-items:center;margin-top:10px;"><button class="btn" id="spinBtn" data-action="spin">Крутить</button><div class="free-badge" style="margin-top:6px">🎁 Осталось: <b data-free-counter>0</b></div></div><span class="badge" id="slotOut" style="margin-top:6px;display:block;text-align:center;">Удачи!</span></div>`;
   updateFreeBadge();
 
   const symbols=['🎃','🕷️','🕸️','🦇','🍬','7️⃣'], N=symbols.length;
@@ -496,7 +491,14 @@ function mountCups(){
   const stage = gameArea.querySelector('.stage');
   const ball = document.createElement('div'); ball.className='ball-sm'; stage.appendChild(ball);
   
-  let cupColorClasses = ['cup--color1', 'cup--color2', 'cup--color3'];
+  let cupColorClasses;
+  try {
+    cupColorClasses = JSON.parse(localStorage.getItem('cup_color_order'));
+    if (!Array.isArray(cupColorClasses) || cupColorClasses.length !== 3) throw new Error();
+  } catch {
+    cupColorClasses = ['cup--color1', 'cup--color2', 'cup--color3'];
+  }
+
   const cups = cupColorClasses.map(colorClass => {
     const c = document.createElement('div'); c.className = `cup ${colorClass}`; stage.appendChild(c); return c;
   });
@@ -505,16 +507,12 @@ function mountCups(){
   const posX=()=>(W=stage.clientWidth, C=W/2, G=Math.min(160, Math.max(110, (W-220)/2)), [C-G, C, C+G]);
   let cupsAtPos=[...cups], ballPosIndex=1;
 
-  function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  }
+  function shuffle(array) { for (let i=array.length-1; i>0; i--) { const j=Math.floor(Math.random()*(i+1)); [array[i], array[j]]=[array[j], array[i]]; } }
   
   function shuffleCupColors(){
     shuffle(cupColorClasses);
-    cups.forEach((cup, i) => {
+    // Применяем новый порядок цветов к текущему положению стаканов
+    cupsAtPos.forEach((cup, i) => {
       cup.classList.remove('cup--color1', 'cup--color2', 'cup--color3');
       cup.classList.add(cupColorClasses[i]);
     });
@@ -530,7 +528,7 @@ function mountCups(){
     cupsAtPos.forEach((cup,pos)=>{ cup.style.transition=`transform ${ms}ms ease`; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
     if(ballPosIndex===a) ballPosIndex=b; else if(ballPosIndex===b) ballPosIndex=a;
     ball.style.transition=`transform ${ms}ms ease`; ball.style.transform=`translate(${xs[ballPosIndex]}px, ${ballY}px) translate(-50%,-50%)`;
-    if (Math.random() < 0.3) shuffleCupColors(); // 30% шанс смены цвета на каждом шаге
+    if (Math.random() < 0.3) shuffleCupColors();
     await new Promise(r=>setTimeout(r,ms+18));
   }
   async function startRound(){
@@ -544,6 +542,9 @@ function mountCups(){
       cupsAtPos.forEach(c=>{ c.onclick=null; c.style.cursor='default'; });
       ball.style.opacity='1';
       cupsAtPos.forEach((cup,pos)=>{ cup.style.transition='transform .2s ease'; cup.style.transform=`translate(${xs[pos]}px, ${upY}px) translate(-50%,-50%)`; });
+      
+      localStorage.setItem('cup_color_order', JSON.stringify(cupColorClasses));
+      
       await new Promise(r=>setTimeout(r,200));
       toast(guessPos===ballPosIndex ? 'Верно! 🎉' : 'Мимо');
       consumeFreeSpinIfAny();
@@ -587,7 +588,6 @@ function mountWheel() {
     await anim.run(async () => {
       const targetIndex = rint(0, numSegments - 1);
       
-      // ИСПРАВЛЕННЫЙ РАСЧЕТ УГЛА ДЛЯ 100% ТОЧНОСТИ
       const rotationToTarget = 360 - (targetIndex * angleStep + angleStep / 2);
       const fullSpins = rint(5, 8) * 360;
       const finalRotation = fullSpins + rotationToTarget;
