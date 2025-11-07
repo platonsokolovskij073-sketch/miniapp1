@@ -15,15 +15,10 @@
   --danger:#ff3b6b; --ok:#35ffb1; --shadow:0 20px 40px rgba(0,0,0,.35);
 
   /* слот */
-  --sym:56px;          /* высота символа */
-  --machine-glow:#ff34c2;
-  --machine-edge:#5b3bff;
+  --sym:56px; /* высота строки символа */
 
   /* стаканы */
-  --cup-w: 92px; --cup-h: 86px; --cup-color:#ecf1ff;
-
-  /* неон */
-  --neon:#9c5cff; --neon2:#ff7a18;
+  --cup-w: 92px; --cup-h: 86px; --cup-color:#eef2ff;
 }
 
 /* анти‑копи */
@@ -137,51 +132,21 @@ body{
   border:1px solid var(--line); overflow:hidden; touch-action:none;
 }
 
-/* ———————— HOME banners ———————— */
+/* ——— HOME banners ——— */
 .banners{display:grid; gap:12px}
 @media(min-width:560px){ .banners{grid-template-columns:1fr 1fr} }
 .banner{
   position:relative; border-radius:16px; overflow:hidden; border:1px solid var(--line);
   background:linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  height:120px; display:grid; place-items:center; color:#fff; box-shadow:var(--shadow)
+  height:140px; display:grid; place-items:center; color:#fff; box-shadow:var(--shadow)
 }
-.banner .ph{width:100%; height:100%; display:grid; place-items:center; font-weight:800; letter-spacing:.5px; color:#fff8}
+.banner .ph{width:100%; height:100%; display:grid; place-items:center; font-weight:800; letter-spacing:.5px; color:#fff8; font-size:22px}
 .banner .tag{position:absolute; left:12px; top:12px; padding:6px 8px; border-radius:10px; background:rgba(0,0,0,.5); border:1px solid var(--line); font-size:12px}
+.banner .tools{position:absolute; right:10px; bottom:10px; display:flex; gap:8px}
 
-/* ———————— СЛОТ‑АВТОМАТ ———————— */
-.machine{
-  position:relative; width:340px; margin:auto; padding:16px 14px 16px; border-radius:24px;
-  background:
-    radial-gradient(300px 140px at 50% -20%, rgba(255,52,194,.35), transparent 60%),
-    radial-gradient(320px 160px at 50% 120%, rgba(156,92,255,.30), transparent 70%),
-    linear-gradient(180deg, #1b1428, #120d1c);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:
-    0 0 0 2px rgba(255,255,255,.06) inset,
-    0 0 24px var(--machine-glow),
-    0 16px 38px rgba(0,0,0,.45);
-}
-.machine::before{
-  content:""; position:absolute; inset:-2px; border-radius:26px;
-  background:linear-gradient(135deg, var(--machine-edge), var(--machine-glow), #ffb86b, var(--machine-edge));
-  filter:blur(12px); opacity:.45; z-index:-1;
-}
-/* верхний дисплей */
-.marquee{
-  height:42px; display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:10px;
-}
-.seven{
-  display:grid; place-items:center; font-weight:900; font-size:22px; letter-spacing:1px;
-  border-radius:12px;
-  color:#0e041a; text-shadow:0 1px 0 #fff7;
-  background:
-    radial-gradient(80px 40px at 50% 0%, rgba(255,255,255,.65), transparent 60%),
-    linear-gradient(180deg, #47e6ff, #14f5c6);
-  box-shadow:inset 0 -6px 14px rgba(0,0,0,.25), 0 6px 16px rgba(78,255,236,.25);
-}
-/* блок барабанов */
-.slot-wrap{display:grid; place-items:center; gap:8px}
-.slot{
+/* ——— SLOT ——— */
+.slot-wrap{display:grid; place-items:center; gap:10px}
+.simple-slot{
   position:relative; width:310px; border-radius:16px; overflow:hidden;
   background:linear-gradient(180deg, #1a1623, #0f0c16);
   border:1px solid var(--line); box-shadow:var(--shadow);
@@ -191,32 +156,21 @@ body{
 .reel{position:relative; overflow:hidden; border-radius:12px; border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.06),rgba(255,255,255,.03)); height:calc(var(--sym)*3)}
 .roller{position:absolute; left:0; right:0; top:0; will-change:transform}
 .symbol{height:var(--sym); display:grid; place-items:center; font-size:42px; line-height:1}
+.simple-slot .vline{position:absolute; top:8px; bottom:8px; width:2px; border-radius:2px;
+  background:linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.02)); box-shadow:0 0 8px rgba(255,255,255,.06)}
+.simple-slot .vline.l1{ left: calc(33.333% - 1px); }
+.simple-slot .vline.l2{ left: calc(66.666% - 3px); }
+.simple-slot .top-pointers{position:absolute; left:8px; right:8px; top:2px; height:0; display:grid; grid-template-columns:repeat(3,1fr); pointer-events:none}
+.simple-slot .ptr{margin:0 auto; width:0;height:0; border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:10px solid #ffb86b; filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}
+.resultline{height:2px; width:100%; background:linear-gradient(90deg, transparent, #ffb86b, transparent); opacity:.7}
 
-/* ❙❙ две вертикальные линии между барабанами */
-.slot .vline{position:absolute; top:8px; bottom:8px; width:2px; border-radius:2px;
-  background:linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.02));
-  box-shadow:0 0 8px rgba(255,255,255,.06);
-}
-.slot .vline.l1{ left: calc(33.333% - 1px); }
-.slot .vline.l2{ left: calc(66.666% - 3px); }
-
-/* стрелочки сверху */
-.slot .top-pointers{position:absolute; left:8px; right:8px; top:2px; height:0; display:grid; grid-template-columns:repeat(3,1fr); pointer-events:none}
-.slot .ptr{margin:0 auto; width:0;height:0; border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:10px solid #ffb86b; filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}
-
-/* кнопка «крутить» в корпусе автомата */
-.machine .spinbar{display:grid; place-items:center; margin-top:12px}
-
-/* ———————— СТАКАНЫ ———————— */
+/* ——— CUPS ——— */
 .cups-ui{display:flex; gap:10px; margin-top:8px}
 .cup{position:absolute; width:var(--cup-w); height:var(--cup-h); will-change:transform; z-index:2; transition:transform .22s ease; border-radius:24px; transform-style:preserve-3d}
 .cup::before{
   content:"";
   position:absolute; inset:4px 10px 8px; 
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.3)),
-    linear-gradient(135deg, rgba(255,255,255,.35), rgba(0,0,0,.08));
-  background-blend-mode:screen;
+  background:linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.3));
   border:1px solid rgba(0,0,0,.22);
   box-shadow: inset 0 10px 18px rgba(255,255,255,.25), inset 0 -12px 22px rgba(0,0,0,.12);
   border-radius:28px / 22px;
@@ -224,26 +178,13 @@ body{
   background-color: var(--cup-color);
   transform-origin:50% 50%;
 }
-.cup.flip::before{ animation: cupFlip .24s ease both; }
-@keyframes cupFlip{
-  0%{ transform: rotateX(0deg); }
-  100%{ transform: rotateX(360deg); }
-}
+.cup.flip::before{ animation: cupFlip .22s ease both; }
+@keyframes cupFlip{ 0%{ transform: rotateX(0deg) } 100%{ transform: rotateX(360deg) } }
 .cup::after{
   content:"";
   position:absolute; left:50%; transform:translateX(-50%);
   width:74%; height:8px; bottom:4px; border-radius:50%;
   background:radial-gradient(closest-side, rgba(0,0,0,.35), transparent 70%);
-}
-.cup .mark{
-  position:absolute; top:12px; left:50%; transform:translateX(-50%);
-  width:38px; height:7px; border-radius:4px; opacity:.9;
-  box-shadow:0 2px 6px rgba(0,0,0,.25);
-  background:linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,.1)), var(--grad,#ff7a18);
-}
-.cup[data-variant="dot"] .mark{ width:12px; height:12px; border-radius:50% }
-.cup[data-variant="chev"] .mark{
-  width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-top:10px solid #ffd36b; background:none;
 }
 .ball-sm{
   position:absolute; width:24px; height:24px; border-radius:50%;
@@ -252,24 +193,19 @@ body{
   will-change:transform; z-index:1; transition:transform .22s ease, opacity .12s ease;
 }
 
-/* ———————— КОЛЕСО ———————— */
+/* ——— WHEEL ——— */
 .wheelbox{position:relative; display:grid; place-items:center}
 .pointer{
-  position:absolute; top:-6px; left:50%; transform:translateX(-50%);
+  position:absolute; top:-10px; left:50%; transform:translateX(-50%);
   width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-bottom:14px solid #ffd36b;
   filter:drop-shadow(0 2px 6px rgba(255,210,107,.6)) drop-shadow(0 0 10px rgba(255,210,107,.45));
-  animation: ptrPulse 1.8s ease-in-out infinite;
+  z-index:2;
 }
-@keyframes ptrPulse{ 0%,100%{ transform:translateX(-50%) translateY(0)} 50%{ transform:translateX(-50%) translateY(2px)} }
-
 .wheel{
   width:240px;height:240px;border-radius:50%; border:1px solid var(--line);
   background:conic-gradient(#ff7a18 0 45deg,#9c5cff 45deg 90deg,#ffb86b 90deg 135deg,#c39aff 135deg 180deg,#ff7a18 180deg 225deg,#9c5cff 225deg 270deg,#ffb86b 270deg 315deg,#c39aff 315deg 360deg); 
-  box-shadow:
-    0 0 30px rgba(156,92,255,.45),
-    0 0 60px rgba(255,122,24,.2),
-    inset 0 0 22px rgba(0,0,0,.35);
-  display:grid; place-items:center; will-change:transform;
+  box-shadow: inset 0 0 22px rgba(0,0,0,.35);
+  display:grid; place-items:center; will-change:transform; position:relative; z-index:1;
 }
 .wheel .labels{position:absolute; inset:0; display:grid; place-items:center; font-size:13px; color:#120914; font-weight:800; opacity:.95; pointer-events:none}
 .wlabel{position:absolute; transform-origin:50% 100%; top:50%; left:50%}
@@ -278,6 +214,11 @@ body{
 .games-grid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
 .games-grid .span2{ grid-column: 1 / span 2; display:flex; justify-content:center }
 .games-grid .span2 .btn{ min-width:180px }
+
+/* daily bonus */
+.bonus-bar{display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-top:8px}
+.bonus-day{height:28px; border-radius:12px; border:1px solid var(--line); display:grid; place-items:center; font-size:12px; color:#fff9; background:rgba(255,255,255,.04)}
+.bonus-day.on{ background:linear-gradient(135deg, rgba(255,122,24,.35), rgba(156,92,255,.35)); color:#120914; font-weight:800 }
 
 /* toast */
 .toast{position:fixed; left:50%; bottom:120px; transform:translateX(-50%) translateY(20px); background:rgba(0,0,0,.8);
@@ -302,23 +243,46 @@ body{
       <div class="card">
         <h3>Добро пожаловать в Starify 🎰</h3>
 
-        <!-- баннеры -->
-        <div class="banners" style="margin-top:8px">
-          <a class="banner" href="https://t.me/your_channel" target="_blank" rel="noopener">
-            <div class="tag">Наш Telegram‑канал</div>
-            <div class="ph">Photo1</div>
-          </a>
-          <a class="banner" href="https://t.me/your_chat" target="_blank" rel="noopener">
-            <div class="tag">Наш Telegram‑чат</div>
-            <div class="ph">Photo2</div>
-          </a>
-        </div>
-
-        <div class="bigbtn" style="margin-top:14px">
+        <!-- СНАЧАЛА быстрые кнопки -->
+        <div class="bigbtn" style="margin-top:8px">
           <button class="btn" data-tab-go="shop">🛒 Магазин</button>
           <button class="btn purple" data-tab-go="games">🎲 Игры</button>
           <button class="btn ghost" data-tab-go="ref">🤝 Рефералка</button>
         </div>
+
+        <!-- Ниже — БАННЕРЫ с возможностью подгрузить свои фото -->
+        <div class="banners" style="margin-top:12px">
+          <div class="banner" id="banner1">
+            <div class="tag">Наш Telegram‑канал</div>
+            <div class="ph">Photo1</div>
+            <div class="tools">
+              <label class="btn" style="font-size:12px; padding:8px 10px; cursor:pointer">
+                Загрузить
+                <input id="upload1" type="file" accept="image/*" style="display:none">
+              </label>
+              <button class="btn ghost" id="reset1" style="font-size:12px; padding:8px 10px">Сбросить</button>
+            </div>
+          </div>
+          <div class="banner" id="banner2">
+            <div class="tag">Наш Telegram‑чат</div>
+            <div class="ph">Photo2</div>
+            <div class="tools">
+              <label class="btn" style="font-size:12px; padding:8px 10px; cursor:pointer">
+                Загрузить
+                <input id="upload2" type="file" accept="image/*" style="display:none">
+              </label>
+              <button class="btn ghost" id="reset2" style="font-size:12px; padding:8px 10px">Сбросить</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ежедневный бонус -->
+        <div class="hr" style="margin-top:12px"></div>
+        <div class="row" style="margin-top:8px">
+          <div class="badge">Ежедневный бонус (7 дней)</div>
+          <button class="btn" id="dailyBtn">Забрать</button>
+        </div>
+        <div class="bonus-bar" id="bonusBar"></div>
       </div>
     </section>
 
@@ -445,13 +409,73 @@ function applyTheme(){
   }catch{}
 })();
 
-/* Banners balances (демо) */
-(function balances(){
-  const g = parseInt(localStorage.getItem('game_balance')||'0',10);
-  const r = parseInt(localStorage.getItem('ref_balance')||'0',10);
-  document.getElementById('gameBal').textContent = `${isNaN(g)?0:g} ⭐`;
-  document.getElementById('refBal').textContent = `${isNaN(r)?0:r} ⭐`;
-})();
+/* balances (демо через localStorage) */
+function getInt(k){ return parseInt(localStorage.getItem(k)||'0',10) || 0; }
+function setInt(k,v){ localStorage.setItem(k, String(v)); }
+function refreshBalances(){
+  document.getElementById('gameBal').textContent = `${getInt('game_balance')} ⭐`;
+  document.getElementById('refBal').textContent  = `${getInt('ref_balance')} ⭐`;
+}
+refreshBalances();
+
+/* banners: загрузка своих фото */
+function loadBanner(id, key){
+  const el=document.getElementById(id);
+  const ph=el.querySelector('.ph');
+  const data=localStorage.getItem(key);
+  if(data){
+    el.style.backgroundImage=`url(${data})`;
+    el.style.backgroundSize='cover';
+    el.style.backgroundPosition='center';
+    ph.style.display='none';
+  } else {
+    el.style.backgroundImage='none';
+    ph.style.display='grid';
+  }
+}
+['banner1','banner2'].forEach((id,i)=>loadBanner(id, 'banner'+(i+1)));
+document.getElementById('upload1').addEventListener('change', e=>readBanner(e,'banner1','banner1'));
+document.getElementById('upload2').addEventListener('change', e=>readBanner(e,'banner2','banner2'));
+document.getElementById('reset1').onclick=()=>{ localStorage.removeItem('banner1'); loadBanner('banner1','banner1'); toast('Сброшено'); };
+document.getElementById('reset2').onclick=()=>{ localStorage.removeItem('banner2'); loadBanner('banner2','banner2'); toast('Сброшено'); };
+function readBanner(ev, id, key){
+  const f=ev.target.files?.[0]; if(!f) return;
+  const reader=new FileReader();
+  reader.onload=()=>{ localStorage.setItem(key, reader.result); loadBanner(id,key); toast('Фото установлено'); };
+  reader.readAsDataURL(f);
+}
+
+/* Ежедневный бонус (7 дней) */
+const rewards=[15,20,25,30,40,60,100];
+function ymd(d=new Date()){ return d.toISOString().slice(0,10); }
+function ymdYesterday(){
+  const d=new Date(); d.setDate(d.getDate()-1); return ymd(d);
+}
+function renderBonus(){
+  const bar=document.getElementById('bonusBar'); bar.innerHTML='';
+  const streak=getInt('daily_streak'); // 0..7
+  for(let i=0;i<7;i++){
+    const d=document.createElement('div'); d.className='bonus-day'+(i<streak?' on':''); d.textContent=(i+1);
+    bar.appendChild(d);
+  }
+  const last=localStorage.getItem('daily_last');
+  const btn=document.getElementById('dailyBtn');
+  if(last===ymd()) { btn.disabled=true; btn.textContent='Уже забрано'; }
+  else { btn.disabled=false; btn.textContent='Забрать'; }
+}
+renderBonus();
+document.getElementById('dailyBtn').onclick=()=>{
+  const last=localStorage.getItem('daily_last');
+  let streak=getInt('daily_streak');
+  if(last===ymd()){ toast('Уже забрано сегодня'); return; }
+  if(last===ymdYesterday()) streak=Math.min(7, streak+1); else streak=1;
+  setInt('daily_streak', streak);
+  localStorage.setItem('daily_last', ymd());
+  const reward=rewards[streak-1]||rewards[rewards.length-1];
+  setInt('game_balance', getInt('game_balance')+reward);
+  refreshBalances(); renderBonus();
+  toast(`+${reward} ⭐ за день ${streak}`);
+};
 
 /* Toast + вкладки */
 const toast=(m='Готово!')=>{const el=document.getElementById('toast'); el.textContent=m; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),1200);};
@@ -545,7 +569,6 @@ document.getElementById('proceed').onclick=()=>{
 /* ——— Игровой лок ——— */
 const gameArea=document.getElementById('gameArea');
 const symbols=['🎃','🕷️','🦇','🕸️','🍬','7️⃣'];
-const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 const rint=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const easeOut=t=>1-Math.pow(1-t,3);
 
@@ -569,43 +592,30 @@ function markGame(kind){
   document.querySelectorAll('.gbtn').forEach(b=>b.classList.toggle('active', b.dataset.game===kind));
 }
 
-/* ———————— SLOT ———————— */
+/* ——— SLOT (строго одна линия) ——— */
 function mountSlot(){
   markGame('slot');
   gameArea.innerHTML='';
-
   const card=document.createElement('div'); card.className='card';
-  const machine=document.createElement('div'); machine.className='machine';
-
-  // верхний дисплей «777»
-  const marquee=document.createElement('div'); marquee.className='marquee';
-  marquee.innerHTML=`<div class="seven" id="m1">7</div><div class="seven" id="m2">7</div><div class="seven" id="m3">7</div>`;
-  machine.appendChild(marquee);
-
-  // барабаны
   const wrap=document.createElement('div'); wrap.className='slot-wrap';
-  const slot=document.createElement('div'); slot.className='slot';
+  const slot=document.createElement('div'); slot.className='simple-slot';
   slot.innerHTML=`
-      <div class="top-pointers"><div class="ptr"></div><div class="ptr"></div><div class="ptr"></div></div>
-      <div class="vline l1"></div><div class="vline l2"></div>
-      <div class="reel"><div class="roller" id="sl_r1"></div></div>
-      <div class="reel"><div class="roller" id="sl_r2"></div></div>
-      <div class="reel"><div class="roller" id="sl_r3"></div></div>`;
+    <div class="top-pointers"><div class="ptr"></div><div class="ptr"></div><div class="ptr"></div></div>
+    <div class="vline l1"></div><div class="vline l2"></div>
+    <div class="reel"><div class="roller" id="sl_r1"></div></div>
+    <div class="reel"><div class="roller" id="sl_r2"></div></div>
+    <div class="reel"><div class="roller" id="sl_r3"></div></div>`;
   wrap.appendChild(slot);
 
-  // кнопка
-  const spinbar=document.createElement('div'); spinbar.className='spinbar';
+  const spinbar=document.createElement('div'); spinbar.style.display='grid'; spinbar.style.placeItems='center'; spinbar.style.marginTop='10px';
   spinbar.innerHTML=`<button class="btn" id="spinBtn" data-action="spin">Крутить</button>`;
-  machine.append(wrap, spinbar);
+  const out=document.createElement('span'); out.className='badge'; out.id='slotOut'; out.style.marginTop='6px'; out.textContent='Удачи!';
 
-  // вывод
-  const out=document.createElement('span'); out.className='badge'; out.id='slotOut'; out.style.marginTop='6px';
-  out.textContent='Удачи!';
-  card.append(machine, out);
+  card.append(wrap, spinbar, out);
   gameArea.appendChild(card);
 
-  // наполнение
-  const stack=Array(24).fill(0).flatMap(()=>symbols);
+  // наполнение — длинные ленты, чтобы никогда не «пустело»
+  const stack=Array(30).fill(0).flatMap(()=>symbols);
   const reelHTML = stack.map(s=>`<div class="symbol">${s}</div>`).join('');
   ['sl_r1','sl_r2','sl_r3'].forEach(id=>document.getElementById(id).innerHTML=reelHTML);
 
@@ -614,10 +624,10 @@ function mountSlot(){
 
   function spinRoller(el, duration){
     const N=symbols.length;
-    const k=rint(0, N-1); // какой символ хотим видеть в СРЕДНЕЙ строке
-    const cycles=rint(11,16);
+    const k=rint(0, N-1);              // хотим видеть k в СРЕДНЕЙ строке
+    const cycles=rint(10,15);
     const base=cycles*N*itemH;
-    const offset = (k-1>=0? k-1 : k-1+N)*itemH; // средняя строка
+    const offset = ((k-1+N)%N)*itemH;  // средняя линия
     const target=base + offset;
     const t0=performance.now();
     return new Promise(res=>{
@@ -626,13 +636,15 @@ function mountSlot(){
         const accel = Math.min(1, p*2);
         const ease = accel<0.7 ? accel*accel*1.3 : easeOut(p);
         const y = ease*target;
-        el.style.transform=`translateY(-${y}px)`;
+        const rest = Math.round(y); // пиксель-в-пиксель, чтобы не дрожало
+        el.style.transform=`translate3d(0,-${rest}px,0)`;
         if(p<1) requestAnimationFrame(step);
-        else { const rest = Math.round(y/itemH)*itemH; el.style.transform=`translateY(-${rest}px)`; res(k); }
+        else { res(k); }
       }
       requestAnimationFrame(step);
     });
   }
+
   async function spinOnce(){
     await anim.run('slot', async()=>{
       out.textContent='Крутим...';
@@ -642,17 +654,13 @@ function mountSlot(){
         spinRoller(rollers[2], 880),
       ]);
       const a=symbols[i1], b=symbols[i2], c=symbols[i3];
-
-      // обновим верхний дисплей
-      const m1=document.getElementById('m1'), m2=document.getElementById('m2'), m3=document.getElementById('m3');
-      if(a===b && b===c){ m1.textContent='7'; m2.textContent='7'; m3.textContent='7'; out.textContent=`Победа! ${a}${b}${c}`; }
-      else { m1.textContent=a; m2.textContent=b; m3.textContent=c; out.textContent=`${a} | ${b} | ${c}`; }
+      out.textContent = (a===b && b===c) ? `Победа! ${a}${b}${c}` : `${a} | ${b} | ${c}`;
     });
   }
   document.getElementById('spinBtn').onclick=spinOnce;
 }
 
-/* ———————— CUPS ———————— */
+/* ——— CUPS (одного цвета, честно, флип только при опускании) ——— */
 function mountCups(){
   markGame('cups');
   gameArea.innerHTML='';
@@ -664,28 +672,15 @@ function mountCups(){
 
   const ball=document.createElement('div'); ball.className='ball-sm';
   stage.appendChild(ball);
-
-  // три стакана с маркерами
-  const variants=['stripe','dot','chev'];
-  const grads=['linear-gradient(90deg,#ff7a18,#ffb86b)','linear-gradient(90deg,#5bc0ff,#a3e7ff)','linear-gradient(90deg,#9c5cff,#c39aff)'];
-  const cups=[0,1,2].map((i)=>{
-    const c=document.createElement('div'); c.className='cup'; 
-    const mark=document.createElement('div'); mark.className='mark';
-    c.appendChild(mark);
-    c.dataset.variant = variants[i%variants.length];
-    mark.style.setProperty('--grad', grads[i%grads.length]);
-    stage.appendChild(c); 
-    return c;
-  });
+  const cups=[0,1,2].map(()=>{ const c=document.createElement('div'); c.className='cup'; stage.appendChild(c); return c; });
 
   card.append(stage, ui); gameArea.appendChild(card);
 
   const baseY=150, upY=72, ballY=baseY+18;
-
   const posX=()=>{ const W=stage.clientWidth; const center=W/2; const gap=Math.min(160, Math.max(110, (W-220)/2)); return [center-gap, center, center+gap]; };
 
   let cupsAtPos=[cups[0], cups[1], cups[2]];
-  let ballPosIndex=1;
+  let ballPosIndex=1; // старт по центру
 
   function placeAll(raised){
     const xs=posX();
@@ -716,74 +711,50 @@ function mountCups(){
   function cycle3(dir='left', ms=200){
     return new Promise(res=>{
       const xs=posX();
-      if(dir==='left'){ const A=cupsAtPos[0],B=cupsAtPos[1],C=cupsAtPos[2]; cupsAtPos=[B,C,A]; }
-      else{ const A=cupsAtPos[0],B=cupsAtPos[1],C=cupsAtPos[2]; cupsAtPos=[C,A,B]; }
+      if(dir==='left'){ const A=cupsAtPos[0],B=cupsAtPos[1],C=cupsAtPos[2]; cupsAtPos=[B,C,A]; ballPosIndex=(ballPosIndex+2)%3; }
+      else{ const A=cupsAtPos[0],B=cupsAtPos[1],C=cupsAtPos[2]; cupsAtPos=[C,A,B]; ballPosIndex=(ballPosIndex+1)%3; }
       cupsAtPos.forEach((cup,pos)=>{ cup.style.transition=`transform ${ms}ms ease`; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
-      if(dir==='left') ballPosIndex = (ballPosIndex+2)%3; else ballPosIndex = (ballPosIndex+1)%3;
       ball.style.transition=`transform ${ms}ms ease`;
       ball.style.transform=`translate(${xs[ballPosIndex]}px, ${ballY}px) translate(-50%,-50%)`;
       setTimeout(res,ms+18);
     });
   }
-  function fakeSwap(ms=180){
-    return new Promise(async res=>{
-      const xs=posX();
-      const victim = rint(0,2);
-      const cup=cupsAtPos[victim];
-      cup.classList.add('flip'); // быстрый переворот
-      cup.style.transition=`transform ${ms}ms ease`;
-      cup.style.transform=`translate(${xs[victim]}px, ${upY}px) translate(-50%,-50%)`;
-      await new Promise(r=>setTimeout(r,ms));
-      const to = (victim+ (Math.random()<.5?1:2))%3;
-      ballPosIndex = to;
-      ball.style.transition=`transform ${ms}ms ease`;
-      ball.style.transform=`translate(${xs[to]}px, ${ballY}px) translate(-50%,-50%)`;
-      cup.style.transform=`translate(${xs[victim]}px, ${baseY}px) translate(-50%,-50%)`;
-      setTimeout(()=>{ cup.classList.remove('flip'); res(); },ms+30);
-    });
-  }
 
   async function startRound(){
     await anim.run('cups', async()=>{
-      // старт: показать шар
-      ballPosIndex=1;
-      placeAll(true);
+      // показать шар
+      ballPosIndex=1; placeAll(true);
       await new Promise(r=>setTimeout(r,600));
 
-      // опустить стаканы с «flip», спрятать шар
+      // опустить стаканы с флипом, спрятать шар
       const xs=posX();
-      cupsAtPos.forEach(c=>{ c.classList.add('flip'); c.style.transition='transform .24s ease'; });
-      cupsAtPos.forEach((cup,pos)=>{ cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
-      setTimeout(()=>cupsAtPos.forEach(c=>c.classList.remove('flip')),260);
-      await new Promise(r=>setTimeout(r,260));
-      ball.style.opacity='0';
+      cupsAtPos.forEach(c=>{ c.classList.add('flip'); c.style.transition='transform .22s ease'; c.style.transform=`translate(${xs[cupsAtPos.indexOf(c)]}px, ${baseY}px) translate(-50%,-50%)`; });
+      setTimeout(()=>cupsAtPos.forEach(c=>c.classList.remove('flip')),240);
+      await new Promise(r=>setTimeout(r,240));
+      ball.style.opacity='0'; // скрыт под стаканами
 
-      // финальная позиция ≠ стартовой
-      let target=rint(0,2); while(target===1) target=rint(0,2);
-
-      // сложная мешанина 16–26 шагов
-      const steps=rint(16,26);
+      // честная мешанина 14–22 шагов (без флипов, шар ездит со стаканом)
+      const steps=rint(14,22);
       for(let i=0;i<steps;i++){
         const pick=Math.random();
         if(pick<0.5)      await swapPos(rint(0,2), rint(0,2), rint(160,230));
-        else if(pick<0.85)await cycle3(Math.random()<.5?'left':'right', rint(180,240));
-        else              await fakeSwap(rint(160,200));
+        else              await cycle3(Math.random()<.5?'left':'right', rint(180,240));
       }
-      if(ballPosIndex!==target) await swapPos(ballPosIndex, target, rint(200,240));
 
-      // выбор пользователя
+      // выбор пользователя по текущим позициям
       const guessPos = await new Promise(resolve=>{
         cupsAtPos.forEach((cup,pos)=>{ cup.style.cursor='pointer'; cup.onclick=()=>resolve(pos); });
       });
       cupsAtPos.forEach(c=>{ c.onclick=null; c.style.cursor='default'; });
 
-      // поднять, показать шар
+      // поднять и показать шар
       ball.style.opacity='1';
       cupsAtPos.forEach((cup,pos)=>{
-        cup.style.transition='transform .24s ease';
+        cup.style.transition='transform .22s ease';
         cup.style.transform=`translate(${xs[pos]}px, ${upY}px) translate(-50%,-50%)`;
       });
-      await new Promise(r=>setTimeout(r,240));
+      await new Promise(r=>setTimeout(r,220));
+
       toast(guessPos===ballPosIndex ? 'Верно! 🎉' : 'Мимо');
     });
   }
@@ -792,7 +763,7 @@ function mountCups(){
   btn.onclick=startRound;
 }
 
-/* ———————— WHEEL (одно колесо, случайное направление) ———————— */
+/* ——— WHEEL (одно, корректное совпадение со стрелкой) ——— */
 function mountWheel(){
   markGame('wheel');
   gameArea.innerHTML='';
@@ -820,30 +791,50 @@ function mountWheel(){
     lbl.textContent=txt; labels.appendChild(lbl);
   });
 
-  let angle=rint(0,359); // случайный старт
-  wheel.style.transform=`rotate(${angle}deg)`;
+  let angle=0; // текущий угол (clockwise)
+  wheel.style.transform=`rotate(0deg)`;
+
+  function mod360(a){ a%=360; if(a<0) a+=360; return a; }
 
   async function spinWheel(){
     await anim.run('wheel', async()=>{
+      // случайное направление и цель (сектор)
       const target = rint(0,n-1);
       const dir = Math.random()<0.5 ? 1 : -1; // cw / ccw
       const turns = 5 + Math.random()*2;
-      const base = target*step + step/2;
-      const end = dir * (turns*360 + (360 - base)); // так, чтоб указатель сверху на целевой сегмент
-      const start=angle; const dur=1500 + rint(0,600);
+
+      // хотим закончить так, чтобы центр target был на 12 часов:
+      // finalPhase ≡ 90° - (target*step + step/2)
+      const curPhase = mod360(angle);
+      const targetPhase = mod360(90 - (target*step + step/2));
+
+      const deltaCW  = (targetPhase - curPhase + 360) % 360;
+      const deltaCCW = (curPhase - targetPhase + 360) % 360;
+      const delta = dir===1 ? deltaCW : deltaCCW;
+
+      const total = dir * (turns*360 + delta);
+      const start=angle; const end=start + total;
+      const dur=1600 + rint(0,600);
 
       await new Promise(res=>{
         const t0=performance.now();
         function loop(now){
           const p=Math.min(1,(now-t0)/dur);
-          const e = p<0.85 ? (1-Math.pow(1-p,2.6)) : (1 - Math.pow(1-p,1.2)*0.2);
-          angle = start + (end)*e;
+          const e = 1-Math.pow(1-p,3); // плавное замедление без перерасчётов
+          angle = start + (end-start)*e;
           wheel.style.transform=`rotate(${angle}deg)`;
           if(p<1) requestAnimationFrame(loop); else res();
         }
         requestAnimationFrame(loop);
       });
-      toast(`Результат: ${SEG[target]}`);
+
+      // точно вычисляем итоговый сектор по стрелке
+      const finalPhase = mod360(angle);
+      // какой это сектор? при фазе f сегмент i, удовлетворя (i*step + step/2 + finalPhase) ≡ 90
+      // => i ≡ round((90 - step/2 - finalPhase)/step)
+      let idx = Math.round((90 - step/2 - finalPhase)/step);
+      idx = ((idx % n)+n)%n;
+      toast(`Результат: ${SEG[idx]}`);
     });
   }
   btn.onclick=spinWheel;
@@ -857,9 +848,9 @@ function showGame(kind){
   if(kind==='wheel') mountWheel();
 }
 document.querySelectorAll('[data-game]').forEach(b=>b.onclick=()=>showGame(b.dataset.game));
-showGame('slot'); // старт
+showGame('slot'); // старт по умолчанию
 
-/* прочее */
+/* копирование + закрыть */
 document.getElementById('copyRef').onclick=async()=>{
   try{ await navigator.clipboard.writeText(document.getElementById('refLink').value); toast('Ссылка скопирована'); }
   catch{ toast('Скопируй вручную'); }
