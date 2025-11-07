@@ -135,6 +135,8 @@ body{
   border-radius: 28px / 22px;
   clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
   background-color: #dfeaff;
+  /* Плавный переход цвета */
+  transition: background-color 0.3s ease;
 }
 .cup.cup--color1::before { background-color: #c39aff; }
 .cup.cup--color2::before { background-color: #ffb86b; }
@@ -154,24 +156,18 @@ body{
 
 /* ——— WHEEL (ИЗМЕНЕНО) ——— */
 .wheel-wrapper{
-  position:relative; width: 250px; height: 250px;
-  margin: auto; margin-top:5px; /* Сдвиг для вмещения указателя */
+  position:relative; width: 240px; height: 240px;
+  margin: auto; margin-top:10px;
   display:grid; place-items:center;
 }
+/* Неоновый прямоугольник-указатель */
 .wheel-pointer{
-  position:absolute; top: -4px;
-  width: 30px; height: 40px;
-  clip-path: polygon(50% 100%, 0 0, 100% 0);
-  background: linear-gradient(180deg, #ffd36b, #ffb86b);
+  position:absolute; top: -2px;
+  width: 24px; height: 8px; border-radius: 4px;
+  background-color: #00f6ff;
+  box-shadow: 0 0 10px #00f6ff, 0 0 20px #00f6ff;
   z-index: 10;
-  transform-origin: bottom center;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,.5));
 }
-@keyframes flapper-click {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(15deg) scale(1.1); }
-}
-.wheel-pointer.clicking { animation: flapper-click 0.1s ease-in-out; }
 .wheel-container{
   position:absolute; width:100%; height:100%;
   border-radius:50%;
@@ -223,7 +219,6 @@ body{
           <button class="btn ghost" data-tab-go="ref">🤝 Рефералка</button>
         </div>
         <div class="banners" style="margin-top:12px">
-          <!-- ИЗМЕНЕННЫЕ ССЫЛКИ -->
           <a class="banner" id="banner1" href="https://t.me/starify777" target="_blank" rel="noopener" style="background-image:url('assets/photo1.jpg')">
             <div class="tag">Наш Telegram‑канал</div>
           </a>
@@ -494,20 +489,36 @@ function mountSlot(){
   document.getElementById('spinBtn').onclick=spin;
 }
 
+/* ——— CUPS (ИЗМЕНЕНО) ——— */
 function mountCups(){
   markGame('cups');
   gameArea.innerHTML = `<div class="card"><div class="stage"></div><div class="cups-ui"><button class="btn" data-action="mix">Начать</button></div></div>`;
   const stage = gameArea.querySelector('.stage');
   const ball = document.createElement('div'); ball.className='ball-sm'; stage.appendChild(ball);
   
-  const cupColors = ['cup--color1', 'cup--color2', 'cup--color3'];
-  const cups = cupColors.map(colorClass => {
+  let cupColorClasses = ['cup--color1', 'cup--color2', 'cup--color3'];
+  const cups = cupColorClasses.map(colorClass => {
     const c = document.createElement('div'); c.className = `cup ${colorClass}`; stage.appendChild(c); return c;
   });
   
   const baseY=150, upY=72, ballY=baseY+18;
   const posX=()=>(W=stage.clientWidth, C=W/2, G=Math.min(160, Math.max(110, (W-220)/2)), [C-G, C, C+G]);
   let cupsAtPos=[...cups], ballPosIndex=1;
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+  
+  function shuffleCupColors(){
+    shuffle(cupColorClasses);
+    cups.forEach((cup, i) => {
+      cup.classList.remove('cup--color1', 'cup--color2', 'cup--color3');
+      cup.classList.add(cupColorClasses[i]);
+    });
+  }
 
   function placeAll(raised){
     const xs=posX();
@@ -519,6 +530,7 @@ function mountCups(){
     cupsAtPos.forEach((cup,pos)=>{ cup.style.transition=`transform ${ms}ms ease`; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
     if(ballPosIndex===a) ballPosIndex=b; else if(ballPosIndex===b) ballPosIndex=a;
     ball.style.transition=`transform ${ms}ms ease`; ball.style.transform=`translate(${xs[ballPosIndex]}px, ${ballY}px) translate(-50%,-50%)`;
+    if (Math.random() < 0.3) shuffleCupColors(); // 30% шанс смены цвета на каждом шаге
     await new Promise(r=>setTimeout(r,ms+18));
   }
   async function startRound(){
@@ -547,7 +559,6 @@ function mountWheel() {
   updateFreeBadge();
 
   const wheelSVG = gameArea.querySelector('.wheel-svg');
-  const pointer = gameArea.querySelector('.wheel-pointer');
   let currentRotation = 0;
 
   const PRIZES = [
@@ -570,22 +581,13 @@ function mountWheel() {
     const d = `M ${start.x} ${start.y} A ${radius} ${radius} 0 0 0 ${end.x} ${end.y} L ${center} ${center} Z`;
     wheelSVG.innerHTML += `<path d="${d}" fill="${prize.color}" stroke="rgba(0,0,0,0.2)" stroke-width="1"></path>`;
     wheelSVG.innerHTML += `<text x="100" y="35" transform="rotate(${startAngle + angleStep/2}, 100, 100)" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">${prize.text}</text>`;
-    const pegPos = polarToCartesian(radius - 10, startAngle); // Колышек на границе
-    wheelSVG.innerHTML += `<circle cx="${pegPos.x}" cy="${pegPos.y}" r="3" fill="rgba(255,255,255,0.3)"></circle>`;
   });
-
-  function getRotationDegrees(element) {
-    const matrix = window.getComputedStyle(element).transform;
-    if (matrix === 'none') return 0;
-    const [a, b] = matrix.match(/matrix\(([^)]+)\)/)[1].split(', ').slice(0, 2);
-    return Math.round(Math.atan2(b, a) * (180 / Math.PI));
-  }
   
   async function spinWheel() {
     await anim.run(async () => {
       const targetIndex = rint(0, numSegments - 1);
       
-      // ТОЧНЫЙ РАСЧЕТ УГЛА: указываем на центр целевого сектора
+      // ИСПРАВЛЕННЫЙ РАСЧЕТ УГЛА ДЛЯ 100% ТОЧНОСТИ
       const rotationToTarget = 360 - (targetIndex * angleStep + angleStep / 2);
       const fullSpins = rint(5, 8) * 360;
       const finalRotation = fullSpins + rotationToTarget;
@@ -593,29 +595,11 @@ function mountWheel() {
       const newTotalRotation = currentRotation + finalRotation;
       wheelSVG.style.transform = `rotate(${newTotalRotation}deg)`;
       
-      // Анимация "кликов" через requestAnimationFrame
-      const animationStartTime = performance.now();
-      let lastPassedPeg = -1;
-      function animatePointerClick(now) {
-        if (now - animationStartTime > 5000) return; // Останавливаем
-        
-        const liveRotation = getRotationDegrees(wheelSVG);
-        const normalizedRotation = (liveRotation % 360 + 360) % 360;
-        const currentPeg = Math.floor(normalizedRotation / angleStep);
-        
-        if (currentPeg !== lastPassedPeg) {
-          pointer.classList.remove('clicking');
-          void pointer.offsetWidth; // трюк для перезапуска анимации
-          pointer.classList.add('clicking');
-          lastPassedPeg = currentPeg;
-        }
-        requestAnimationFrame(animatePointerClick);
-      }
-      requestAnimationFrame(animatePointerClick);
-      
       await new Promise(resolve => setTimeout(resolve, 5000));
       
-      currentRotation = newTotalRotation % 360; // Сохраняем только остаток
+      // ИСПРАВЛЕНО: Сохраняем ПОЛНЫЙ угол для следующего вращения
+      currentRotation = newTotalRotation;
+      
       toast(`Результат: ${PRIZES[targetIndex].text}`);
       consumeFreeSpinIfAny();
     });
