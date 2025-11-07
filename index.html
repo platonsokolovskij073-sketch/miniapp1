@@ -115,19 +115,6 @@ body{
   position:relative; height:240px; border-radius:16px; background:rgba(255,255,255,.06);
   border:1px solid var(--line); overflow:hidden; touch-action:none;
 }
-.hoop{position:absolute; right:22px; top:48px; font-size:28px; filter:drop-shadow(0 4px 6px rgba(0,0,0,.4))}
-.ball,.dart,.bowl{position:absolute; will-change:transform}
-.ball{font-size:44px}
-.bowl{font-size:44px}
-.pin{position:absolute; font-size:32px; will-change:transform; transform-origin:50% 100%}
-.target{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  width:170px; height:170px; border-radius:50%;
-  background:
-    radial-gradient(circle at center, #d41414 0 12%, #fff 12% 24%, #d41414 24% 36%, #fff 36% 48%, #d41414 48% 60%, transparent 60%);
-  box-shadow:0 0 0 6px #ffffff22 inset, 0 10px 30px rgba(0,0,0,.25);
-}
-
-/* Slot */
 .slot-wrap{display:grid; place-items:center; gap:10px}
 .slot{width:300px; height:120px; border-radius:16px; overflow:hidden;
   background:rgba(0,0,0,.35); border:1px solid var(--line); box-shadow:var(--shadow);
@@ -135,7 +122,14 @@ body{
 .reel{position:relative; overflow:hidden; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,.08); display:grid; place-items:center}
 .roller{position:absolute; left:0; right:0; top:0; will-change:transform}
 .symbol{height:48px; display:grid; place-items:center; font-size:36px;}
-.symbol.blank{opacity:.15}
+
+.cup{position:absolute; font-size:44px; will-change:transform}
+.ball-sm{position:absolute; font-size:24px; will-change:transform; filter:drop-shadow(0 4px 6px rgba(0,0,0,.4))}
+.pointer{position:absolute; left:50%; top:-2px; transform:translateX(-50%); width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:12px solid #ffb86b; filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
+.wheel-wrap{position:relative; display:grid; place-items:center}
+.wheel{width:220px;height:220px;border-radius:50%;border:1px solid var(--line);background:conic-gradient(#ff7a18 0 45deg,#9c5cff 45deg 90deg,#ffb86b 90deg 135deg,#c39aff 135deg 180deg,#ff7a18 180deg 225deg,#9c5cff 225deg 270deg,#ffb86b 270deg 315deg,#c39aff 315deg 360deg); box-shadow:var(--shadow); display:grid; place-items:center}
+.wheel .labels{position:absolute; inset:0; display:grid; place-items:center; font-size:12px; color:#120914; font-weight:800; opacity:.9}
+.wlabel{position:absolute; transform-origin:50% 100%; top:50%; left:50%}
 
 .toast{position:fixed; left:50%; bottom:120px; transform:translateX(-50%) translateY(20px); background:rgba(0,0,0,.8);
   border:1px solid var(--line); color:#fff; padding:10px 14px; border-radius:12px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; font-size:13px}
@@ -157,7 +151,7 @@ body{
     <!-- HOME -->
     <section class="container active" id="home">
       <div class="card">
-        <h3>Добро пожаловать в Starify 🎃</h3>
+        <h3>Добро пожаловать в Starify 🎰</h3>
         <div class="bigbtn" style="margin-top:10px">
           <button class="btn" data-tab-go="shop">🛒 Магазин</button>
           <button class="btn purple" data-tab-go="games">🎲 Игры</button>
@@ -215,12 +209,11 @@ body{
     <!-- GAMES -->
     <section class="container" id="games">
       <div class="card">
-        <h3>Мини-игры</h3>
+        <h3>Мини‑игры</h3>
         <div class="row" style="margin-top:8px">
           <button class="btn" data-game="slot">🎰 Слот</button>
-          <button class="btn purple" data-game="basket">🏀 Баскетбол</button>
-          <button class="btn ghost" data-game="bowling">🎳 Боулинг</button>
-          <button class="btn ghost" data-game="darts">🎯 Дартс</button>
+          <button class="btn purple" data-game="cups">🥤 Стаканы</button>
+          <button class="btn ghost" data-game="wheel">🧭 Колесо</button>
         </div>
       </div>
 
@@ -283,9 +276,9 @@ function applyTheme(){
 })();
 
 /* UI */
-const toast=(m='Готово!')=>{const el=document.getElementById('toast'); el.textContent=m; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),1100);};
+const toast=(m='Готово!')=>{const el=document.getElementById('toast'); el.textContent=m; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),1200);};
 function openTab(id){
-  if(anim.busy) return; // запрет переключения, пока идёт анимация в любой игре
+  if(anim.busy) return; // нельзя переключать, пока идёт анимация
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));
   document.querySelectorAll('.container').forEach(s=>s.classList.toggle('active',s.id===id));
 }
@@ -294,7 +287,8 @@ document.querySelectorAll('[data-tab-go]').forEach(b=>b.onclick=()=>openTab(b.da
 
 /* Магазин */
 const starsQuick=[500,1000,2500,5000];
-const plans=[{name:'1 месяц',plan:'1m'},{name:'3 месяца',plan:'3m'},{name:'6 месяцев',plan:'6m'},{name:'12 месяцев',plan:'12m'}];
+// оставляем только 3/6/12 месяцев
+const plans=[{name:'3 месяца',plan:'3m'},{name:'6 месяцев',plan:'6m'},{name:'12 месяцев',plan:'12m'}];
 
 const elStarsQuick=document.getElementById('starsQuick');
 starsQuick.forEach(q=>{
@@ -334,10 +328,21 @@ document.getElementById('buyCustomStars').onclick=()=>{
   const qty=parseInt(document.getElementById('customStars').value,10) || null;
   goCheckout({type:'stars', label:'Звёзды', qty});
 };
+
+/* Жёсткая проверка username для всех покупок */
+function validUser(u){ return /^@[a-zA-Z0-9_]{2,32}$/.test(u); }
 document.getElementById('proceed').onclick=()=>{
-  const u=(document.getElementById('username').value.trim()||'@username');
-  const qty=document.getElementById('amount').parentElement.style.display==='none' ? '' : ` • ${document.getElementById('amount').value||checkoutState.qty||0} ⭐`;
-  toast(`Заявка: ${checkoutState.label} → ${u}${qty}`);
+  const u=(document.getElementById('username').value||'').trim();
+  if(!validUser(u)){ toast('Введи @username'); return; }
+  if(checkoutState.type==='stars'){
+    const qty = parseInt(document.getElementById('amount').value||checkoutState.qty||0,10);
+    if(!qty || qty<1){ toast('Укажи количество звёзд'); return; }
+    toast(`Заявка: Звёзды → ${u} • ${qty} ⭐`);
+  }else if(checkoutState.type==='premium'){
+    toast(`Заявка: Premium → ${u} • ${checkoutState.plan}`);
+  }else{
+    toast('Выбери товар');
+  }
 };
 
 /* Анти‑копи JS */
@@ -360,7 +365,7 @@ document.getElementById('proceed').onclick=()=>{
 
 /* -------- Игровой движок/лок -------- */
 const gameArea=document.getElementById('gameArea');
-const symbols=['🎃','🕷️','🦇','🕸️','🍬','7️⃣','']; // последний — пустой
+const symbols=['🎃','🕷️','🦇','🕸️','🍬','7️⃣']; // без пустых
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 const rand=(a,b)=>Math.random()*(b-a)+a;
 const rint=(a,b)=>Math.floor(rand(a,b+1));
@@ -378,7 +383,6 @@ const anim={
   }
 };
 function setGameControlsDisabled(dis){
-  // блокируем: кнопки выбора игр + кнопки действий в текущей игре
   document.querySelectorAll('[data-game]').forEach(b=>b.disabled=dis);
   document.querySelectorAll('[data-action]').forEach(b=>b.disabled=dis);
   document.querySelectorAll('.tab').forEach(t=>t.disabled=dis);
@@ -399,7 +403,7 @@ function makeSprite(el, stage){
   return {set:setPos, get};
 }
 
-/* ---------- SLOT (быстрый спин, финал пустой) ---------- */
+/* ---------- SLOT (быстро, но с результатом) ---------- */
 function mountSlot(){
   gameArea.innerHTML='';
   const wrap=document.createElement('div'); wrap.className='card slot-wrap';
@@ -409,30 +413,28 @@ function mountSlot(){
       <div class="reel"><div class="roller" id="sl_r2"></div></div>
       <div class="reel"><div class="roller" id="sl_r3"></div></div>
     </div>
-    <div class="row"><button class="btn" id="spinBtn" data-action="spin">Быстрый спин</button></div>
-    <span class="badge" id="slotOut"></span>`;
+    <div class="row"><button class="btn" id="spinBtn" data-action="spin">Крутить</button></div>
+    <span class="badge" id="slotOut">Удачи!</span>`;
   gameArea.appendChild(wrap);
 
-  // ленты: дублируем, добавляем пустой символ (class="blank")
-  const reelHTML = symbols.concat(symbols, symbols).map(s=>{
-    return s ? `<div class="symbol">${s}</div>` : `<div class="symbol blank"></div>`;
-  }).join('');
+  const reelHTML = symbols.concat(symbols, symbols).map(s=>`<div class="symbol">${s}</div>`).join('');
   ['sl_r1','sl_r2','sl_r3'].forEach(id=>document.getElementById(id).innerHTML=reelHTML);
 
   const rollers=[document.getElementById('sl_r1'),document.getElementById('sl_r2'),document.getElementById('sl_r3')];
   const itemH=48;
-  function fastSpin(el, duration){
-    // очень быстрый спин: резкий разгон и короткая остановка
-    const cycles=rint(10,16);
-    const endIndex = symbols.length-1; // пустой символ
+
+  function spinRoller(el, duration){
+    // быстрый разгон и плавная остановка на случайном символе
+    const cycles=rint(8,14);
+    const endIndex = rint(0, symbols.length-1);
     const total=cycles*symbols.length*itemH + endIndex*itemH;
     const t0=performance.now();
     return new Promise(res=>{
       function step(now){
         const t=(now-t0)/duration;
         const p=t<0?0:(t>1?1:t);
-        // кривые: резкий старт, короткая тормозилка
-        const ease = p<0.6 ? (p*p*3) : easeOut(p);
+        const accel = Math.min(1, p*2);             // быстрый разгон
+        const ease = accel<0.7 ? accel*accel*1.3 : easeOut(p); // короткая тормозилка
         const y = ease*total;
         el.style.transform=`translateY(-${y}px)`;
         if(p<1) requestAnimationFrame(step);
@@ -447,285 +449,265 @@ function mountSlot(){
   }
 
   async function spinOnce(){
-    const out=document.getElementById('slotOut'); out.textContent='';
     await anim.run('slot', async()=>{
-      const i1=fastSpin(rollers[0], 420);
-      const i2=fastSpin(rollers[1], 460);
-      const i3=fastSpin(rollers[2], 500);
-      await Promise.all([i1,i2,i3]);
-      // итоги — ничего не выводим (пусто), по твоей просьбе
-      out.textContent='';
+      const out=document.getElementById('slotOut'); out.textContent='Крутим...';
+      const p1=spinRoller(rollers[0], 650);
+      const p2=spinRoller(rollers[1], 720);
+      const p3=spinRoller(rollers[2], 790);
+      const [i1,i2,i3]=await Promise.all([p1,p2,p3]);
+      const a=symbols[i1], b=symbols[i2], c=symbols[i3];
+      out.textContent = (a===b && b===c) ? `Победа! ${a}${b}${c}` : `${a} | ${b} | ${c}`;
     });
   }
   document.getElementById('spinBtn').onclick=spinOnce;
 }
 
-/* ---------- BASKETBALL (детект касания кольца) ---------- */
-function mountBasket(){
+/* ---------- CUPS (3 стакана и шарик) ---------- */
+function mountCups(){
   gameArea.innerHTML='';
   const card=document.createElement('div'); card.className='card';
   const stage=document.createElement('div'); stage.className='stage';
-  const hoop=document.createElement('div'); hoop.className='hoop'; hoop.textContent='🟧'; // визуал
-  const ball=document.createElement('div'); ball.className='ball'; ball.textContent='🏀';
-  const btn=document.createElement('button'); btn.className='btn'; btn.dataset.action='shoot'; btn.textContent='Бросок';
+  const btn=document.createElement('button'); btn.className='btn'; btn.dataset.action='mix'; btn.textContent='Начать';
   btn.style.marginTop='10px';
 
-  stage.append(hoop,ball); card.append(stage,btn); gameArea.appendChild(card);
+  // три стакана и шарик
+  const cups=[], cupSprites=[];
+  const ball=document.createElement('div'); ball.className='ball-sm'; ball.textContent='🔴'; stage.appendChild(ball);
 
-  const spr=makeSprite(ball, stage);
+  for(let i=0;i<3;i++){
+    const c=document.createElement('div'); c.className='cup'; c.textContent='🥤';
+    stage.appendChild(c);
+    cups.push(c);
+  }
+  card.append(stage, btn); gameArea.appendChild(card);
 
-  // геометрия кольца
-  function hoopGeom(){
-    const W=stage.clientWidth, H=stage.clientHeight;
-    const r=18; // радиус датчика «обода»
-    const cx=W-42, cy=78; // центр кольца
-    return {cx,cy,r,W,H};
+  // геометрия
+  const baseY = 130, upY = 60;
+  function positions(){
+    const W=stage.clientWidth;
+    const gap= Math.min(120, Math.max(86, (W-140)/2)); // три точки по X
+    const center=W/2;
+    return [center-gap, center, center+gap];
   }
 
-  async function throwOnce(){
-    await anim.run('basket', async()=>{
-      const g=1700;
-      const {W,H,cx,cy,r} = (()=>{ const g=hoopGeom(); return {W:g.W,H:g.H,cx:g.cx,cy:g.cy,r:g.r}; })();
-      // стартовая позиция
-      spr.set(14, H-68);
-      let {x,y,w,h}=spr.get();
-      let vx = rand(420,560);      // скорость по X
-      let vy = rand(-1200,-900);   // начальная по Y
-      const t0=performance.now();
-      let lastY=y;
-      let hit=false, miss=false;
-      function loop(now){
-        const dt=Math.min(32, now-(loop.tPrev||now))/1000; loop.tPrev=now;
+  function placeStatic(idxBall, raised=false){
+    const pos=positions();
+    const yCup = raised? upY : baseY;
+    cups.forEach((c,i)=>{
+      c.style.transform=`translate(${pos[i]}px, ${yCup}px) translate(-50%,-50%)`;
+    });
+    ball.style.transform=`translate(${pos[idxBall]}px, ${baseY+16}px) translate(-50%,-50%)`;
+  }
 
-        vy += g*dt;
-        x += vx*dt;
-        y += vy*dt;
-
-        // клампинг + отражения
-        const S=spr.get();
-        if(x<=0){ x=0; vx=Math.abs(vx)*0.85; }
-        if(x>=S.W-S.w){ x=S.W-S.w; vx=-Math.abs(vx)*0.85; }
-        if(y>=S.H-S.h){ y=S.H-S.h; vy=-Math.abs(vy)*0.55; vx*=0.96; }
-        if(y<=0){ y=0; vy=Math.abs(vy)*0.55; }
-
-        spr.set(x,y);
-
-        // детект попадания: пересечение центра мяча с кольцом сверху вниз
-        const cxBall = x+w*0.5, cyBall = y+h*0.5;
-        const dist = Math.hypot(cxBall - cx, cyBall - cy);
-        const goingDown = (cyBall > lastY); lastY = cyBall;
-
-        if(!hit && dist <= (r+10) && goingDown){
-          hit=true; toast('Победа!'); ball.textContent='✨';
-          setTimeout(()=>{},120);
-          return end();
-        }
-
-        // промах: мяч прошёл правее кольца и упал на пол
-        if(!hit && cxBall > cx+30 && cyBall > cy+80 && Math.abs(vy)<40){
-          miss=true; toast('Мимо');
-          return end();
-        }
-
-        if((now-t0)>3500) return end();
-        requestAnimationFrame(loop);
+  function animateCupTo(i, x, y, ms){
+    const c=cups[i];
+    const t0=performance.now();
+    const start=c.getBoundingClientRect();
+    // текущие x/y читаем из transform грубо: проще хранить локально
+    // сделаем через style.translate (поддерживается) как упрощение:
+    return new Promise(res=>{
+      const from=c.style.transform;
+      function step(now){
+        const p=clamp((now-t0)/ms,0,1);
+        const e=1-(1-p)*(1-p)*(1-p);
+        // интерполируем между from и to «проще»: подменяем сразу целевое значение
+        c.style.transform=`translate(${x}px, ${y}px) translate(-50%,-50%)`;
+        if(p<1) requestAnimationFrame(step); else res();
       }
-      function end(){ resolve(); }
-      const resolve = (()=>{
-        let done=false;
-        return ()=>{ if(done) return; done=true; };
-      })();
-      await new Promise(res=>{
-        const _end=()=>{ res(); };
-        (function wrapEnd(){
-          const orig=end;
-          end=function(){ orig(); _end(); };
-        })();
-        requestAnimationFrame(loop);
-      });
+      requestAnimationFrame(step);
+    });
+  }
+  function animateBallTo(x, y, ms){
+    const t0=performance.now();
+    return new Promise(res=>{
+      function step(now){
+        const p=clamp((now-t0)/ms,0,1);
+        const e=1-(1-p)*(1-p)*(1-p);
+        ball.style.transform=`translate(${x}px, ${y}px) translate(-50%,-50%)`;
+        if(p<1) requestAnimationFrame(step); else res();
+      }
+      requestAnimationFrame(step);
     });
   }
 
-  btn.onclick=throwOnce;
-}
+  async function startRound(){
+    await anim.run('cups', async()=>{
+      // старт: шар показан, стаканы подняты
+      const pos=positions();
+      let startIdx = rint(0,2);
+      placeStatic(startIdx, true);
+      // подождём показать шар
+      await new Promise(r=>setTimeout(r,700));
 
-/* ---------- BOWLING (новая постановка) ---------- */
-function mountBowling(){
-  gameArea.innerHTML='';
-  const card=document.createElement('div'); card.className='card';
-  const stage=document.createElement('div'); stage.className='stage';
-  const ball=document.createElement('div'); ball.className='bowl'; ball.textContent='🎳';
-  const btn=document.createElement('button'); btn.className='btn'; btn.dataset.action='roll'; btn.textContent='Бросок';
-  btn.style.marginTop='10px';
+      // опускаем стаканы — накрыть шар
+      cups.forEach((c,i)=> c.style.transition='transform .25s ease');
+      cups.forEach((c,i)=> c.style.transform=`translate(${pos[i]}px, ${baseY}px) translate(-50%,-50%)`);
+      await new Promise(r=>setTimeout(r,260));
 
-  stage.append(ball); card.append(stage,btn); gameArea.appendChild(card);
+      // генерируем финальную позицию, отличную от начальной
+      let finalIdx = rint(0,2); while(finalIdx===startIdx) finalIdx=rint(0,2);
 
-  const sBall=makeSprite(ball, stage);
+      // создаём последовательность перемешиваний, которая приведёт к finalIdx
+      // массив позиций: где какой стакан (индекс стакана в позиции posIndex)
+      let map=[0,1,2]; // map[pos]=cupIndex
+      // найдём где сейчас шар (под каким posIndex)
+      let ballPosIndex=startIdx;
 
-  // раскладка кеглей: треугольник 4‑3‑2‑1, всё строго внутри сцены
-  const pins=[];
-  function layoutPins(){
-    // очищаем старые
-    pins.splice(0,pins.length);
-    stage.querySelectorAll('.pin').forEach(n=>n.remove());
-
-    const W=stage.clientWidth, H=stage.clientHeight;
-    const baseX = W-180, baseY = 58, gap=28;
-    for(let row=0; row<4; row++){
-      const inRow = 4-row;
-      for(let c=0;c<inRow;c++){
-        const p=document.createElement('div'); p.className='pin'; p.textContent='🎳';
-        stage.appendChild(p);
-        const spr=makeSprite(p, stage);
-        const px = baseX + c*gap + row*gap*0.5;
-        const py = baseY + row*gap;
-        spr.set(px,py);
-        pins.push({el:p, spr, vx:0, vy:0, rot:0, active:false});
+      async function swap(posA,posB,ms=220){
+        // обменять стаканы, визуально проехать друг через друга
+        const tmp=map[posA]; map[posA]=map[posB]; map[posB]=tmp;
+        const xA=pos[posA], xB=pos[posB];
+        const cA=cups[map[posA]], cB=cups[map[posB]]; // после обмена map уже новый!
+        // но нам надо анимировать старые индексы — проще до swap получить cup индексы:
       }
-    }
-  }
-  layoutPins();
-  window.addEventListener('resize', layoutPins);
 
-  async function rollOnce(){
-    await anim.run('bowling', async()=>{
-      const g = 1900, floorRest=0.5, wallRest=0.6;
-      // старт шара
-      const H=stage.clientHeight;
-      let vx = rand(360, 520);
-      let vy = rand(-180, -40);
-      sBall.set(10, H-72);
-      let {x,y,w,h,W} = sBall.get();
+      // Реалистично: пройдём 8-12 шагов, каждый шаг — либо соседний свап, либо дальний
+      async function shuffleTo(targetPos){
+        // хотим, чтобы ballPosIndex стал targetPos
+        const steps=rint(8,12);
+        for(let s=0;s<steps;s++){
+          // выберем два разных pos
+          let a=rint(0,2), b=rint(0,2); while(b===a) b=rint(0,2);
+          // визуально сдвинем соответствующие стаканы
+          const idxA = map[a], idxB = map[b]; // cup индексы
+          // обновим map сразу
+          [map[a], map[b]]=[map[b], map[a]];
+          // если шар под позицией a или b — обновим его позицию (он ездит под стаканом)
+          if(ballPosIndex===a) ballPosIndex=b; else if(ballPosIndex===b) ballPosIndex=a;
 
-      // сброс кеглей
-      pins.forEach(p=>{ const pos=p.spr.get(); p.vx=0; p.vy=0; p.rot=0; p.active=false; p.el.style.opacity='1'; p.spr.set(pos.x,pos.y); });
-
-      const start=performance.now();
-      let last = start;
-
-      await new Promise(res=>{
-        function loop(now){
-          const dt=Math.min(32, now-last)/1000; last=now;
-
-          // шар
-          vy += g*dt;
-          x += vx*dt; y += vy*dt;
-
-          // границы для шара
-          const B=sBall.get();
-          if(x<=0){ x=0; vx=Math.abs(vx)*wallRest; }
-          if(x>=B.W-B.w){ x=B.W-B.w; vx=-Math.abs(vx)*wallRest; }
-          if(y>=B.H-B.h){ y=B.H-B.h; vy=-Math.abs(vy)*floorRest; vx*=0.98; }
-          if(y<=0){ y=0; vy=Math.abs(vy)*floorRest; }
-          sBall.set(x,y);
-
-          // столкновения шар ↔ кегли
-          const bc={x:x+w*0.5, y:y+h*0.5, r:20};
-          pins.forEach(p=>{
-            const P=p.spr.get();
-            const pc={x:P.x+P.w*0.5, y:P.y+P.h*0.5, r:16};
-            const dx=pc.x-bc.x, dy=pc.y-bc.y;
-            const dist=Math.hypot(dx,dy);
-            if(dist<(pc.r+bc.r)){
-              // толчок кегли
-              const ang=Math.atan2(dy,dx);
-              const force = 700 + Math.random()*500;
-              p.vx += Math.cos(ang)*force;
-              p.vy += Math.sin(ang)*force - 300;
-              p.active=true;
-
-              // отталкивание шара (чуть-чуть)
-              vx -= Math.cos(ang)*160;
-              vy -= Math.sin(ang)*160;
-            }
-          });
-
-          // физика кеглей
-          pins.forEach(p=>{
-            if(!p.active) return;
-            const P=p.spr.get();
-            p.vy += g*dt;
-            let px=P.x + p.vx*dt;
-            let py=P.y + p.vy*dt;
-
-            // границы
-            if(px<=0){ px=0; p.vx=Math.abs(p.vx)*0.55; }
-            if(px>=P.W-P.w){ px=P.W-P.w; p.vx=-Math.abs(p.vx)*0.55; }
-            if(py>=P.H-P.h){ py=P.H-P.h; p.vy=-Math.abs(p.vy)*0.42; p.vx*=0.96; }
-            if(py<=0){ py=0; p.vy=Math.abs(p.vy)*0.42; }
-
-            // демпфирование
-            p.vx*=0.995; p.vy*=0.995;
-            p.rot += (Math.hypot(p.vx,p.vy)*dt)*0.02;
-            p.el.style.transformOrigin='50% 100%';
-            p.el.style.transform=`translate(${px}px,${py}px) rotate(${p.rot}rad)`;
-            p.spr.set(px,py);
-          });
-
-          // условия окончания
-          const ballSpeed = Math.hypot(vx,vy);
-          const pinsActive = pins.filter(p=>Math.hypot(p.vx,p.vy)>70).length;
-          if((now-start)>3800 && ballSpeed<80 && pinsActive===0){
-            res();
-            return;
-          }
-          requestAnimationFrame(loop);
+          // анимация
+          const xA=pos[a], xB=pos[b];
+          const y=baseY;
+          cups[idxA].style.transition='transform .22s ease'; 
+          cups[idxB].style.transition='transform .22s ease';
+          cups[idxA].style.transform=`translate(${xB}px, ${y}px) translate(-50%,-50%)`;
+          cups[idxB].style.transform=`translate(${xA}px, ${y}px) translate(-50%,-50%)`;
+          // шар едет вместе с тем стаканом, под которым он сейчас
+          await new Promise(r=>setTimeout(r,230));
         }
-        requestAnimationFrame(loop);
+
+        // теперь жёстко поставим, чтобы итоговый ballPosIndex != startIdx и == finalIdx
+        // если не совпало — сделаем финальный свап, меняющий позицию шара на нужную
+        if(ballPosIndex!==finalIdx){
+          // обменяем текущую позицию шара с нужной
+          const from=ballPosIndex, to=finalIdx;
+          const idxFrom = map[from], idxTo = map[to];
+          [map[from], map[to]]=[map[to], map[from]];
+          const xFrom=pos[from], xTo=pos[to], y=baseY;
+          cups[idxFrom].style.transition='transform .22s ease'; 
+          cups[idxTo].style.transition='transform .22s ease';
+          cups[idxFrom].style.transform=`translate(${xTo}px, ${y}px) translate(-50%,-50%)`;
+          cups[idxTo].style.transform=`translate(${xFrom}px, ${y}px) translate(-50%,-50%)`;
+          ballPosIndex=to;
+          await new Promise(r=>setTimeout(r,230));
+        }
+      }
+
+      await shuffleTo(finalIdx);
+
+      // ожидание выбора пользователя
+      const guess=await new Promise(resolve=>{
+        cups.forEach((c,posIndex)=>{
+          c.style.cursor='pointer';
+          c.onclick=()=>resolve(posIndex);
+        });
       });
+
+      // убираем клики
+      cups.forEach(c=>{ c.onclick=null; c.style.cursor='default'; });
+
+      // поднять все стаканы, показать результат
+      cups.forEach((c,i)=>{ c.style.transition='transform .25s ease'; });
+      const posNow=positions();
+      cups.forEach((c,i)=>{
+        const x = posNow[ map.indexOf(i) ]; // позиция, где стоит этот стакан
+        c.style.transform=`translate(${x}px, ${upY}px) translate(-50%,-50%)`;
+      });
+      // шар на своей финальной позиции
+      ball.style.transform=`translate(${posNow[finalIdx]}px, ${baseY+16}px) translate(-50%,-50%)`;
+      await new Promise(r=>setTimeout(r,260));
+
+      toast(guess===finalIdx ? 'Верно! 🎉' : 'Мимо');
+      // задержка чисто визуально
+      await new Promise(r=>setTimeout(r,200));
     });
   }
 
-  btn.onclick=rollOnce;
+  // первичная раскладка
+  placeStatic(1, true);
+  btn.onclick=startRound;
 }
 
-/* ---------- DARTS ---------- */
-function mountDarts(){
+/* ---------- WHEEL (колесо) ---------- */
+function mountWheel(){
   gameArea.innerHTML='';
   const card=document.createElement('div'); card.className='card';
   const stage=document.createElement('div'); stage.className='stage';
-  const target=document.createElement('div'); target.className='target';
-  const dart=document.createElement('div'); dart.className='dart'; dart.textContent='🪁'; dart.style.fontSize='38px';
-  const btn=document.createElement('button'); btn.className='btn'; btn.dataset.action='throw'; btn.textContent='Бросок';
+  const wrap=document.createElement('div'); wrap.className='wheel-wrap';
+  wrap.style.margin='auto';
+
+  const pointer=document.createElement('div'); pointer.className='pointer';
+  const wheel=document.createElement('div'); wheel.className='wheel';
+  const labels=document.createElement('div'); labels.className='labels';
+
+  const btn=document.createElement('button'); btn.className='btn'; btn.dataset.action='spinwheel'; btn.textContent='Крутить';
   btn.style.marginTop='10px';
 
-  stage.append(target,dart); card.append(stage,btn); gameArea.appendChild(card);
-  const spr=makeSprite(dart,stage);
+  const SEG = ['+⭐','×2','MISS','+⭐⭐','×3','MISS','+⭐','BONUS'];
+  const n=SEG.length, step=360/n;
 
-  async function throwOnce(){
-    await anim.run('darts', async()=>{
-      const S=spr.get();
-      const cx=S.W/2-10, cy=S.H/2-10;
-      spr.set(-42, 26);
-      const bull = Math.random()<0.5;
-      const endX = bull? cx : cx + rand(-44,44);
-      const endY = bull? cy : cy + rand(-28,28);
-      const dur = rand(600, 850);
+  // разместим подписи вокруг
+  SEG.forEach((txt,i)=>{
+    const lbl=document.createElement('div');
+    lbl.className='wlabel';
+    const angle=i*step + step/2;
+    lbl.style.transform=`translate(-50%,-50%) rotate(${angle}deg) translateY(-84px) rotate(${-angle}deg)`;
+    lbl.textContent=txt;
+    labels.appendChild(lbl);
+  });
+
+  wheel.appendChild(labels);
+  wrap.appendChild(wheel);
+  stage.append(pointer, wrap);
+  card.append(stage, btn);
+  gameArea.appendChild(card);
+
+  let angle=0;
+
+  async function spinWheel(){
+    await anim.run('wheel', async()=>{
+      const target = rint(0,n-1);
+      // хотим остановить так, чтобы стрелка указывала на target (центр сегмента)
+      const targetAngle = 360*5 + (360 - (target*step + step/2)); // 5 оборотов + bring to pointer top
+      const start=angle;
+      const end=targetAngle;
+      const dur=1600+ rint(0,400);
+
       await new Promise(res=>{
         const t0=performance.now();
         function loop(now){
           const p=clamp((now-t0)/dur,0,1);
-          const wobble = (1-p)*Math.sin(p*12)* (bull? 6 : 14);
-          const x = -42 + p*(endX+42);
-          const y = 26 + (endY-26)*p + (bull? 0 : wobble);
-          spr.set(x,y);
-          dart.style.transform += ` rotate(18deg)`;
-          if(p<1){ requestAnimationFrame(loop); } else { dart.textContent='🎯'; res(); }
+          const e=1-Math.pow(1-p,3);
+          angle = start + (end-start)*e;
+          wheel.style.transform=`rotate(${angle}deg)`;
+          if(p<1) requestAnimationFrame(loop); else res();
         }
         requestAnimationFrame(loop);
       });
+
+      toast(`Результат: ${SEG[target]}`);
     });
   }
-  btn.onclick=throwOnce;
+
+  btn.onclick=spinWheel;
 }
 
-/* Переключатель игр (запрещаем смену, если идёт анимация) */
+/* Переключатель игр */
 function showGame(kind){
   if(anim.busy) return;
   if(kind==='slot') mountSlot();
-  if(kind==='basket') mountBasket();
-  if(kind==='bowling') mountBowling();
-  if(kind==='darts') mountDarts();
+  if(kind==='cups') mountCups();
+  if(kind==='wheel') mountWheel();
 }
 document.querySelectorAll('[data-game]').forEach(b=>b.onclick=()=>showGame(b.dataset.game));
 showGame('slot'); // по умолчанию
@@ -738,13 +720,6 @@ document.getElementById('copyRef').onclick=async()=>{
 document.getElementById('closeBtn').onclick=()=>tg?.close?.();
 
 tg?.ready?.(); tg?.expand?.(); applyTheme();
-
-/* CHECKOUT дубль (как было) */
-document.getElementById('proceed').onclick=()=>{
-  const u=(document.getElementById('username').value.trim()||'@username');
-  const qty=document.getElementById('amount').parentElement.style.display==='none' ? '' : ` • ${document.getElementById('amount').value||checkoutState.qty||0} ⭐`;
-  toast(`Заявка: ${checkoutState.label} → ${u}${qty}`);
-};
 </script>
 </body>
 </html>
