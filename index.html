@@ -155,16 +155,14 @@ body{
   margin: auto; margin-top:10px;
   display:grid; place-items:center;
 }
-/* Красивая стрелка-указатель с динамическим концом (наверху, перевернута вниз) */
+/* Простой прямоугольник-указатель */
 .wheel-pointer{
-  position:absolute; top: -20px; left: 50%; transform: translateX(-50%) rotate(180deg);
-  width: 32px; height: 32px; z-index: 10;
-  filter: drop-shadow(0 0 8px rgba(0, 246, 255, 0.8));
+  position:absolute; top: -28px; left: 50%; transform: translateX(-50%);
+  width: 24px; height: 8px; border-radius: 4px;
+  background-color: #00f6ff;
+  box-shadow: 0 0 10px #00f6ff, 0 0 20px #00f6ff;
+  z-index: 10;
   transition: transform 0.1s ease-out;
-  transform-origin: center bottom;
-}
-.wheel-pointer svg{
-  width: 100%; height: 100%;
 }
 .wheel-container{
   position:absolute; width:100%; height:100%;
@@ -583,7 +581,7 @@ function mountCups(){
 /* ——— WHEEL (ПОЛНОСТЬЮ ПЕРЕРАБОТАНО) ——— */
 function mountWheel() {
   markGame('wheel');
-  gameArea.innerHTML = `<div class="card"><div class="stage"><div class="wheel-wrapper"><div class="wheel-pointer"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="arrowGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#00f6ff;stop-opacity:1" /><stop offset="100%" style="stop-color:#0099ff;stop-opacity:0.8" /></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M 16 0 L 24 20 L 20 20 L 20 32 L 12 32 L 12 20 L 8 20 Z" fill="url(#arrowGrad)" filter="url(#glow)" stroke="#00d4ff" stroke-width="0.5"/></svg></div><div class="wheel-container"><svg class="wheel-svg" viewBox="0 0 200 200"></svg></div><div class="wheel-center"></div></div></div><div style="display:grid; place-items:center;"><button class="btn" data-action="spinwheel" style="margin-top:10px;">Крутить</button><div class="free-badge" style="margin-top:6px;">🎁 Осталось: <b data-free-counter>0</b></div></div></div>`;
+  gameArea.innerHTML = `<div class="card"><div class="stage"><div class="wheel-wrapper"><div class="wheel-pointer"></div><div class="wheel-container"><svg class="wheel-svg" viewBox="0 0 200 200"></svg></div><div class="wheel-center"></div></div></div><div style="display:grid; place-items:center;"><button class="btn" data-action="spinwheel" style="margin-top:10px;">Крутить</button><div class="free-badge" style="margin-top:6px;">🎁 Осталось: <b data-free-counter>0</b></div></div></div>`;
   updateFreeBadge();
 
   const wheelSVG = gameArea.querySelector('.wheel-svg');
@@ -668,11 +666,10 @@ function mountWheel() {
     // Динамическая стрелка - перекатывание через шарики
     if (minDist < 10) {
       const intensity = (10 - minDist) / 10;
-      const rollAngle = Math.sin(intensity * Math.PI) * 15;
       const rollOffset = Math.sin(intensity * Math.PI * 2) * 2;
-      pointerEl.style.transform = `translateX(-50%) rotate(${180 + rollAngle}deg) translateY(${rollOffset}px)`;
+      pointerEl.style.transform = `translateX(-50%) translateY(${rollOffset}px)`;
     } else {
-      pointerEl.style.transform = `translateX(-50%) rotate(180deg) translateY(0px)`;
+      pointerEl.style.transform = `translateX(-50%) translateY(0px)`;
     }
     
     // Эффект трения при касании шариков
@@ -745,7 +742,7 @@ function mountWheel() {
             requestAnimationFrame(animate);
           } else {
             wheelSVG.style.transform = `rotate(${endRotation}deg)`;
-            pointerEl.style.transform = `translateX(-50%) rotate(180deg) translateY(0px)`;
+            pointerEl.style.transform = `translateX(-50%) translateY(0px)`;
             currentRotation = endRotation;
             resolve();
           }
