@@ -155,11 +155,13 @@ body{
   margin: auto; margin-top:10px;
   display:grid; place-items:center;
 }
-/* Красивая стрелка-указатель с динамическим концом (перевернута вниз) */
+/* Красивая стрелка-указатель с динамическим концом (наверху) */
 .wheel-pointer{
-  position:absolute; bottom: -8px; left: 50%; transform: translateX(-50%) rotate(180deg);
+  position:absolute; top: -8px; left: 50%; transform: translateX(-50%);
   width: 32px; height: 32px; z-index: 10;
   filter: drop-shadow(0 0 8px rgba(0, 246, 255, 0.8));
+  transition: transform 0.1s ease-out;
+  transform-origin: center bottom;
 }
 .wheel-pointer svg{
   width: 100%; height: 100%;
@@ -641,33 +643,9 @@ function mountWheel() {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
   
-  // Функция для генерации звука "тр" при касании шариков
-  function playBallSound() {
-    try {
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      
-      oscillator.type = 'square';
-      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.05);
-      
-      gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
-      
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.05);
-    } catch (e) {
-      // Игнорируем ошибки звука
-    }
-  }
-  
-  // Функция для эффекта замедления при касании шариков
+  // Функция для эффекта замедления и динамической стрелки при касании шариков
   let lastBallAngle = -1;
-  function getFrictionFactor(currentAngle, numSegments, angleStep) {
+  function getFrictionFactor(currentAngle, numSegments, angleStep, pointerEl) {
     // Проверяем близость к границам сегментов (где находятся шарики)
     const normalizedAngle = ((currentAngle % 360) + 360) % 360;
     let minDist = Infinity;
@@ -686,10 +664,17 @@ function mountWheel() {
       }
     }
     
-    // Воспроизводим звук при касании шарика
-    if (minDist < 6 && Math.abs(closestBallAngle - lastBallAngle) > 2) {
-      playBallSound();
-      lastBallAngle = closestBallAngle;
+    // Динамическая стрелка - перекатывание через шарики
+    if (minDist < 10) {
+      // Вычисляем угол наклона стрелки при перекатывании через шарик
+      const rollAngle = Math.sin((10 - minDist) / 10 * Math.PI) * 15; // Максимальный наклон 15 градусов
+      const rollOffset = Math.sin((10 - minDist) / 10 * Math.PI * 2) * 2; // Небольшое смещение вверх-вниз
+      
+      // Применяем эффект перекатывания
+      pointerEl.style.transform = `translateX(-50%) rotate(${rollAngle}deg) translateY(${rollOffset}px)`;
+    } else {
+      // Возвращаем стрелку в нормальное положение
+      pointerEl.style.transform = `translateX(-50%) rotate(0deg) translateY(0px)`;
     }
     
     // Если близко к шарику (в пределах 8 градусов) - замедляем
@@ -702,17 +687,26 @@ function mountWheel() {
 
   async function spinWheel() {
     await anim.run(async () => {
-      const targetIndex = rint(0, numSegments - 1);
+      // Рандомизация результата - нельзя предугадать
+      // Добавляем случайный сдвиг в конце для непредсказуемости
+      const baseTargetIndex = rint(0, numSegments - 1);
+      const randomOffset = rint(-1, 1); // Случайный сдвиг на ±1 сегмент
+      const targetIndex = ((baseTargetIndex + randomOffset + numSegments) % numSegments);
       
       // Определяем конечную позицию (стрелка указывает на центр сегмента)
-      const targetAngle = 360 - (targetIndex * angleStep + angleStep / 2);
-      const fullSpins = rint(5, 8) * 360;
+      // Добавляем дополнительную рандомизацию угла для непредсказуемости
+      const segmentCenter = targetIndex * angleStep + angleStep / 2;
+      const randomAngleOffset = (Math.random() - 0.5) * angleStep * 0.3; // ±15% от угла сегмента
+      const targetAngle = 360 - (segmentCenter + randomAngleOffset);
+      
+      // Рандомизация количества оборотов для непредсказуемости
+      const fullSpins = rint(6, 10) * 360;
       
       const startRotation = currentRotation;
       const endRotation = startRotation + fullSpins + ((targetAngle - (startRotation % 360) + 360) % 360);
       
-      // Дольше крутится - увеличиваем длительность до 8 секунд
-      const duration = 8000;
+      // Рандомизация длительности для непредсказуемости
+      const duration = 7000 + rint(0, 2000); // От 7 до 9 секунд
       const startTime = performance.now();
       let currentRot = startRotation;
       let lastTime = startTime;
@@ -732,9 +726,9 @@ function mountWheel() {
           const baseDeltaRotation = targetRotation - currentRot;
           const baseVelocity = baseDeltaRotation / (deltaTime || 0.016);
           
-          // Применяем эффект трения при касании шариков
+          // Применяем эффект трения и динамическую стрелку при касании шариков
           const currentAngle = currentRot % 360;
-          const friction = getFrictionFactor(currentAngle, numSegments, angleStep);
+          const friction = getFrictionFactor(currentAngle, numSegments, angleStep, pointerEl);
           
           // Корректируем скорость с учетом трения (чем ближе к шарику, тем медленнее)
           const adjustedVelocity = baseVelocity * friction;
@@ -750,6 +744,7 @@ function mountWheel() {
           } else {
             // Финальная позиция точно на целевом сегменте
             wheelSVG.style.transform = `rotate(${endRotation}deg)`;
+            pointerEl.style.transform = `translateX(-50%) rotate(0deg) translateY(0px)`;
             currentRot = endRotation;
             resolve();
           }
