@@ -155,9 +155,9 @@ body{
   margin: auto; margin-top:10px;
   display:grid; place-items:center;
 }
-/* Красивая стрелка-указатель с динамическим концом (наверху) */
+/* Красивая стрелка-указатель с динамическим концом (наверху, перевернута вниз) */
 .wheel-pointer{
-  position:absolute; top: -8px; left: 50%; transform: translateX(-50%);
+  position:absolute; top: -8px; left: 50%; transform: translateX(-50%) rotate(180deg);
   width: 32px; height: 32px; z-index: 10;
   filter: drop-shadow(0 0 8px rgba(0, 246, 255, 0.8));
   transition: transform 0.1s ease-out;
@@ -466,12 +466,6 @@ function mountSlot(){
   });
   // Функция плавного замедления (easeOutCubic)
   const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
-  
-  // Функция для азартного докрута (очень медленное замедление в конце)
-  function easeOutElastic(t) {
-    const c4 = (2 * Math.PI) / 3;
-    return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
-  }
 
   async function spin(){
     await anim.run(async()=>{
@@ -479,30 +473,18 @@ function mountSlot(){
       const results = await Promise.all(rollers.map((r,i)=>new Promise(res=>{
         const k=rint(0, N-1), target=(rint(10,15)*N + ((k-1+N)%N)) * itemH;
         const t0=performance.now();
-        // Основная анимация - быстрая часть
-        const fastDuration = 1800 + i * 180;
-        // Азартный докрут - медленная часть в конце
-        const slowDuration = 400 + i * 40;
-        const totalDuration = fastDuration + slowDuration;
+        // Один медленный прокрут
+        const duration = 3000 + i * 200; // От 3 до 3.4 секунд
         
         const step=(now)=>{
           const elapsed = now - t0;
-          const totalProgress = Math.min(elapsed / totalDuration, 1);
+          const progress = Math.min(elapsed / duration, 1);
           
-          let easedProgress;
-          if (totalProgress < fastDuration / totalDuration) {
-            // Быстрая часть - обычное замедление
-            const fastProgress = totalProgress / (fastDuration / totalDuration);
-            easedProgress = easeOutCubic(fastProgress) * (fastDuration / totalDuration);
-          } else {
-            // Медленный азартный докрут в конце
-            const slowProgress = (totalProgress - fastDuration / totalDuration) / (slowDuration / totalDuration);
-            const slowEased = easeOutElastic(slowProgress);
-            easedProgress = (fastDuration / totalDuration) + slowEased * (slowDuration / totalDuration);
-          }
+          // Простое плавное замедление
+          const easedProgress = easeOutCubic(progress);
           
           r.style.transform=`translate3d(0,-${Math.round(easedProgress * target)}px,0)`;
-          if(totalProgress < 1) requestAnimationFrame(step); else res(k);
+          if(progress < 1) requestAnimationFrame(step); else res(k);
         };
         requestAnimationFrame(step);
       })));
@@ -670,11 +652,11 @@ function mountWheel() {
       const rollAngle = Math.sin((10 - minDist) / 10 * Math.PI) * 15; // Максимальный наклон 15 градусов
       const rollOffset = Math.sin((10 - minDist) / 10 * Math.PI * 2) * 2; // Небольшое смещение вверх-вниз
       
-      // Применяем эффект перекатывания
-      pointerEl.style.transform = `translateX(-50%) rotate(${rollAngle}deg) translateY(${rollOffset}px)`;
+      // Применяем эффект перекатывания (180deg - базовая перевернутая стрелка)
+      pointerEl.style.transform = `translateX(-50%) rotate(${180 + rollAngle}deg) translateY(${rollOffset}px)`;
     } else {
-      // Возвращаем стрелку в нормальное положение
-      pointerEl.style.transform = `translateX(-50%) rotate(0deg) translateY(0px)`;
+      // Возвращаем стрелку в нормальное положение (перевернута вниз)
+      pointerEl.style.transform = `translateX(-50%) rotate(180deg) translateY(0px)`;
     }
     
     // Если близко к шарику (в пределах 8 градусов) - замедляем
@@ -705,8 +687,8 @@ function mountWheel() {
       const startRotation = currentRotation;
       const endRotation = startRotation + fullSpins + ((targetAngle - (startRotation % 360) + 360) % 360);
       
-      // Рандомизация длительности для непредсказуемости
-      const duration = 7000 + rint(0, 2000); // От 7 до 9 секунд
+      // Рандомизация длительности для непредсказуемости - более медленный прокрут
+      const duration = 10000 + rint(0, 3000); // От 10 до 13 секунд
       const startTime = performance.now();
       let currentRot = startRotation;
       let lastTime = startTime;
@@ -744,7 +726,7 @@ function mountWheel() {
           } else {
             // Финальная позиция точно на целевом сегменте
             wheelSVG.style.transform = `rotate(${endRotation}deg)`;
-            pointerEl.style.transform = `translateX(-50%) rotate(0deg) translateY(0px)`;
+            pointerEl.style.transform = `translateX(-50%) rotate(180deg) translateY(0px)`;
             currentRot = endRotation;
             resolve();
           }
