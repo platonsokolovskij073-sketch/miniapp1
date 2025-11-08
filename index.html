@@ -623,59 +623,14 @@ function mountWheel() {
     const textPos = polarToCartesian(radius * 0.6, midAngle);
     wheelSVG.innerHTML += `<text x="${textPos.x}" y="${textPos.y}" transform="rotate(${midAngle}, ${textPos.x}, ${textPos.y})" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">${prize.text}</text>`;
     
-    // Отрисовка шариков на границах сегментов
-    const ballRadius = 4;
-    const ballDistance = 95;
-    const leftBall = polarToCartesian(ballDistance, startAngle);
-    const rightBall = polarToCartesian(ballDistance, endAngle);
-    wheelSVG.innerHTML += `<circle cx="${leftBall.x}" cy="${leftBall.y}" r="${ballRadius}" fill="#888888" opacity="0.9"><animate attributeName="opacity" values="0.7;1;0.7" dur="1s" repeatCount="indefinite"/></circle>`;
-    wheelSVG.innerHTML += `<circle cx="${rightBall.x}" cy="${rightBall.y}" r="${ballRadius}" fill="#888888" opacity="0.9"><animate attributeName="opacity" values="0.7;1;0.7" dur="1s" repeatCount="indefinite"/></circle>`;
+    // Отрисовка линий между сегментами
+    const lineEnd = polarToCartesian(radius, startAngle);
+    wheelSVG.innerHTML += `<line x1="${center}" y1="${center}" x2="${lineEnd.x}" y2="${lineEnd.y}" stroke="rgba(255,255,255,0.3)" stroke-width="2"></line>`;
   });
   
-  // Функции easing для плавной анимации
+  // Функция easing: медленное начало → быстрая середина → медленный конец
   function easeInOutCubic(t) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  }
-  
-  function easeOutQuint(t) {
-    return 1 - Math.pow(1 - t, 5);
-  }
-  
-  // Функция для эффекта трения и динамической стрелки при касании шариков
-  let lastBallAngle = -1;
-  function getFrictionAndPointerEffect(currentAngle, numSegments, angleStep, pointerEl) {
-    const normalizedAngle = ((currentAngle % 360) + 360) % 360;
-    let minDist = Infinity;
-    let closestBallAngle = -1;
-    
-    // Находим ближайший шарик
-    for (let i = 0; i < numSegments; i++) {
-      const boundaryAngle = i * angleStep;
-      const dist1 = Math.abs(normalizedAngle - boundaryAngle);
-      const dist2 = Math.abs(normalizedAngle - (boundaryAngle + 360));
-      const dist3 = Math.abs(normalizedAngle - (boundaryAngle - 360));
-      const dist = Math.min(dist1, dist2, dist3);
-      
-      if (dist < minDist) {
-        minDist = dist;
-        closestBallAngle = boundaryAngle;
-      }
-    }
-    
-    // Динамическая стрелка - перекатывание через шарики
-    if (minDist < 10) {
-      const intensity = (10 - minDist) / 10;
-      const rollOffset = Math.sin(intensity * Math.PI * 2) * 2;
-      pointerEl.style.transform = `translateX(-50%) translateY(${rollOffset}px)`;
-    } else {
-      pointerEl.style.transform = `translateX(-50%) translateY(0px)`;
-    }
-    
-    // Эффект трения при касании шариков
-    if (minDist < 8) {
-      return 0.4 + (minDist / 8) * 0.6;
-    }
-    return 1.0;
   }
 
   async function spinWheel() {
@@ -697,56 +652,29 @@ function mountWheel() {
       // Длительность прокрута
       const duration = 10000 + rint(0, 3000);
       const startTime = performance.now();
-      let currentRot = normalizedStart;
-      let lastTime = startTime;
-      lastBallAngle = -1;
 
       await new Promise(resolve => {
         function animate(now) {
           const elapsed = now - startTime;
           const progress = Math.min(elapsed / duration, 1);
           
-          // Плавная анимация: медленное начало → быстрая середина → очень медленный конец
-          let easedProgress;
-          if (progress < 0.7) {
-            const earlyProgress = progress / 0.7;
-            easedProgress = easeInOutCubic(earlyProgress) * 0.7;
-          } else {
-            const lateProgress = (progress - 0.7) / 0.3;
-            easedProgress = 0.7 + easeOutQuint(lateProgress) * 0.3;
-          }
+          // Плавная анимация: медленное начало → быстрая середина → медленный конец
+          const easedProgress = easeInOutCubic(progress);
+          const rotation = normalizedStart + (endRotation - normalizedStart) * easedProgress;
           
-          const targetRotation = normalizedStart + (endRotation - normalizedStart) * easedProgress;
-          
-          // Вычисляем скорость вращения
-          const deltaTime = (now - lastTime) / 1000;
-          const baseDeltaRotation = targetRotation - currentRot;
-          const baseVelocity = baseDeltaRotation / (deltaTime || 0.016);
-          
-          // Применяем эффект трения и динамическую стрелку
-          const currentAngle = currentRot % 360;
-          const friction = getFrictionAndPointerEffect(currentAngle, numSegments, angleStep, pointerEl);
-          
-          // Корректируем скорость с учетом трения
-          const adjustedVelocity = baseVelocity * friction;
-          const adjustedDeltaRotation = adjustedVelocity * deltaTime;
-          
-          currentRot += adjustedDeltaRotation;
-          lastTime = now;
-          
-          wheelSVG.style.transform = `rotate(${currentRot}deg)`;
+          wheelSVG.style.transform = `rotate(${rotation}deg)`;
           
           if (progress < 1) {
             requestAnimationFrame(animate);
           } else {
             wheelSVG.style.transform = `rotate(${endRotation}deg)`;
-            pointerEl.style.transform = `translateX(-50%) translateY(0px)`;
-            currentRotation = endRotation % 360;
             resolve();
           }
         }
         requestAnimationFrame(animate);
       });
+      
+      currentRotation = endRotation % 360;
       
       toast(`Результат: ${PRIZES[targetIndex].text}`);
       consumeFreeSpinIfAny();
