@@ -155,9 +155,9 @@ body{
   margin: auto; margin-top:10px;
   display:grid; place-items:center;
 }
-/* Красивая стрелка-указатель с динамическим концом */
+/* Красивая стрелка-указатель с динамическим концом (перевернута вниз) */
 .wheel-pointer{
-  position:absolute; top: -8px; left: 50%; transform: translateX(-50%);
+  position:absolute; bottom: -8px; left: 50%; transform: translateX(-50%) rotate(180deg);
   width: 32px; height: 32px; z-index: 10;
   filter: drop-shadow(0 0 8px rgba(0, 246, 255, 0.8));
 }
@@ -625,17 +625,43 @@ function mountWheel() {
     const d = `M ${start.x} ${start.y} A ${radius} ${radius} 0 0 0 ${end.x} ${end.y} L ${center} ${center} Z`;
     wheelSVG.innerHTML += `<path d="${d}" fill="${prize.color}" stroke="rgba(0,0,0,0.2)" stroke-width="1"></path>`;
     wheelSVG.innerHTML += `<text x="100" y="35" transform="rotate(${startAngle + angleStep/2}, 100, 100)" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">${prize.text}</text>`;
+    
+    // Шарики по бокам каждого сегмента (на границах)
+    const ballRadius = 4;
+    const ballDistance = 95; // Расстояние от центра до шариков
+    const leftBall = polarToCartesian(ballDistance, startAngle);
+    const rightBall = polarToCartesian(ballDistance, endAngle);
+    wheelSVG.innerHTML += `<circle cx="${leftBall.x}" cy="${leftBall.y}" r="${ballRadius}" fill="#00f6ff" opacity="0.8"><animate attributeName="opacity" values="0.8;1;0.8" dur="1s" repeatCount="indefinite"/></circle>`;
+    wheelSVG.innerHTML += `<circle cx="${rightBall.x}" cy="${rightBall.y}" r="${ballRadius}" fill="#00f6ff" opacity="0.8"><animate attributeName="opacity" values="0.8;1;0.8" dur="1s" repeatCount="indefinite"/></circle>`;
   });
   
-  // Функция плавного замедления (easeOutCubic из стандартных easing функций)
-  function easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
+  // Функция плавного замедления (easeOutQuart - более медленное замедление)
+  function easeOutQuart(t) {
+    return 1 - Math.pow(1 - t, 4);
   }
   
-  // Функция для азартного докрута (очень медленное замедление в конце)
-  function easeOutElastic(t) {
-    const c4 = (2 * Math.PI) / 3;
-    return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+  // Функция для эффекта замедления при касании шариков
+  function getFrictionFactor(currentAngle, numSegments, angleStep) {
+    // Проверяем близость к границам сегментов (где находятся шарики)
+    const normalizedAngle = ((currentAngle % 360) + 360) % 360;
+    let minDist = Infinity;
+    
+    for (let i = 0; i < numSegments; i++) {
+      const boundaryAngle = i * angleStep;
+      const dist1 = Math.abs(normalizedAngle - boundaryAngle);
+      const dist2 = Math.abs(normalizedAngle - (boundaryAngle + 360));
+      const dist3 = Math.abs(normalizedAngle - (boundaryAngle - 360));
+      const dist = Math.min(dist1, dist2, dist3);
+      
+      if (dist < minDist) minDist = dist;
+    }
+    
+    // Если близко к шарику (в пределах 8 градусов) - замедляем
+    if (minDist < 8) {
+      // Чем ближе к шарику, тем сильнее замедление (от 0.4 до 1.0)
+      return 0.4 + (minDist / 8) * 0.6;
+    }
+    return 1.0;
   }
 
   async function spinWheel() {
@@ -649,45 +675,45 @@ function mountWheel() {
       const startRotation = currentRotation;
       const endRotation = startRotation + fullSpins + ((targetAngle - (startRotation % 360) + 360) % 360);
       
-      // Основная анимация - быстрая часть
-      const fastDuration = 4000;
-      // Азартный докрут - медленная часть в конце
-      const slowDuration = 2000;
-      const totalDuration = fastDuration + slowDuration;
+      // Дольше крутится - увеличиваем длительность до 8 секунд
+      const duration = 8000;
       const startTime = performance.now();
+      let currentRot = startRotation;
+      let lastTime = startTime;
 
       await new Promise(resolve => {
         function animate(now) {
           const elapsed = now - startTime;
-          const totalProgress = Math.min(elapsed / totalDuration, 1);
+          const progress = Math.min(elapsed / duration, 1);
           
-          let easedProgress;
-          if (totalProgress < fastDuration / totalDuration) {
-            // Быстрая часть - обычное замедление
-            const fastProgress = totalProgress / (fastDuration / totalDuration);
-            easedProgress = easeOutCubic(fastProgress) * (fastDuration / totalDuration);
-          } else {
-            // Медленный азартный докрут в конце
-            const slowProgress = (totalProgress - fastDuration / totalDuration) / (slowDuration / totalDuration);
-            const slowEased = easeOutElastic(slowProgress);
-            easedProgress = (fastDuration / totalDuration) + slowEased * (slowDuration / totalDuration);
-          }
-
-          const frameRotation = startRotation + (endRotation - startRotation) * easedProgress;
-          wheelSVG.style.transform = `rotate(${frameRotation}deg)`;
+          // Базовое плавное замедление на всю длительность (без быстрого конца)
+          const easedProgress = easeOutQuart(progress);
+          const targetRotation = startRotation + (endRotation - startRotation) * easedProgress;
           
-          // Плавное покачивание стрелки в конце
-          if (totalProgress > 0.8) {
-            const wobble = Math.sin((totalProgress - 0.8) * 10 * Math.PI) * 2;
-            pointerEl.style.transform = `translateX(-50%) rotate(${wobble}deg)`;
-          } else {
-            pointerEl.style.transform = `translateX(-50%) rotate(0deg)`;
-          }
+          // Вычисляем базовую скорость вращения
+          const deltaTime = (now - lastTime) / 1000; // в секундах
+          const baseDeltaRotation = targetRotation - currentRot;
+          const baseVelocity = baseDeltaRotation / (deltaTime || 0.016);
           
-          if (totalProgress < 1) {
+          // Применяем эффект трения при касании шариков
+          const currentAngle = currentRot % 360;
+          const friction = getFrictionFactor(currentAngle, numSegments, angleStep);
+          
+          // Корректируем скорость с учетом трения (чем ближе к шарику, тем медленнее)
+          const adjustedVelocity = baseVelocity * friction;
+          const adjustedDeltaRotation = adjustedVelocity * deltaTime;
+          
+          currentRot += adjustedDeltaRotation;
+          lastTime = now;
+          
+          wheelSVG.style.transform = `rotate(${currentRot}deg)`;
+          
+          if (progress < 1) {
             requestAnimationFrame(animate);
           } else {
-            pointerEl.style.transform = `translateX(-50%) rotate(0deg)`;
+            // Финальная позиция точно на целевом сегменте
+            wheelSVG.style.transform = `rotate(${endRotation}deg)`;
+            currentRot = endRotation;
             resolve();
           }
         }
