@@ -155,13 +155,14 @@ body{
   margin: auto; margin-top:10px;
   display:grid; place-items:center;
 }
-/* Неоновый прямоугольник-указатель */
+/* Красивая стрелка-указатель с динамическим концом */
 .wheel-pointer{
-  position:absolute; top: -2px;
-  width: 24px; height: 8px; border-radius: 4px;
-  background-color: #00f6ff;
-  box-shadow: 0 0 10px #00f6ff, 0 0 20px #00f6ff;
-  z-index: 10;
+  position:absolute; top: -8px; left: 50%; transform: translateX(-50%);
+  width: 32px; height: 32px; z-index: 10;
+  filter: drop-shadow(0 0 8px rgba(0, 246, 255, 0.8));
+}
+.wheel-pointer svg{
+  width: 100%; height: 100%;
 }
 .wheel-container{
   position:absolute; width:100%; height:100%;
@@ -460,18 +461,45 @@ function mountSlot(){
     el.innerHTML = Array(30).fill(0).flatMap(()=>symbols).map(s=>`<div class="symbol">${s}</div>`).join('');
     return el;
   });
-  const easeOut=t=>1-Math.pow(1-t,3);
+  // Функция плавного замедления (easeOutCubic)
+  const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+  
+  // Функция для азартного докрута (очень медленное замедление в конце)
+  function easeOutElastic(t) {
+    const c4 = (2 * Math.PI) / 3;
+    return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+  }
 
   async function spin(){
     await anim.run(async()=>{
       document.getElementById('slotOut').textContent='Крутим...';
       const results = await Promise.all(rollers.map((r,i)=>new Promise(res=>{
         const k=rint(0, N-1), target=(rint(10,15)*N + ((k-1+N)%N)) * itemH;
-        const t0=performance.now(), dur=720+i*80;
+        const t0=performance.now();
+        // Основная анимация - быстрая часть
+        const fastDuration = 1800 + i * 180;
+        // Азартный докрут - медленная часть в конце
+        const slowDuration = 400 + i * 40;
+        const totalDuration = fastDuration + slowDuration;
+        
         const step=(now)=>{
-          const p=Math.min(1,(now-t0)/dur);
-          r.style.transform=`translate3d(0,-${Math.round(easeOut(p)*target)}px,0)`;
-          if(p<1) requestAnimationFrame(step); else res(k);
+          const elapsed = now - t0;
+          const totalProgress = Math.min(elapsed / totalDuration, 1);
+          
+          let easedProgress;
+          if (totalProgress < fastDuration / totalDuration) {
+            // Быстрая часть - обычное замедление
+            const fastProgress = totalProgress / (fastDuration / totalDuration);
+            easedProgress = easeOutCubic(fastProgress) * (fastDuration / totalDuration);
+          } else {
+            // Медленный азартный докрут в конце
+            const slowProgress = (totalProgress - fastDuration / totalDuration) / (slowDuration / totalDuration);
+            const slowEased = easeOutElastic(slowProgress);
+            easedProgress = (fastDuration / totalDuration) + slowEased * (slowDuration / totalDuration);
+          }
+          
+          r.style.transform=`translate3d(0,-${Math.round(easedProgress * target)}px,0)`;
+          if(totalProgress < 1) requestAnimationFrame(step); else res(k);
         };
         requestAnimationFrame(step);
       })));
@@ -542,7 +570,7 @@ function mountCups(){
       const xs=posX();
       cupsAtPos.forEach((cup,pos)=>{ cup.style.transition='transform .2s ease'; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
       await new Promise(r=>setTimeout(r,200)); ball.style.opacity='0';
-      for(let i=0;i<rint(14,22);i++){ await swapPos(rint(0,1), rint(1,2), rint(160,230)); }
+      for(let i=0;i<rint(14,22);i++){ await swapPos(rint(0,1), rint(1,2), rint(300,450)); }
       
       if (Math.random() < 0.3) {
         toast('Возврат!');
@@ -570,10 +598,11 @@ function mountCups(){
 /* ——— WHEEL (ИЗМЕНЕНО) ——— */
 function mountWheel() {
   markGame('wheel');
-  gameArea.innerHTML = `<div class="card"><div class="stage"><div class="wheel-wrapper"><div class="wheel-pointer"></div><div class="wheel-container"><svg class="wheel-svg" viewBox="0 0 200 200"></svg></div><div class="wheel-center"></div></div></div><div style="display:grid; place-items:center;"><button class="btn" data-action="spinwheel" style="margin-top:10px;">Крутить</button><div class="free-badge" style="margin-top:6px;">🎁 Осталось: <b data-free-counter>0</b></div></div></div>`;
+  gameArea.innerHTML = `<div class="card"><div class="stage"><div class="wheel-wrapper"><div class="wheel-pointer"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="arrowGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#00f6ff;stop-opacity:1" /><stop offset="100%" style="stop-color:#0099ff;stop-opacity:0.8" /></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M 16 0 L 24 20 L 20 20 L 20 32 L 12 32 L 12 20 L 8 20 Z" fill="url(#arrowGrad)" filter="url(#glow)" stroke="#00d4ff" stroke-width="0.5"/></svg></div><div class="wheel-container"><svg class="wheel-svg" viewBox="0 0 200 200"></svg></div><div class="wheel-center"></div></div></div><div style="display:grid; place-items:center;"><button class="btn" data-action="spinwheel" style="margin-top:10px;">Крутить</button><div class="free-badge" style="margin-top:6px;">🎁 Осталось: <b data-free-counter>0</b></div></div></div>`;
   updateFreeBadge();
 
   const wheelSVG = gameArea.querySelector('.wheel-svg');
+  const pointerEl = gameArea.querySelector('.wheel-pointer');
   let currentRotation = 0;
 
   const PRIZES = [
@@ -598,41 +627,74 @@ function mountWheel() {
     wheelSVG.innerHTML += `<text x="100" y="35" transform="rotate(${startAngle + angleStep/2}, 100, 100)" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">${prize.text}</text>`;
   });
   
-  const easeOut = t => 1 - Math.pow(1 - t, 4);
+  // Функция плавного замедления (easeOutCubic из стандартных easing функций)
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+  
+  // Функция для азартного докрута (очень медленное замедление в конце)
+  function easeOutElastic(t) {
+    const c4 = (2 * Math.PI) / 3;
+    return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+  }
 
   async function spinWheel() {
     await anim.run(async () => {
       const targetIndex = rint(0, numSegments - 1);
       
-      // Определяем конечную позицию
+      // Определяем конечную позицию (стрелка указывает на центр сегмента)
       const targetAngle = 360 - (targetIndex * angleStep + angleStep / 2);
       const fullSpins = rint(5, 8) * 360;
       
       const startRotation = currentRotation;
       const endRotation = startRotation + fullSpins + ((targetAngle - (startRotation % 360) + 360) % 360);
       
-      const duration = 5000;
+      // Основная анимация - быстрая часть
+      const fastDuration = 4000;
+      // Азартный докрут - медленная часть в конце
+      const slowDuration = 2000;
+      const totalDuration = fastDuration + slowDuration;
       const startTime = performance.now();
 
       await new Promise(resolve => {
         function animate(now) {
           const elapsed = now - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          const easedProgress = easeOut(progress);
+          const totalProgress = Math.min(elapsed / totalDuration, 1);
+          
+          let easedProgress;
+          if (totalProgress < fastDuration / totalDuration) {
+            // Быстрая часть - обычное замедление
+            const fastProgress = totalProgress / (fastDuration / totalDuration);
+            easedProgress = easeOutCubic(fastProgress) * (fastDuration / totalDuration);
+          } else {
+            // Медленный азартный докрут в конце
+            const slowProgress = (totalProgress - fastDuration / totalDuration) / (slowDuration / totalDuration);
+            const slowEased = easeOutElastic(slowProgress);
+            easedProgress = (fastDuration / totalDuration) + slowEased * (slowDuration / totalDuration);
+          }
 
           const frameRotation = startRotation + (endRotation - startRotation) * easedProgress;
           wheelSVG.style.transform = `rotate(${frameRotation}deg)`;
           
-          if (progress < 1) {
+          // Плавное покачивание стрелки в конце
+          if (totalProgress > 0.8) {
+            const wobble = Math.sin((totalProgress - 0.8) * 10 * Math.PI) * 2;
+            pointerEl.style.transform = `translateX(-50%) rotate(${wobble}deg)`;
+          } else {
+            pointerEl.style.transform = `translateX(-50%) rotate(0deg)`;
+          }
+          
+          if (totalProgress < 1) {
             requestAnimationFrame(animate);
           } else {
+            pointerEl.style.transform = `translateX(-50%) rotate(0deg)`;
             resolve();
           }
         }
         requestAnimationFrame(animate);
       });
       
-      currentRotation = endRotation; // Обновляем текущий угол
+      currentRotation = endRotation;
       
       toast(`Результат: ${PRIZES[targetIndex].text}`);
       consumeFreeSpinIfAny();
