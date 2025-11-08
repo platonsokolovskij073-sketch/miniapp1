@@ -157,7 +157,7 @@ body{
 }
 /* Красивая стрелка-указатель с динамическим концом (наверху, перевернута вниз) */
 .wheel-pointer{
-  position:absolute; top: -8px; left: 50%; transform: translateX(-50%) rotate(180deg);
+  position:absolute; top: -20px; left: 50%; transform: translateX(-50%) rotate(180deg);
   width: 32px; height: 32px; z-index: 10;
   filter: drop-shadow(0 0 8px rgba(0, 246, 255, 0.8));
   transition: transform 0.1s ease-out;
@@ -620,9 +620,19 @@ function mountWheel() {
     wheelSVG.innerHTML += `<circle cx="${rightBall.x}" cy="${rightBall.y}" r="${ballRadius}" fill="#888888" opacity="0.9"><animate attributeName="opacity" values="0.7;1;0.7" dur="1s" repeatCount="indefinite"/></circle>`;
   });
   
-  // Функция анимации: медленное начало → быстрая середина → медленный конец
+  // Функция анимации: медленное начало → быстрая середина → очень медленный конец
   function easeInOutCubic(t) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+  
+  // Функция для очень медленного замедления в конце (easeOutQuint)
+  function easeOutQuint(t) {
+    return 1 - Math.pow(1 - t, 5);
+  }
+  
+  // Комбинированная функция: быстрый старт, очень медленный конец
+  function easeInOutQuint(t) {
+    return t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2;
   }
   
   // Функция для эффекта замедления и динамической стрелки при касании шариков
@@ -699,8 +709,20 @@ function mountWheel() {
           const elapsed = now - startTime;
           const progress = Math.min(elapsed / duration, 1);
           
-          // Медленное начало → быстрая середина → медленный конец
-          const easedProgress = easeInOutCubic(progress);
+          // Медленное начало → быстрая середина → очень медленный конец (все медленнее и медленнее)
+          // Используем комбинированную функцию для более плавного замедления в конце
+          let easedProgress;
+          if (progress < 0.7) {
+            // Первые 70% - обычное ускорение и замедление
+            const earlyProgress = progress / 0.7;
+            easedProgress = easeInOutCubic(earlyProgress) * 0.7;
+          } else {
+            // Последние 30% - очень медленное замедление (все медленнее и медленнее)
+            const lateProgress = (progress - 0.7) / 0.3;
+            const lateEased = easeOutQuint(lateProgress);
+            easedProgress = 0.7 + lateEased * 0.3;
+          }
+          
           const targetRotation = startRotation + (endRotation - startRotation) * easedProgress;
           
           // Вычисляем базовую скорость вращения
