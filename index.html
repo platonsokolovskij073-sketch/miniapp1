@@ -189,7 +189,7 @@ body{
 .toast{position:fixed; left:50%; bottom:120px; transform:translateX(-50%) translateY(20px); background:rgba(0,0,0,.8);
   border:1px solid var(--line); color:#fff; padding:10px 14px; border-radius:12px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; font-size:13px}
 .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
-@keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
+@keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}
 
 /* ===== Overgo (scoped) ===== */
 .overgo { --stroke:#10162b; --muted:#9ca3af; --win:#22c55e; --win2:#86efac; --lose:#ef4444; }
@@ -291,7 +291,9 @@ body{
     <section class="container" id="games">
       <div class="card">
         <h3>Мини-игры</h3>
-        <div class="row" style="margin-top:6px"><span class="free-badge">🎁 Бесплатных прокрутов: <b data-free-counter>0</b></span></div>
+        <div class="row" style="margin-top:6px">
+          <span class="free-badge">🆓 Демо-режим: баланс не тратится</span>
+        </div>
         <div class="games-grid" style="margin-top:8px">
           <button class="btn gbtn" data-game="slot">🎰 Слот</button>
           <button class="btn purple gbtn" data-game="cups">🥤 Стаканы</button>
@@ -315,7 +317,7 @@ body{
           <button class="btn" id="dailyBtn">Забрать</button>
         </div>
         <div class="bonus-bar" id="bonusBar" style="margin-bottom:6px"></div>
-        <div class="tile"><div>Бесплатных прокрутов</div><div><b data-free-counter>0</b></div></div>
+        <div class="tile"><div>Бесплатных прокрутов</div><div><b data-free-counter>∞</b></div></div>
       </div>
     </section>
     <section class="container" id="ref">
@@ -381,13 +383,16 @@ if (localStorage.getItem('game_balance') === null) {
   setInt('game_balance', 10000);
 }
 
+// === Глобальный демо-флаг: бесплатно
+const FREE_PLAY = true;
+
 function refreshBalances(){
   document.getElementById('gameBal').textContent = `${getInt('game_balance')} ⭐`;
   document.getElementById('refBal').textContent  = `${getInt('ref_balance')} ⭐`;
 }
 function updateFreeBadge(){
-  const n = getInt('free_spins');
-  document.querySelectorAll('[data-free-counter]').forEach(el=>el.textContent=n);
+  // в демо-режиме показываем бесконечность
+  document.querySelectorAll('[data-free-counter]').forEach(el=>el.textContent= FREE_PLAY ? '∞' : (getInt('free_spins')||0));
 }
 refreshBalances(); updateFreeBadge();
 
@@ -408,6 +413,7 @@ function renderBonus(){
 }
 renderBonus();
 document.getElementById('dailyBtn').onclick=()=>{
+  // можно оставить как есть; free режим не зависит от бонуса
   const last=localStorage.getItem('daily_last');
   let streak=getInt('daily_streak');
   if(last===ymd()){ toast('Уже забрано сегодня'); return; }
@@ -481,6 +487,8 @@ const anim={
 };
 function markGame(kind){ document.querySelectorAll('.gbtn').forEach(b=>b.classList.toggle('active', b.dataset.game===kind)); }
 function consumeFreeSpinIfAny(){
+  // в демо-режиме ничего не списываем
+  if (FREE_PLAY) return false;
   const n = getInt('free_spins');
   if(n>0){ setInt('free_spins', n-1); updateFreeBadge(); toast('🎁 Бесплатный прокрут использован'); return true; }
   return false;
@@ -489,9 +497,7 @@ function consumeFreeSpinIfAny(){
 /* SLOT */
 function mountSlot(){
   markGame('slot');
-  gameArea.innerHTML=`<div class="card"><div class="slot-wrap"><div class="simple-slot"><div class="reel"><div class="roller" id="sl_r1"></div></div><div class="reel"><div class="roller" id="sl_r2"></div></div><div class="reel"><div class="roller" id="sl_r3"></div></div></div></div><div style="display:grid;place-items:center;margin-top:10px;"><button class="btn" id="spinBtn" data-action="spin">Крутить</button><div class="free-badge" style="margin-top:6px">🎁 Осталось: <b data-free-counter>0</b></div></div><span class="badge" id="slotOut" style="margin-top:6px;display:block;text-align:center;">Удачи!</span></div>`;
-  updateFreeBadge();
-
+  gameArea.innerHTML=`<div class="card"><div class="slot-wrap"><div class="simple-slot"><div class="reel"><div class="roller" id="sl_r1"></div></div><div class="reel"><div class="roller" id="sl_r2"></div></div><div class="reel"><div class="roller" id="sl_r3"></div></div></div></div><div style="display:grid;place-items:center;margin-top:10px;"><button class="btn" id="spinBtn" data-action="spin">Крутить</button><div class="free-badge" style="margin-top:6px">🆓 Демо</div></div><span class="badge" id="slotOut" style="margin-top:6px;display:block;text-align:center;">Удачи!</span></div>`;
   const symbols=['🎃','🕷️','🕸️','🦇','🍬','7️⃣'], N=symbols.length;
   const itemH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sym'));
   const rollers = ['sl_r1','sl_r2','sl_r3'].map(id=>{
@@ -519,7 +525,7 @@ function mountSlot(){
       })));
       const [a,b,c] = results.map(i=>symbols[i]);
       document.getElementById('slotOut').textContent = (a===b && b===c) ? `Победа! ${a}${b}${c}` : `${a} | ${b} | ${c}`;
-      consumeFreeSpinIfAny();
+      // демо: ничего не списываем/начисляем
     });
   }
   document.getElementById('spinBtn').onclick=spin;
@@ -528,10 +534,10 @@ function mountSlot(){
 /* CUPS */
 function mountCups(){
   markGame('cups');
-  gameArea.innerHTML = `<div class="card"><div class="stage"></div><div class="cups-ui"><button class="btn" data-action="mix">Начать</button></div></div>`;
+  gameArea.innerHTML = `<div class="card"><div class="stage"></div><div class="cups-ui"><button class="btn" data-action="mix">Начать</button><span class="free-badge">🆓 Демо</span></div></div>`;
   const stage = gameArea.querySelector('.stage');
   const ball = document.createElement('div'); ball.className='ball-sm'; stage.appendChild(ball);
-  
+
   let cupColorClasses;
   try {
     cupColorClasses = JSON.parse(localStorage.getItem('cup_color_order'));
@@ -543,13 +549,12 @@ function mountCups(){
   const cups = cupColorClasses.map(colorClass => {
     const c = document.createElement('div'); c.className = `cup ${colorClass}`; stage.appendChild(c); return c;
   });
-  
+
   const baseY=150, upY=72, ballY=baseY+18;
   const posX=()=>(W=stage.clientWidth, C=W/2, G=Math.min(160, Math.max(110, (W-220)/2)), [C-G, C, C+G]);
   let cupsAtPos=[...cups], ballPosIndex=1;
 
   function shuffle(array) { for (let i=array.length-1; i>0; i--) { const j=Math.floor(Math.random()*(i+1)); [array[i], array[j]]=[array[j], array[i]]; } }
-  
   function shuffleCupColors(){ shuffle(cupColorClasses); applyColors(); }
   function cycleCupColors(){ cupColorClasses.push(cupColorClasses.shift()); applyColors(); }
   function applyColors(){
@@ -569,11 +574,9 @@ function mountCups(){
     cupsAtPos.forEach((cup,pos)=>{ cup.style.transition=`transform ${ms}ms ease`; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
     if(ballPosIndex===a) ballPosIndex=b; else if(ballPosIndex===b) ballPosIndex=a;
     ball.style.transition=`transform ${ms}ms ease`; ball.style.transform=`translate(${xs[ballPosIndex]}px, ${ballY}px) translate(-50%,-50%)`;
-    
     const rand = Math.random();
     if (rand < 0.35) { shuffleCupColors(); }
     else if (rand < 0.6) { cycleCupColors(); }
-
     await new Promise(r=>setTimeout(r,ms+18));
   }
   async function startRound(){
@@ -585,25 +588,14 @@ function mountCups(){
       cupsAtPos.forEach((cup,pos)=>{ cup.style.transition='transform .2s ease'; cup.style.transform=`translate(${xs[pos]}px, ${baseY}px) translate(-50%,-50%)`; });
       await new Promise(r=>setTimeout(r,200)); ball.style.opacity='0';
       for(let i=0;i<rint(14,22);i++){ await swapPos(rint(0,1), rint(1,2), rint(300,450)); }
-      
-      if (Math.random() < 0.3) {
-        toast('Возврат!');
-        cupColorClasses = initialColorOrder;
-        applyColors();
-        await new Promise(r => setTimeout(r, 300));
-      }
-
+      if (Math.random() < 0.3) { cupColorClasses = initialColorOrder; applyColors(); await new Promise(r => setTimeout(r, 300)); }
       const guessPos = await new Promise(res=>cupsAtPos.forEach((cup,pos)=>{ cup.style.cursor='pointer'; cup.onclick=()=>res(pos); }));
       cupsAtPos.forEach(c=>{ c.onclick=null; c.style.cursor='default'; });
       ball.style.opacity='1';
       cupsAtPos.forEach((cup,pos)=>{ cup.style.transition='transform .2s ease'; cup.style.transform=`translate(${xs[pos]}px, ${upY}px) translate(-50%,-50%)`; });
-      
-      const finalColorOrder = cupsAtPos.map(cup => cup.classList[1]);
-      localStorage.setItem('cup_color_order', JSON.stringify(finalColorOrder));
-      
+      localStorage.setItem('cup_color_order', JSON.stringify(cupsAtPos.map(c=>c.classList[1])));
       await new Promise(r=>setTimeout(r,200));
-      toast(guessPos===ballPosIndex ? 'Верно! 🎉' : 'Мимо');
-      consumeFreeSpinIfAny();
+      toast(guessPos===ballPosIndex ? 'Верно! 🎉 (демо)' : 'Мимо (демо)');
     });
   }
   placeAll(true); gameArea.querySelector('[data-action="mix"]').onclick=startRound;
@@ -612,12 +604,9 @@ function mountCups(){
 /* WHEEL */
 function mountWheel() {
   markGame('wheel');
-  gameArea.innerHTML = `<div class="card"><div class="stage"><div class="wheel-wrapper"><div class="wheel-pointer"></div><div class="wheel-container"><svg class="wheel-svg" viewBox="0 0 200 200"></svg></div><div class="wheel-center"></div></div></div><div style="display:grid; place-items:center;"><button class="btn" data-action="spinwheel" style="margin-top:10px;">Крутить</button><div class="free-badge" style="margin-top:6px;">🎁 Осталось: <b data-free-counter>0</b></div></div></div>`;
-  updateFreeBadge();
-
+  gameArea.innerHTML = `<div class="card"><div class="stage"><div class="wheel-wrapper"><div class="wheel-pointer"></div><div class="wheel-container"><svg class="wheel-svg" viewBox="0 0 200 200"></svg></div><div class="wheel-center"></div></div></div><div style="display:grid; place-items:center;"><button class="btn" data-action="spinwheel" style="margin-top:10px;">Крутить</button><div class="free-badge" style="margin-top:6px;">🆓 Демо</div></div></div>`;
   const wheelSVG = gameArea.querySelector('.wheel-svg');
   let currentRotation = 0;
-
   const PRIZES = [
     { text: '+10 ⭐', color: '#ff7a18' }, { text: '+50 ⭐', color: '#9c5cff' },
     { text: 'Ничего', color: '#4a415a' }, { text: '+100 ⭐', color: '#ffb86b' },
@@ -626,18 +615,14 @@ function mountWheel() {
   ];
   const numSegments = PRIZES.length;
   const angleStep = 360 / numSegments;
-  const center = 100;
-  const radius = 100;
-
+  const center = 100, radius = 100;
   function polarToCartesian(r, angle) {
     const a = (angle - 90) * Math.PI / 180;
     return { x: center + r * Math.cos(a), y: center + r * Math.sin(a) };
   }
   wheelSVG.innerHTML = '';
   PRIZES.forEach((prize, i) => {
-    const startAngle = i * angleStep;
-    const endAngle = startAngle + angleStep;
-    const midAngle = startAngle + angleStep / 2;
+    const startAngle = i * angleStep, endAngle = startAngle + angleStep, midAngle = startAngle + angleStep / 2;
     const start = polarToCartesian(radius, endAngle);
     const end = polarToCartesian(radius, startAngle);
     const d = `M ${start.x} ${start.y} A ${radius} ${radius} 0 0 0 ${end.x} ${end.y} L ${center} ${center} Z`;
@@ -660,7 +645,6 @@ function mountWheel() {
       const endRotation = normalizedStart + fullSpins + angleDiff;
       const duration = 10000 + rint(0, 3000);
       const startTime = performance.now();
-
       await new Promise(resolve => {
         function animate(now) {
           const elapsed = now - startTime;
@@ -673,8 +657,7 @@ function mountWheel() {
         requestAnimationFrame(animate);
       });
       currentRotation = endRotation % 360;
-      toast(`Результат: ${PRIZES[targetIndex].text}`);
-      consumeFreeSpinIfAny();
+      toast(`Результат (демо): ${PRIZES[targetIndex].text}`);
     });
   }
   gameArea.querySelector('[data-action="spinwheel"]').onclick = spinWheel;
@@ -706,7 +689,7 @@ function mountOvergo(){
           <div class="pill">Баланс <b><span id="og_bal">0</span> ⭐</b></div>
           <div class="pill">Последний <b id="og_last">x1.00</b></div>
         </div>
-        <div class="free-badge" style="margin-top:8px">🎁 Осталось: <b data-free-counter>0</b></div>
+        <div class="free-badge" style="margin-top:8px">🆓 Демо</div>
       </div>
 
       <div class="panel">
@@ -746,7 +729,6 @@ function mountOvergo(){
       </div>
     </div>
   </div>`;
-  updateFreeBadge();
 
   // Elements
   const betEl = document.getElementById('og_bet');
@@ -760,10 +742,8 @@ function mountOvergo(){
   const lastEl = document.getElementById('og_last');
   const strip = document.getElementById('og_strip');
 
-  // State
   let lastMult = 1.0;
-
-  const HOUSE_EDGE = 0.03; // 3%
+  const HOUSE_EDGE = 0.03;
   const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
   const round2 = v => Math.round(v*100)/100;
 
@@ -825,11 +805,9 @@ function mountOvergo(){
       const multTarget = parseFloat((targetEl.value||'1').replace(',','.'))||1.01;
       const chance = clamp(parseFloat((chanceEl.value||'').replace(',','.'))||0, 0.1, 99.9);
 
-      // проверка средств / free spin
-      let usedFree = false;
-      if(getInt('free_spins')>0){
-        usedFree = consumeFreeSpinIfAny();
-      }else{
+      // DEMO: не списываем и не проверяем баланс
+      const usedFree = FREE_PLAY ? true : consumeFreeSpinIfAny();
+      if(!FREE_PLAY && !usedFree){
         const bal = getInt('game_balance');
         if(bet<=0){ toast('Укажи сумму ставки'); return; }
         if(bal < bet){ toast('Недостаточно средств'); return; }
@@ -858,19 +836,23 @@ function mountOvergo(){
         shownMult = multTarget;
         xEl.textContent = 'x'+round2(shownMult).toFixed(2);
         xEl.classList.add('win');
-        const winAmount = Math.floor(bet * shownMult);
-        setInt('game_balance', getInt('game_balance') + winAmount);
-        refreshBalances(); updatePayout();
-        toast(`Победа! +${winAmount} ⭐`);
+        if (!FREE_PLAY) {
+          const winAmount = Math.floor(bet * shownMult);
+          setInt('game_balance', getInt('game_balance') + winAmount);
+          refreshBalances(); updatePayout();
+          toast(`Победа! +${winAmount} ⭐`);
+        } else {
+          toast(`Победа! (демо)`);
+        }
       }else{
         shownMult = Math.max(1.00, Math.min(multTarget-0.01, multTarget*Math.random()*0.95));
         xEl.textContent = 'x'+round2(shownMult).toFixed(2);
         xEl.classList.add('lose');
-        toast(usedFree ? 'Проигрыш, но ставка не списана (free)' : `Проигрыш −${bet} ⭐`);
+        toast(FREE_PLAY ? 'Проигрыш (демо)' : (usedFree ? 'Проигрыш, но ставка не списана (free)' : `Проигрыш −${bet} ⭐`));
       }
 
       lastMult = shownMult;
-      document.getElementById('og_last').textContent = 'x'+round2(lastMult).toFixed(2);
+      lastEl.textContent = 'x'+round2(lastMult).toFixed(2);
       pushHistory(shownMult, win);
       updatePayout();
     });
