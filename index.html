@@ -298,7 +298,6 @@ body{
           <div class="span2">
             <button class="btn ghost gbtn" data-game="wheel">🧭 Колесо</button>
           </div>
-          <!-- Overgo button -->
           <div class="span2">
             <button class="btn gbtn" data-game="overgo">🧪 Overgo</button>
           </div>
@@ -376,6 +375,12 @@ function applyTheme(){
 
 const getInt = k => parseInt(localStorage.getItem(k)||'0',10) || 0;
 const setInt = (k,v) => localStorage.setItem(k, String(v));
+
+// === Стартовый баланс каждому: 10 000 ⭐ (один раз при первой загрузке)
+if (localStorage.getItem('game_balance') === null) {
+  setInt('game_balance', 10000);
+}
+
 function refreshBalances(){
   document.getElementById('gameBal').textContent = `${getInt('game_balance')} ⭐`;
   document.getElementById('refBal').textContent  = `${getInt('ref_balance')} ⭐`;
@@ -756,19 +761,23 @@ function mountOvergo(){
   const strip = document.getElementById('og_strip');
 
   // State
-  let balance = getInt('game_balance'); // общий баланс из профиля
   let lastMult = 1.0;
 
-  // Config
   const HOUSE_EDGE = 0.03; // 3%
-
   const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
   const round2 = v => Math.round(v*100)/100;
+
+  function updatePayout(){
+    const bet = Math.max(0, Math.floor(+betEl.value||0));
+    const mult = parseFloat((targetEl.value||'1').replace(',','.'))||1.01;
+    const payout = Math.floor(bet * mult);
+    payoutEl.textContent = payout.toString();
+    balEl.textContent = getInt('game_balance');
+  }
   function syncFromTarget(){
     let t = parseFloat((targetEl.value||'').replace(',','.'));
     if(!isFinite(t) || t<1.01) t=1.01;
     t = clamp(t, 1.01, 100);
-    // шанс = (100 / (мультик / (1-хаус)))%
     let chance = 100 / (t / (1 - HOUSE_EDGE));
     chance = clamp(chance, 0.1, 99.9);
     chanceEl.value = round2(chance).toFixed(2);
@@ -778,17 +787,9 @@ function mountOvergo(){
     let c = parseFloat((chanceEl.value||'').replace(',','.'));
     if(!isFinite(c) || c<=0) c = 0.1;
     c = clamp(c, 0.1, 99.9);
-    // таргет = (100 / шанс) * (1-хаус)
     const t = (100 / c) * (1 - HOUSE_EDGE);
     targetEl.value = round2(Math.max(1.01,t)).toFixed(2);
     updatePayout();
-  }
-  function updatePayout(){
-    const bet = Math.max(0, Math.floor(+betEl.value||0));
-    const mult = parseFloat(targetEl.value.replace(',','.'))||1.01;
-    const payout = Math.floor(bet * mult);
-    payoutEl.textContent = payout.toString();
-    balEl.textContent = getInt('game_balance');
   }
   function pushHistory(mult, win){
     const chip = document.createElement('div');
@@ -821,25 +822,23 @@ function mountOvergo(){
   async function play(){
     await anim.run(async ()=>{
       let bet = Math.max(0, Math.floor(+betEl.value||0));
-      const multTarget = parseFloat(targetEl.value.replace(',','.'))||1.01;
-      const chance = clamp(parseFloat(chanceEl.value.replace(',','.'))||0, 0.1, 99.9);
+      const multTarget = parseFloat((targetEl.value||'1').replace(',','.'))||1.01;
+      const chance = clamp(parseFloat((chanceEl.value||'').replace(',','.'))||0, 0.1, 99.9);
 
-      // проверка средств
+      // проверка средств / free spin
       let usedFree = false;
       if(getInt('free_spins')>0){
         usedFree = consumeFreeSpinIfAny();
       }else{
-        balance = getInt('game_balance');
+        const bal = getInt('game_balance');
         if(bet<=0){ toast('Укажи сумму ставки'); return; }
-        if(balance < bet){ toast('Недостаточно средств'); return; }
-        // списываем ставку
-        balance -= bet; setInt('game_balance', balance); refreshBalances(); updatePayout();
+        if(bal < bet){ toast('Недостаточно средств'); return; }
+        setInt('game_balance', bal - bet); refreshBalances(); updatePayout();
       }
 
-      // анимация полосы + розыгрыш
+      // анимация полосы
       xEl.classList.remove('lose','win'); xEl.textContent='...';
       bar.style.width = '0%';
-
       const duration = 1200;
       const start = performance.now();
       await new Promise(res=>{
@@ -851,34 +850,27 @@ function mountOvergo(){
         requestAnimationFrame(step);
       });
 
-      // результат: win с probability = chance%
-      const roll = Math.random() * 100;
-      const win = roll < chance;
-
-      // визуальный множитель результата
+      // результат
+      const win = Math.random()*100 < chance;
       let shownMult;
+
       if(win){
         shownMult = multTarget;
         xEl.textContent = 'x'+round2(shownMult).toFixed(2);
         xEl.classList.add('win');
         const winAmount = Math.floor(bet * shownMult);
-        balance = getInt('game_balance') + winAmount; // если был списан бет — он уже был вычтен выше; добавляем полный выигрыш
-        setInt('game_balance', balance); refreshBalances();
+        setInt('game_balance', getInt('game_balance') + winAmount);
+        refreshBalances(); updatePayout();
         toast(`Победа! +${winAmount} ⭐`);
       }else{
-        // показываем произвольный мультик ниже цели
-        const low = Math.max(1.00, multTarget * Math.random() * 0.95);
-        shownMult = Math.max(1.00, Math.min(multTarget-0.01, low));
+        shownMult = Math.max(1.00, Math.min(multTarget-0.01, multTarget*Math.random()*0.95));
         xEl.textContent = 'x'+round2(shownMult).toFixed(2);
         xEl.classList.add('lose');
-        if(usedFree){
-          toast('Проигрыш, но ставка не списана (free)');
-        }else{
-          toast(`Проигрыш −${bet} ⭐`);
-        }
+        toast(usedFree ? 'Проигрыш, но ставка не списана (free)' : `Проигрыш −${bet} ⭐`);
       }
+
       lastMult = shownMult;
-      lastEl.textContent = 'x'+round2(lastMult).toFixed(2);
+      document.getElementById('og_last').textContent = 'x'+round2(lastMult).toFixed(2);
       pushHistory(shownMult, win);
       updatePayout();
     });
