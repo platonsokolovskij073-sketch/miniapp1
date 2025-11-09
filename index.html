@@ -16,7 +16,9 @@
   --sym:56px; --cup-w: 92px; --cup-h: 86px;
 }
 
-html.nocopy, html.nocopy body, html.nocopy *:not(input):not(textarea){ -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+html.nocopy, html.nocopy body, html.nocopy *:not(input):not(textarea){
+  -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;
+}
 html.nocopy ::selection{background:transparent}
 html,body{height:100%; overflow:hidden;}
 *{box-sizing:border-box}
@@ -147,11 +149,33 @@ body{
 }
 
 /* ——— WHEEL ——— */
-.wheel-wrapper{ position:relative; width: 240px; height: 240px; margin: auto; margin-top:10px; display:grid; place-items:center; }
-.wheel-pointer{ position:absolute; top:-2px; left:50%; transform:translateX(-50%); width:24px; height:8px; border-radius:4px; background:#00f6ff; box-shadow:0 0 10px #00f6ff, 0 0 20px #00f6ff; z-index:10; }
-.wheel-container{ position:absolute; width:100%; height:100%; border-radius:50%; box-shadow: inset 0 0 20px rgba(0,0,0,.5), 0 0 0 6px #2a2a2a; border:1px solid #2a2a2a; background: rgba(42,42,42,.3); }
+.wheel-wrapper{
+  position:relative; width: 240px; height: 240px;
+  margin: auto; margin-top:10px;
+  display:grid; place-items:center;
+}
+.wheel-pointer{
+  position:absolute; top: -2px; left: 50%; transform: translateX(-50%);
+  width: 24px; height: 8px; border-radius: 4px;
+  background-color: #00f6ff;
+  box-shadow: 0 0 10px #00f6ff, 0 0 20px #00f6ff;
+  z-index: 10;
+}
+.wheel-container{
+  position:absolute; width:100%; height:100%;
+  border-radius:50%;
+  box-shadow: inset 0 0 20px rgba(0,0,0,.5), 0 0 0 6px #2a2a2a;
+  border: 1px solid #2a2a2a;
+  background: rgba(42, 42, 42, 0.3);
+}
 .wheel-svg{ width:100%; height:100%; }
-.wheel-center{ position:absolute; width:50px; height:50px; border-radius:50%; background: radial-gradient(circle,#443a59,#1e152d); border:2px solid rgba(255,255,255,.2); box-shadow:0 0 10px rgba(0,0,0,.5); }
+.wheel-center{
+  position:absolute; width: 50px; height: 50px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #443a59, #1e152d);
+  border: 2px solid rgba(255,255,255,.2);
+  box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
 
 .games-grid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
 .games-grid .span2{ grid-column: 1 / span 2; display:flex; justify-content:center }
@@ -165,7 +189,7 @@ body{
 .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
 @keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
 
-/* ===== Overgo (scoped) ===== */
+/* ===== OVERGO (порт анимаций) ===== */
 .overgo { --stroke:#10162b; --muted:#9ca3af; --win:#22c55e; --win2:#86efac; --lose:#ef4444; }
 .overgo .grid{display:grid; gap:12px}
 @media(min-width:720px){ .overgo .grid{grid-template-columns:360px minmax(0,1fr)} }
@@ -174,25 +198,38 @@ body{
 .overgo .field{display:flex; align-items:center; gap:8px; border:1px solid var(--line); border-radius:12px; padding:9px 12px; background:rgba(255,255,255,.06)}
 .overgo input[type="number"], .overgo input[type="text"]{flex:1; border:0; outline:0; background:transparent; color:var(--text); font-size:15px}
 .overgo .chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
-.overgo .chip{border:1px solid var(--line); background:rgba(255,255,255,.05); color:#d1d5db; font-size:11px; border-radius:999px; padding:6px 10px; cursor:pointer}
+.overgo .chip{border:1px solid var(--line); background:#0a1228; color:#d1d5db; font-size:11px; border-radius:999px; padding:6px 10px; cursor:pointer; transition:.12s}
+.overgo .chip:hover{transform:translateY(-1px); box-shadow:0 6px 16px rgba(34,197,94,.35); border-color:rgba(34,197,94,.5)}
 .overgo .chip.danger{color:#fecaca}
 .overgo .btn-main{margin-top:12px; width:100%}
 .overgo .pills{display:flex; gap:8px; margin-top:12px}
 .overgo .pill{flex:1; border:1px solid var(--line); border-radius:999px; padding:7px 10px; font-size:12px; color:var(--muted); display:flex; align-items:center; justify-content:space-between}
 .overgo .statgrid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px}
-.overgo .stat{border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.04); padding:9px 11px; font-size:11px; color:var(--muted); display:flex; flex-direction:column; gap:4px}
-.overgo .screen{position:relative; margin-top:10px; border:1px solid var(--line); border-radius:14px; background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); min-height:220px; display:grid; place-items:center; overflow:hidden}
-.overgo .x{font-weight:800; letter-spacing:.06em; font-size:clamp(44px,6.5vw,72px)}
-.overgo .x.win{color:#dcfce7; text-shadow:0 0 14px rgba(34,197,94,.55)}
-.overgo .x.lose{color:#fecaca; text-shadow:0 0 14px rgba(239,68,68,.45)}
-.overgo .bar{margin-top:10px; height:6px; border-radius:999px; border:1px solid var(--line); overflow:hidden}
-.overgo .bar>div{height:100%; width:0; background:linear-gradient(90deg, var(--win), var(--win2)); transition:width .35s ease-out}
-.overgo .stripWrap{margin-top:10px; border:1px solid var(--line); border-radius:10px; padding:6px 8px}
-.overgo .stripTitle{font-size:11px; letter-spacing:.12em; color:var(--muted); text-transform:uppercase; margin-bottom:4px}
+.overgo .stat{border:1px solid var(--line); border-radius:12px; background:#0a1228; padding:9px 11px; font-size:11px; color:var(--muted); display:flex; flex-direction:column; gap:4px}
+.overgo .screen{position:relative; margin-top:10px; border:1px solid var(--line); border-radius:14px; background:radial-gradient(circle at top, rgba(34,197,94,.18), rgba(7,16,38,1)); min-height:240px; display:grid; place-items:center; overflow:hidden}
+.overgo .x{position:relative; z-index:1; font-weight:800; letter-spacing:.06em; font-size:clamp(44px,6.5vw,72px); transform-origin:center}
+.overgo .x.win{color:#dcfce7; text-shadow:0 0 14px rgba(34,197,94,.55),0 0 40px rgba(34,197,94,.65)}
+.overgo .x.lose{color:#fecaca; text-shadow:0 0 14px rgba(239,68,68,.45),0 0 40px rgba(239,68,68,.40)}
+.overgo .glow{position:absolute; inset:-40%; background:radial-gradient(circle at center, rgba(34,197,94,.6), transparent 60%); pointer-events:none; opacity:0; transition:opacity .3s; mix-blend-mode:screen}
+.overgo .screen.med .glow{opacity:.65; animation:rot 6s linear infinite}
+.overgo .screen.epic .glow{opacity:1; animation:rot 4s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.overgo .x.animate{animation:pop .7s ease-out}
+@keyframes pop{0%{transform:scale(.96);opacity:.2}40%{transform:scale(1.05);opacity:1}100%{transform:scale(1)}}
+.overgo .bar{margin-top:10px; height:6px; border-radius:999px; border:1px solid var(--line); overflow:hidden; background:#0b132a}
+.overgo .bar>div{height:100%; width:0; background:linear-gradient(90deg, var(--win), var(--win2)); transition:width .35s ease-out,background .2s ease-out}
+.overgo .stripWrap{margin-top:10px; border:1px solid var(--line); border-radius:10px; padding:6px 8px; background:#0a1228}
+.overgo .stripTitle{font-size:11px; letter-spacing:.12em; color:#6b7280; text-transform:uppercase; margin-bottom:4px}
 .overgo .strip{display:flex; gap:6px; overflow-x:auto; padding-bottom:2px}
 .overgo .chipx{flex:0 0 auto; border-radius:999px; padding:4px 10px; font-size:11px; font-weight:700; min-width:44px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,.35)}
 .overgo .chipx.win{background:#166534; color:#dcfce7}
 .overgo .chipx.lose{background:#7f1d1d; color:#fecaca}
+.overgo .toast{position:absolute; left:50%; bottom:18px; transform:translateX(-50%) translateY(20px); padding:10px 18px; border-radius:999px; font-size:13px; font-weight:700; letter-spacing:.06em; display:flex; gap:8px; opacity:0; pointer-events:none; transition:.25s; box-shadow:0 16px 40px rgba(0,0,0,.7)}
+.overgo .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+.overgo .toast.win{background:rgba(22,163,74,.14); border:1px solid rgba(34,197,94,.9); color:#dcfce7}
+.overgo .toast.lose{background:rgba(220,38,38,.14); border:1px solid rgba(248,113,113,.9); color:#fecaca}
+.overgo .particle{position:absolute; width:6px; height:6px; border-radius:50%; pointer-events:none; opacity:0; animation:fly .9s ease-out forwards}
+@keyframes fly{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
 </style>
 </head>
 <body>
@@ -224,7 +261,6 @@ body{
         </div>
       </div>
     </section>
-
     <section class="container" id="shop">
       <div class="card">
         <h3>Магазин</h3>
@@ -250,7 +286,6 @@ body{
         </div>
       </div>
     </section>
-
     <section class="container" id="checkout">
       <div class="card">
         <h3>Оформление</h3>
@@ -264,7 +299,6 @@ body{
         </div>
       </div>
     </section>
-
     <section class="container" id="games">
       <div class="card">
         <h3>Мини-игры</h3>
@@ -280,7 +314,6 @@ body{
       </div>
       <div id="gameArea" class="grid" style="margin-top:6px"></div>
     </section>
-
     <section class="container" id="bonus">
       <div class="card">
         <h3>Ежедневный бонус</h3>
@@ -294,7 +327,6 @@ body{
         <div class="tile"><div>Бесплатных прокрутов</div><div><b data-free-counter>∞</b></div></div>
       </div>
     </section>
-
     <section class="container" id="ref">
       <div class="card">
         <h3>Реферальная программа</h3>
@@ -306,7 +338,6 @@ body{
         </div>
       </div>
     </section>
-
     <section class="container" id="profile">
       <div class="card">
         <h3>Профиль</h3>
@@ -322,7 +353,6 @@ body{
       </div>
     </section>
   </div>
-
   <nav class="nav">
     <button class="tab active" data-tab="home">🏠<span>Дом</span></button>
     <button class="tab" data-tab="shop">🛒<span>Магазин</span></button>
@@ -331,7 +361,6 @@ body{
     <button class="tab" data-tab="bonus">🎁<span>Бонус</span></button>
     <button class="tab" data-tab="profile">👤<span>Профиль</span></button>
   </nav>
-
   <div class="toast" id="toast">Готово!</div>
 
 <script>
@@ -356,10 +385,12 @@ function applyTheme(){
 const getInt = k => parseInt(localStorage.getItem(k)||'0',10) || 0;
 const setInt = (k,v) => localStorage.setItem(k, String(v));
 
-// стартовый баланс 10к один раз
-if (localStorage.getItem('game_balance') === null) setInt('game_balance', 10000);
+// стартовый баланс 10к — единожды
+if (localStorage.getItem('game_balance') === null) {
+  setInt('game_balance', 10000);
+}
 
-// демо-режим: бесплатно
+// демо-флаг: игры бесплатны
 const FREE_PLAY = true;
 
 function refreshBalances(){
@@ -460,14 +491,11 @@ const anim={
   }
 };
 function markGame(kind){ document.querySelectorAll('.gbtn').forEach(b=>b.classList.toggle('active', b.dataset.game===kind)); }
-function consumeFreeSpinIfAny(){
-  if (FREE_PLAY) return false;
-  const n = getInt('free_spins');
-  if(n>0){ setInt('free_spins', n-1); updateFreeBadge(); toast('🎁 Бесплатный прокрут использован'); return true; }
-  return false;
-}
 
-/* SLOT */
+/* FREE режим — ничего не списываем */
+function consumeFreeSpinIfAny(){ return !!FREE_PLAY; }
+
+/* ——— SLOT ——— */
 function mountSlot(){
   markGame('slot');
   gameArea.innerHTML=`<div class="card"><div class="slot-wrap"><div class="simple-slot"><div class="reel"><div class="roller" id="sl_r1"></div></div><div class="reel"><div class="roller" id="sl_r2"></div></div><div class="reel"><div class="roller" id="sl_r3"></div></div></div></div><div style="display:grid;place-items:center;margin-top:10px;"><button class="btn" id="spinBtn" data-action="spin">Крутить</button><div class="free-badge" style="margin-top:6px">🆓 Демо</div></div><span class="badge" id="slotOut" style="margin-top:6px;display:block;text-align:center;">Удачи!</span></div>`;
@@ -503,7 +531,7 @@ function mountSlot(){
   document.getElementById('spinBtn').onclick=spin;
 }
 
-/* CUPS */
+/* ——— CUPS ——— */
 function mountCups(){
   markGame('cups');
   gameArea.innerHTML = `<div class="card"><div class="stage"></div><div class="cups-ui"><button class="btn" data-action="mix">Начать</button><span class="free-badge">🆓 Демо</span></div></div>`;
@@ -571,7 +599,7 @@ function mountCups(){
   placeAll(true); gameArea.querySelector('[data-action="mix"]').onclick=startRound;
 }
 
-/* WHEEL */
+/* ——— WHEEL ——— */
 function mountWheel() {
   markGame('wheel');
   gameArea.innerHTML = `<div class="card"><div class="stage"><div class="wheel-wrapper"><div class="wheel-pointer"></div><div class="wheel-container"><svg class="wheel-svg" viewBox="0 0 200 200"></svg></div><div class="wheel-center"></div></div></div><div style="display:grid; place-items:center;"><button class="btn" data-action="spinwheel" style="margin-top:10px;">Крутить</button><div class="free-badge" style="margin-top:6px;">🆓 Демо</div></div></div>`;
@@ -618,7 +646,7 @@ function mountWheel() {
   gameArea.querySelector('[data-action="spinwheel"]').onclick=spinWheel;
 }
 
-/* ===== OVERGO ===== */
+/* ===== OVERGO (с анимациями) ===== */
 function mountOvergo(){
   markGame('overgo');
   gameArea.innerHTML = `
@@ -641,8 +669,8 @@ function mountOvergo(){
         </div>
         <button class="btn btn-main" id="og_play" data-action="og_play">Играть</button>
         <div class="pills">
-          <div class="pill">Баланс <b><span id="og_bal">0</span> ⭐</b></div>
-          <div class="pill">Последний <b id="og_last">x1.00</b></div>
+          <div class="pill">Баланс <b><span id="og_bal">${FREE_PLAY?'∞':getInt('game_balance')}</span> ⭐</b></div>
+          <div class="pill">Последний <b id="og_last">x1.02</b></div>
         </div>
         <div class="free-badge" style="margin-top:8px">🆓 Демо</div>
       </div>
@@ -652,7 +680,7 @@ function mountOvergo(){
           <div class="stat">
             <span>Цель</span>
             <div style="display:flex;align-items:center;gap:4px">
-              <input type="text" id="og_target" placeholder="напр. 1.10" value="2.00" />
+              <input type="text" id="og_target" placeholder="напр. 1.02" value="2.00" />
               <span style="font-size:13px;color:var(--muted)">x</span>
             </div>
           </div>
@@ -666,13 +694,18 @@ function mountOvergo(){
           <div class="stat">
             <span>Потенциальный выигрыш</span>
             <div style="font-size:14px;color:var(--text);white-space:nowrap">
-              <span id="og_payout">300</span> ⭐
+              <span id="og_payout">300.00</span> ⭐
             </div>
           </div>
         </div>
 
         <div class="screen" id="og_screen">
-          <div class="x win" id="og_x">x1.00</div>
+          <div class="glow"></div>
+          <div class="x win" id="og_x">x1.02</div>
+          <div id="og_toast" class="toast win">
+            <div id="og_toastLbl">WIN</div>
+            <div id="og_toastMult">x2.00</div>
+          </div>
         </div>
 
         <div class="bar"><div id="og_bar"></div></div>
@@ -684,6 +717,7 @@ function mountOvergo(){
       </div>
     </div>
   </div>`;
+
   // Elements
   const betEl = document.getElementById('og_bet');
   const targetEl = document.getElementById('og_target');
@@ -691,119 +725,126 @@ function mountOvergo(){
   const playBtn = document.getElementById('og_play');
   const payoutEl = document.getElementById('og_payout');
   const xEl = document.getElementById('og_x');
+  const screen = document.getElementById('og_screen');
+  const toastEl = document.getElementById('og_toast');
+  const toastLbl = document.getElementById('og_toastLbl');
+  const toastMult = document.getElementById('og_toastMult');
   const bar = document.getElementById('og_bar');
-  const balEl = document.getElementById('og_bal');
   const lastEl = document.getElementById('og_last');
   const strip = document.getElementById('og_strip');
 
-  let lastMult = 1.0;
-  const HOUSE_EDGE = 0.03;
+  // Helpers from demo
   const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
   const round2 = v => Math.round(v*100)/100;
+  const cryptoRandom=()=>{const a=new Uint32Array(1); crypto.getRandomValues(a); return (a[0]+1)/4294967297;}
 
-  function updatePayout(){
-    const bet = Math.max(0, Math.floor(+betEl.value||0));
-    const mult = parseFloat((targetEl.value||'1').replace(',','.'))||1.01;
-    const payout = Math.floor(bet * mult);
-    payoutEl.textContent = payout.toString();
-    // в демо показываем ∞
-    balEl.textContent = FREE_PLAY ? '∞' : getInt('game_balance');
+  // «щедрость» игры (демо — константа как в файле)
+  const BASE_EDGE = 0.03;
+  function generosity(target){ return 1 - (target < 1.10 ? Math.min(.95, BASE_EDGE + 0.05) : BASE_EDGE); }
+
+  function chanceFromTarget(t){ const g=generosity(t); return clamp((g/t)*100,0.1,95); }
+  function targetFromChance(c){ const g=generosity(parseFloat(targetEl.value)||2); return clamp(g/(c/100),1.02,95000); }
+
+  function sampleMultiplier(gen, target){
+    const r = cryptoRandom();
+    let m = gen / r;
+    const hardCap = (target < 250) ? 250 : 95000;
+    m = Math.max(1.02, Math.min(m, hardCap));
+    return m;
   }
-  function syncFromTarget(){
-    let t = parseFloat((targetEl.value||'').replace(',','.'));
-    if(!isFinite(t) || t<1.01) t=1.01;
-    t = clamp(t, 1.01, 100);
-    let chance = 100 / (t / (1 - HOUSE_EDGE));
-    chance = clamp(chance, 0.1, 99.9);
-    chanceEl.value = round2(chance).toFixed(2);
-    updatePayout();
-  }
-  function syncFromChance(){
-    let c = parseFloat((chanceEl.value||'').replace(',','.'));
-    if(!isFinite(c) || c<=0) c = 0.1;
-    c = clamp(c, 0.1, 99.9);
-    const t = (100 / c) * (1 - HOUSE_EDGE);
-    targetEl.value = round2(Math.max(1.01,t)).toFixed(2);
-    updatePayout();
-  }
+
   function pushHistory(mult, win){
     const chip = document.createElement('div');
     chip.className = 'chipx ' + (win?'win':'lose');
-    chip.textContent = 'x' + round2(mult).toFixed(2);
-    strip.prepend(chip);
-    while (strip.children.length>40) strip.lastElementChild.remove();
+    chip.textContent = mult.toFixed(2)+'x';
+    strip.appendChild(chip);
+    while (strip.children.length>40) strip.removeChild(strip.firstChild);
+    strip.scrollLeft = strip.scrollWidth;
   }
 
-  // init
-  syncFromTarget(); updatePayout();
+  function particlesEpic(){
+    for(let i=0;i<28;i++){
+      const p=document.createElement('div'); p.className='particle';
+      const a=(Math.random()*360)*Math.PI/180, dist=120+Math.random()*140;
+      p.style.background=`hsl(${Math.floor(120+Math.random()*60)} 90% 60%)`;
+      p.style.left='50%'; p.style.top='50%';
+      p.style.setProperty('--dx', Math.cos(a)*dist+'px');
+      p.style.setProperty('--dy', Math.sin(a)*dist+'px');
+      screen.appendChild(p); setTimeout(()=>p.remove(),900);
+    }
+  }
 
-  // events
-  targetEl.addEventListener('input', syncFromTarget);
-  chanceEl.addEventListener('input', syncFromChance);
-  betEl.addEventListener('input', updatePayout);
-  gameArea.querySelectorAll('.chip').forEach(ch=>{
-    ch.addEventListener('click', ()=>{
-      const type = ch.dataset.type, val = parseInt(ch.dataset.val||'0',10);
-      let bet = Math.max(0, Math.floor(+betEl.value||0));
-      if(type==='add') bet += val;
-      if(type==='double') bet *= 2;
-      if(type==='half') bet = Math.floor(bet/2);
-      if(type==='clear') bet = 0;
-      betEl.value = bet;
-      updatePayout();
+  function showLoseStatic(val){
+    screen.classList.remove('med','epic');
+    xEl.className='x lose'; xEl.classList.remove('animate');
+    xEl.textContent='x'+val.toFixed(2);
+  }
+  function animateWinValue(val){
+    screen.classList.remove('med','epic');
+    if (val>=20) screen.classList.add('epic'); else if (val>=5) screen.classList.add('med');
+    xEl.className='x win'; xEl.classList.remove('animate'); void xEl.offsetWidth; xEl.classList.add('animate');
+    const start=performance.now(), from=1.02, to=val, dur= val>=20?1200: (val>=5?900:700);
+    requestAnimationFrame(function step(now){
+      const t=Math.min(1,(now-start)/dur), e=1-Math.pow(1-t,3), cur=from+(to-from)*e;
+      xEl.textContent='x'+cur.toFixed(2); if(t<1) requestAnimationFrame(step);
+    });
+    if(val>=20) particlesEpic();
+  }
+  function barFlash(win){
+    const w = 70 + Math.random()*30;
+    bar.style.background = win ? `linear-gradient(90deg,#22c55e,#86efac)` : `linear-gradient(90deg,#ef4444,#fca5a5)`;
+    bar.style.width = w+'%';
+    setTimeout(()=>bar.style.width='0%',650);
+  }
+  function showToast(win, m){
+    toastEl.className='toast '+(win?'win':'lose');
+    toastLbl.textContent = win ? 'WIN' : 'LOSE';
+    toastMult.textContent = 'x'+m.toFixed(2);
+    void toastEl.offsetWidth; toastEl.classList.add('show');
+    setTimeout(()=>toastEl.classList.remove('show'),1400);
+  }
+
+  function updatePreview(){
+    const bet = Math.floor(+betEl.value||0);
+    let t = parseFloat((targetEl.value||'').replace(',','.'));
+    let c = parseFloat((chanceEl.value||'').replace(',','.'));
+    if(!isNaN(t)) { chanceEl.value = chanceFromTarget(t).toFixed(1); t = clamp(t,1.02,95000); }
+    else if(!isNaN(c)) { t = targetFromChance(c); targetEl.value = t.toFixed(2); }
+    else { t = 2; }
+    payoutEl.textContent = (bet*t).toFixed(2);
+  }
+  targetEl.addEventListener('input',updatePreview);
+  chanceEl.addEventListener('input',updatePreview);
+  betEl.addEventListener('input',updatePreview);
+  document.querySelectorAll('.chip').forEach(ch=>{
+    ch.addEventListener('click',()=>{
+      const t=ch.dataset.type, v=parseInt(ch.dataset.val||'0',10);
+      let b = Math.floor(+betEl.value||0);
+      if(t==='add') b+=v; else if(t==='double') b*=2; else if(t==='half') b=Math.floor(b/2); else if(t==='clear') b=0;
+      betEl.value=b; updatePreview();
     });
   });
+  updatePreview();
 
   async function play(){
     await anim.run(async ()=>{
-      let bet = Math.max(0, Math.floor(+betEl.value||0));
-      const multTarget = parseFloat((targetEl.value||'1').replace(',','.'))||1.01;
-      const chance = clamp(parseFloat((chanceEl.value||'').replace(',','.'))||0, 0.1, 99.9);
+      const used = consumeFreeSpinIfAny(); /* демо всегда true */
+      let bet = Math.floor(+betEl.value||0);
+      let t = clamp(parseFloat((targetEl.value||'').replace(',','.'))||2, 1.02, 95000);
+      const g = generosity(t);
+      chanceEl.value = ((g/t)*100).toFixed(1);
 
-      // DEMO: не списываем и не проверяем баланс
-      const usedFree = FREE_PLAY ? true : consumeFreeSpinIfAny();
-      if(!FREE_PLAY && !usedFree){
-        const bal = getInt('game_balance');
-        if(bet<=0){ toast('Укажи сумму ставки'); return; }
-        if(bal < bet){ toast('Недостаточно средств'); return; }
-        setInt('game_balance', bal - bet); refreshBalances(); updatePayout();
-      }
+      /* розыгрыш */
+      let m = sampleMultiplier(g, t);
+      const win = m >= t;
 
-      // анимация
-      xEl.classList.remove('lose','win'); xEl.textContent='...';
-      bar.style.width='0%';
-      const duration=1200, t0=performance.now();
-      await new Promise(res=>{
-        function step(now){ const p=Math.min(1,(now-t0)/duration); bar.style.width=Math.round(p*100)+'%'; requestAnimationFrame(p<1?step:res); }
-        requestAnimationFrame(step);
-      });
+      if(win){ animateWinValue(m); }
+      else { showLoseStatic(m); }
 
-      // результат
-      const win = Math.random()*100 < chance;
-      let shownMult;
-      if(win){
-        shownMult = multTarget;
-        xEl.textContent = 'x'+round2(shownMult).toFixed(2);
-        xEl.classList.add('win');
-        if(!FREE_PLAY){
-          const winAmount = Math.floor(bet * shownMult);
-          setInt('game_balance', getInt('game_balance') + winAmount);
-          refreshBalances(); updatePayout();
-          toast(`Победа! +${winAmount} ⭐`);
-        } else {
-          toast('Победа! (демо)');
-        }
-      } else {
-        shownMult = Math.max(1.00, Math.min(multTarget-0.01, multTarget*Math.random()*0.95));
-        xEl.textContent = 'x'+round2(shownMult).toFixed(2);
-        xEl.classList.add('lose');
-        toast(FREE_PLAY ? 'Проигрыш (демо)' : (usedFree ? 'Проигрыш, но ставка не списана (free)' : `Проигрыш −${bet} ⭐`));
-      }
-
-      lastMult = shownMult;
-      lastEl.textContent = 'x'+round2(lastMult).toFixed(2);
-      pushHistory(shownMult, win);
-      updatePayout();
+      showToast(win, m);
+      barFlash(win);
+      lastEl.textContent = 'x'+m.toFixed(2);
+      pushHistory(m, win);
     });
   }
   playBtn.addEventListener('click', play);
