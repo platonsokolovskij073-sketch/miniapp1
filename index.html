@@ -16,9 +16,7 @@
   --sym:56px; --cup-w: 92px; --cup-h: 86px;
 }
 
-html.nocopy, html.nocopy body, html.nocopy *:not(input):not(textarea){
-  -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;
-}
+html.nocopy, html.nocopy body, html.nocopy *:not(input):not(textarea){ -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
 html.nocopy ::selection{background:transparent}
 html,body{height:100%; overflow:hidden;}
 *{box-sizing:border-box}
@@ -149,35 +147,11 @@ body{
 }
 
 /* ——— WHEEL ——— */
-.wheel-wrapper{
-  position:relative; width: 240px; height: 240px;
-  margin: auto; margin-top:10px;
-  display:grid; place-items:center;
-}
-.wheel-pointer{
-  position:absolute; top: -2px; left: 50%; transform: translateX(-50%);
-  width: 24px; height: 8px; border-radius: 4px;
-  background-color: #00f6ff;
-  box-shadow: 0 0 10px #00f6ff, 0 0 20px #00f6ff;
-  z-index: 10;
-}
-.wheel-container{
-  position:absolute; width:100%; height:100%;
-  border-radius:50%;
-  box-shadow: inset 0 0 20px rgba(0,0,0,.5), 0 0 0 6px #2a2a2a;
-  border: 1px solid #2a2a2a;
-  background: rgba(42, 42, 42, 0.3);
-}
-.wheel-svg{
-  width:100%; height:100%;
-}
-.wheel-center{
-  position:absolute; width: 50px; height: 50px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #443a59, #1e152d);
-  border: 2px solid rgba(255,255,255,.2);
-  box-shadow: 0 0 10px rgba(0,0,0,.5);
-}
+.wheel-wrapper{ position:relative; width: 240px; height: 240px; margin: auto; margin-top:10px; display:grid; place-items:center; }
+.wheel-pointer{ position:absolute; top:-2px; left:50%; transform:translateX(-50%); width:24px; height:8px; border-radius:4px; background:#00f6ff; box-shadow:0 0 10px #00f6ff, 0 0 20px #00f6ff; z-index:10; }
+.wheel-container{ position:absolute; width:100%; height:100%; border-radius:50%; box-shadow: inset 0 0 20px rgba(0,0,0,.5), 0 0 0 6px #2a2a2a; border:1px solid #2a2a2a; background: rgba(42,42,42,.3); }
+.wheel-svg{ width:100%; height:100%; }
+.wheel-center{ position:absolute; width:50px; height:50px; border-radius:50%; background: radial-gradient(circle,#443a59,#1e152d); border:2px solid rgba(255,255,255,.2); box-shadow:0 0 10px rgba(0,0,0,.5); }
 
 .games-grid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
 .games-grid .span2{ grid-column: 1 / span 2; display:flex; justify-content:center }
@@ -189,7 +163,7 @@ body{
 .toast{position:fixed; left:50%; bottom:120px; transform:translateX(-50%) translateY(20px); background:rgba(0,0,0,.8);
   border:1px solid var(--line); color:#fff; padding:10px 14px; border-radius:12px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; font-size:13px}
 .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
-@keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}
+@keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
 
 /* ===== Overgo (scoped) ===== */
 .overgo { --stroke:#10162b; --muted:#9ca3af; --win:#22c55e; --win2:#86efac; --lose:#ef4444; }
@@ -250,6 +224,7 @@ body{
         </div>
       </div>
     </section>
+
     <section class="container" id="shop">
       <div class="card">
         <h3>Магазин</h3>
@@ -275,6 +250,7 @@ body{
         </div>
       </div>
     </section>
+
     <section class="container" id="checkout">
       <div class="card">
         <h3>Оформление</h3>
@@ -288,6 +264,7 @@ body{
         </div>
       </div>
     </section>
+
     <section class="container" id="games">
       <div class="card">
         <h3>Мини-игры</h3>
@@ -297,16 +274,13 @@ body{
         <div class="games-grid" style="margin-top:8px">
           <button class="btn gbtn" data-game="slot">🎰 Слот</button>
           <button class="btn purple gbtn" data-game="cups">🥤 Стаканы</button>
-          <div class="span2">
-            <button class="btn ghost gbtn" data-game="wheel">🧭 Колесо</button>
-          </div>
-          <div class="span2">
-            <button class="btn gbtn" data-game="overgo">🧪 Overgo</button>
-          </div>
+          <div class="span2"><button class="btn ghost gbtn" data-game="wheel">🧭 Колесо</button></div>
+          <div class="span2"><button class="btn gbtn" data-game="overgo">🧪 Overgo</button></div>
         </div>
       </div>
       <div id="gameArea" class="grid" style="margin-top:6px"></div>
     </section>
+
     <section class="container" id="bonus">
       <div class="card">
         <h3>Ежедневный бонус</h3>
@@ -320,6 +294,7 @@ body{
         <div class="tile"><div>Бесплатных прокрутов</div><div><b data-free-counter>∞</b></div></div>
       </div>
     </section>
+
     <section class="container" id="ref">
       <div class="card">
         <h3>Реферальная программа</h3>
@@ -331,6 +306,7 @@ body{
         </div>
       </div>
     </section>
+
     <section class="container" id="profile">
       <div class="card">
         <h3>Профиль</h3>
@@ -346,6 +322,7 @@ body{
       </div>
     </section>
   </div>
+
   <nav class="nav">
     <button class="tab active" data-tab="home">🏠<span>Дом</span></button>
     <button class="tab" data-tab="shop">🛒<span>Магазин</span></button>
@@ -354,6 +331,7 @@ body{
     <button class="tab" data-tab="bonus">🎁<span>Бонус</span></button>
     <button class="tab" data-tab="profile">👤<span>Профиль</span></button>
   </nav>
+
   <div class="toast" id="toast">Готово!</div>
 
 <script>
@@ -378,12 +356,10 @@ function applyTheme(){
 const getInt = k => parseInt(localStorage.getItem(k)||'0',10) || 0;
 const setInt = (k,v) => localStorage.setItem(k, String(v));
 
-// === Стартовый баланс каждому: 10 000 ⭐ (один раз при первой загрузке)
-if (localStorage.getItem('game_balance') === null) {
-  setInt('game_balance', 10000);
-}
+// стартовый баланс 10к один раз
+if (localStorage.getItem('game_balance') === null) setInt('game_balance', 10000);
 
-// === Глобальный демо-флаг: бесплатно
+// демо-режим: бесплатно
 const FREE_PLAY = true;
 
 function refreshBalances(){
@@ -391,7 +367,6 @@ function refreshBalances(){
   document.getElementById('refBal').textContent  = `${getInt('ref_balance')} ⭐`;
 }
 function updateFreeBadge(){
-  // в демо-режиме показываем бесконечность
   document.querySelectorAll('[data-free-counter]').forEach(el=>el.textContent= FREE_PLAY ? '∞' : (getInt('free_spins')||0));
 }
 refreshBalances(); updateFreeBadge();
@@ -413,7 +388,6 @@ function renderBonus(){
 }
 renderBonus();
 document.getElementById('dailyBtn').onclick=()=>{
-  // можно оставить как есть; free режим не зависит от бонуса
   const last=localStorage.getItem('daily_last');
   let streak=getInt('daily_streak');
   if(last===ymd()){ toast('Уже забрано сегодня'); return; }
@@ -487,7 +461,6 @@ const anim={
 };
 function markGame(kind){ document.querySelectorAll('.gbtn').forEach(b=>b.classList.toggle('active', b.dataset.game===kind)); }
 function consumeFreeSpinIfAny(){
-  // в демо-режиме ничего не списываем
   if (FREE_PLAY) return false;
   const n = getInt('free_spins');
   if(n>0){ setInt('free_spins', n-1); updateFreeBadge(); toast('🎁 Бесплатный прокрут использован'); return true; }
@@ -525,7 +498,6 @@ function mountSlot(){
       })));
       const [a,b,c] = results.map(i=>symbols[i]);
       document.getElementById('slotOut').textContent = (a===b && b===c) ? `Победа! ${a}${b}${c}` : `${a} | ${b} | ${c}`;
-      // демо: ничего не списываем/начисляем
     });
   }
   document.getElementById('spinBtn').onclick=spin;
@@ -542,9 +514,7 @@ function mountCups(){
   try {
     cupColorClasses = JSON.parse(localStorage.getItem('cup_color_order'));
     if (!Array.isArray(cupColorClasses) || cupColorClasses.length !== 3) throw new Error();
-  } catch {
-    cupColorClasses = ['cup--color1', 'cup--color2', 'cup--color3'];
-  }
+  } catch { cupColorClasses = ['cup--color1', 'cup--color2', 'cup--color3']; }
 
   const cups = cupColorClasses.map(colorClass => {
     const c = document.createElement('div'); c.className = `cup ${colorClass}`; stage.appendChild(c); return c;
@@ -613,54 +583,39 @@ function mountWheel() {
     { text: 'x2', color: '#c39aff' }, { text: '+25 ⭐', color: '#ff7a18' },
     { text: 'Ничего', color: '#4a415a' }, { text: 'Джекпот', color: '#e5c100' }
   ];
-  const numSegments = PRIZES.length;
-  const angleStep = 360 / numSegments;
-  const center = 100, radius = 100;
-  function polarToCartesian(r, angle) {
-    const a = (angle - 90) * Math.PI / 180;
-    return { x: center + r * Math.cos(a), y: center + r * Math.sin(a) };
-  }
-  wheelSVG.innerHTML = '';
-  PRIZES.forEach((prize, i) => {
-    const startAngle = i * angleStep, endAngle = startAngle + angleStep, midAngle = startAngle + angleStep / 2;
-    const start = polarToCartesian(radius, endAngle);
-    const end = polarToCartesian(radius, startAngle);
-    const d = `M ${start.x} ${start.y} A ${radius} ${radius} 0 0 0 ${end.x} ${end.y} L ${center} ${center} Z`;
-    wheelSVG.innerHTML += `<path d="${d}" fill="${prize.color}" stroke="rgba(0,0,0,0.2)" stroke-width="1"></path>`;
-    const textPos = polarToCartesian(radius * 0.6, midAngle);
-    wheelSVG.innerHTML += `<text x="${textPos.x}" y="${textPos.y}" transform="rotate(${midAngle}, ${textPos.x}, ${textPos.y})" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">${prize.text}</text>`;
-    const lineEnd = polarToCartesian(radius, startAngle);
-    wheelSVG.innerHTML += `<line x1="${center}" y1="${center}" x2="${lineEnd.x}" y2="${lineEnd.y}" stroke="rgba(255,255,255,0.3)" stroke-width="2"></line>`;
+  const numSegments = PRIZES.length, angleStep = 360 / numSegments; const center = 100, radius = 100;
+  function polarToCartesian(r, angle){ const a=(angle-90)*Math.PI/180; return {x:center + r*Math.cos(a), y:center + r*Math.sin(a)}; }
+  wheelSVG.innerHTML='';
+  PRIZES.forEach((p,i)=>{ const sa=i*angleStep, ea=sa+angleStep, ma=sa+angleStep/2;
+    const s=polarToCartesian(radius,ea), e=polarToCartesian(radius,sa);
+    wheelSVG.innerHTML+=`<path d="M ${s.x} ${s.y} A ${radius} ${radius} 0 0 0 ${e.x} ${e.y} L ${center} ${center} Z" fill="${p.color}" stroke="rgba(0,0,0,.2)" stroke-width="1"></path>`;
+    const tp=polarToCartesian(radius*0.6,ma);
+    wheelSVG.innerHTML+=`<text x="${tp.x}" y="${tp.y}" transform="rotate(${ma}, ${tp.x}, ${tp.y})" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">${p.text}</text>`;
+    const le=polarToCartesian(radius,sa);
+    wheelSVG.innerHTML+=`<line x1="${center}" y1="${center}" x2="${le.x}" y2="${le.y}" stroke="rgba(255,255,255,.3)" stroke-width="2"></line>`;
   });
-  function easeInOutCubic(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
+  const easeInOutCubic=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 
-  async function spinWheel() {
-    await anim.run(async () => {
-      const targetIndex = rint(0, numSegments - 1);
-      const segmentCenter = targetIndex * angleStep + angleStep / 2;
-      const targetAngle = 360 - segmentCenter;
-      const fullSpins = rint(6, 10) * 360;
-      const normalizedStart = ((currentRotation % 360) + 360) % 360;
-      const angleDiff = ((targetAngle - normalizedStart + 360) % 360);
-      const endRotation = normalizedStart + fullSpins + angleDiff;
-      const duration = 10000 + rint(0, 3000);
-      const startTime = performance.now();
-      await new Promise(resolve => {
-        function animate(now) {
-          const elapsed = now - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          const eased = easeInOutCubic(progress);
-          const rotation = normalizedStart + (endRotation - normalizedStart) * eased;
-          wheelSVG.style.transform = `rotate(${rotation}deg)`;
-          if (progress < 1) requestAnimationFrame(animate); else { wheelSVG.style.transform = `rotate(${endRotation}deg)`; resolve(); }
-        }
-        requestAnimationFrame(animate);
+  async function spinWheel(){
+    await anim.run(async ()=>{
+      const targetIndex=rint(0,numSegments-1);
+      const segCenter=targetIndex*angleStep+angleStep/2;
+      const targetAngle=360-segCenter;
+      const fullSpins=rint(6,10)*360;
+      const start=((currentRotation%360)+360)%360;
+      const angleDiff=((targetAngle-start+360)%360);
+      const end=start+fullSpins+angleDiff;
+      const dur=10000+rint(0,3000), t0=performance.now();
+      await new Promise(res=>{
+        function step(now){ const p=Math.min(1,(now-t0)/dur), eased=easeInOutCubic(p);
+          wheelSVG.style.transform=`rotate(${start+(end-start)*eased}deg)`;
+          if(p<1) requestAnimationFrame(step); else { wheelSVG.style.transform=`rotate(${end}deg)`; res(); } }
+        requestAnimationFrame(step);
       });
-      currentRotation = endRotation % 360;
-      toast(`Результат (демо): ${PRIZES[targetIndex].text}`);
+      currentRotation=end%360; toast(`Результат (демо): ${PRIZES[targetIndex].text}`);
     });
   }
-  gameArea.querySelector('[data-action="spinwheel"]').onclick = spinWheel;
+  gameArea.querySelector('[data-action="spinwheel"]').onclick=spinWheel;
 }
 
 /* ===== OVERGO ===== */
@@ -729,7 +684,6 @@ function mountOvergo(){
       </div>
     </div>
   </div>`;
-
   // Elements
   const betEl = document.getElementById('og_bet');
   const targetEl = document.getElementById('og_target');
@@ -752,7 +706,8 @@ function mountOvergo(){
     const mult = parseFloat((targetEl.value||'1').replace(',','.'))||1.01;
     const payout = Math.floor(bet * mult);
     payoutEl.textContent = payout.toString();
-    balEl.textContent = getInt('game_balance');
+    // в демо показываем ∞
+    balEl.textContent = FREE_PLAY ? '∞' : getInt('game_balance');
   }
   function syncFromTarget(){
     let t = parseFloat((targetEl.value||'').replace(',','.'));
@@ -814,37 +769,31 @@ function mountOvergo(){
         setInt('game_balance', bal - bet); refreshBalances(); updatePayout();
       }
 
-      // анимация полосы
+      // анимация
       xEl.classList.remove('lose','win'); xEl.textContent='...';
-      bar.style.width = '0%';
-      const duration = 1200;
-      const start = performance.now();
+      bar.style.width='0%';
+      const duration=1200, t0=performance.now();
       await new Promise(res=>{
-        function step(now){
-          const p = Math.min(1, (now-start)/duration);
-          bar.style.width = Math.round(p*100)+'%';
-          requestAnimationFrame(p<1?step:res);
-        }
+        function step(now){ const p=Math.min(1,(now-t0)/duration); bar.style.width=Math.round(p*100)+'%'; requestAnimationFrame(p<1?step:res); }
         requestAnimationFrame(step);
       });
 
       // результат
       const win = Math.random()*100 < chance;
       let shownMult;
-
       if(win){
         shownMult = multTarget;
         xEl.textContent = 'x'+round2(shownMult).toFixed(2);
         xEl.classList.add('win');
-        if (!FREE_PLAY) {
+        if(!FREE_PLAY){
           const winAmount = Math.floor(bet * shownMult);
           setInt('game_balance', getInt('game_balance') + winAmount);
           refreshBalances(); updatePayout();
           toast(`Победа! +${winAmount} ⭐`);
         } else {
-          toast(`Победа! (демо)`);
+          toast('Победа! (демо)');
         }
-      }else{
+      } else {
         shownMult = Math.max(1.00, Math.min(multTarget-0.01, multTarget*Math.random()*0.95));
         xEl.textContent = 'x'+round2(shownMult).toFixed(2);
         xEl.classList.add('lose');
