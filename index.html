@@ -255,7 +255,7 @@ body{
 .overgo .particle{position:absolute; width:6px; height:6px; border-radius:50%; pointer-events:none; opacity:0; animation:fly .9s ease-out forwards}
 @keyframes fly{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
 
-/* ====== Crash iframe layout (увеличили масштаб) ====== */
+/* ====== Crash iframe layout (отдалили игру) ====== */
 .other-game-frame-wrap{
   position:relative;
   width:100%;
@@ -269,20 +269,18 @@ body{
 .other-game-frame-wrap::before{
   content:"";
   display:block;
-  padding-top:70%; /* чуть больше высоты на телефоне */
+  padding-top:60%; /* высота контейнера */
 }
 .other-game-frame{
   position:absolute;
   top:0;
   left:50%;
-  transform:translateX(-50%) scale(1.12); /* зум */
+  transform:translateX(-50%) scale(0.8); /* отдаляем */
   transform-origin:top center;
-  width:120%;  /* шире, чтобы не было рамок */
+  width:130%;
   height:100%;
   border:0;
 }
-
-/* на более широких экранах показываем без зума */
 @media (min-width:720px){
   .other-game-frame-wrap::before{
     padding-top:56.25%;
@@ -816,7 +814,6 @@ function mountOtherGames(){
 
 /* ===== OVERGO (с анимациями) ===== */
 function mountOvergo(){
-  // оставляем подсветку на "Другие игры"
   markGame('other');
   gameArea.innerHTML = `
   <div class="card overgo">
@@ -890,7 +887,6 @@ function mountOvergo(){
     </div>
   </div>`;
 
-  // Elements
   const betEl = document.getElementById('og_bet');
   const targetEl = document.getElementById('og_target');
   const chanceEl = document.getElementById('og_chance');
@@ -1005,7 +1001,7 @@ function mountOvergo(){
 
   async function play(){
     await anim.run(async ()=>{
-      consumeFreeSpinIfAny(); // демо-режим
+      consumeFreeSpinIfAny();
       let t = clamp(parseFloat((targetEl.value||'').replace(',','.'))||2, 1.02, 95000);
       const g = generosity(t);
       chanceEl.value = ((g/t)*100).toFixed(1);
