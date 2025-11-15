@@ -9,9 +9,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0b0a12; --bg2:#2a1a3d; --text:#f7f4ff; --muted:#b7abc9;
+  --bg:#0b0a12; --bg2:#161427; --text:#f7f4ff; --muted:#b7abc9;
   --line:rgba(255,255,255,.10); --card:rgba(255,255,255,.06);
-  --orange:#ff7a18; --orange2:#ffb86b; --violet:#9c5cff; --violet2:#c39aff;
+  --orange:#38bdf8; --orange2:#a5f3fc;
+  --violet:#6366f1; --violet2:#a5b4fc;
   --danger:#ff3b6b; --ok:#35ffb1; --shadow:0 20px 40px rgba(0,0,0,.35);
   --sym:56px; --cup-w: 92px; --cup-h: 86px;
 }
@@ -25,7 +26,7 @@ html,body{height:100%; overflow:hidden;}
 
 body{
   margin:0; font-family:"Inter",system-ui,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
-  background:linear-gradient(180deg, var(--bg2), var(--bg));
+  background:radial-gradient(circle at top, #1e293b, #020617 55%);
   display:flex; flex-direction:column; overscroll-behavior:none;
 }
 .header{
@@ -43,8 +44,8 @@ body{
 .container.active{display:block}
 .logo{
   width:36px; height:36px; border-radius:12px; display:grid; place-items:center; font-weight:800;
-  background:conic-gradient(from 0deg, var(--orange2), var(--orange), var(--violet), var(--orange2));
-  color:#150b00; box-shadow:var(--shadow);
+  background:conic-gradient(from 0deg, #e5f9ff, #38bdf8, #6366f1, #e5f9ff);
+  color:#020617; box-shadow:var(--shadow);
 }
 .title{font-weight:800; letter-spacing:.3px}
 .subtitle{font-size:12px; color:var(--muted)}
@@ -66,17 +67,17 @@ body{
   border:1px solid var(--line); background:rgba(255,255,255,.06);
   color:var(--text); outline:none;
 }
-.input:focus{ border-color: rgba(255,186,107,.6); box-shadow:0 0 0 6px rgba(255,122,24,.15); }
+.input:focus{ border-color: rgba(56,189,248,.6); box-shadow:0 0 0 6px rgba(56,189,248,.18); }
 .btn{
   appearance:none; border:0; cursor:pointer; padding:12px 14px; border-radius:14px; font-weight:800;
-  color:#1b0b00; background:linear-gradient(135deg, var(--orange), var(--orange2));
-  box-shadow:0 12px 26px rgba(255,122,24,.35);
+  color:#020617; background:linear-gradient(135deg, var(--orange), var(--orange2));
+  box-shadow:0 12px 26px rgba(15,118,178,.45);
   transition:transform .12s,filter .2s, box-shadow .2s, opacity .2s, background-position .4s ease;
 }
 .btn:active{transform:scale(.98)}
-.btn:hover{ transform:translateY(-1px); background-position: 100% 0; box-shadow:0 16px 34px rgba(255,122,24,.45); }
-.btn.purple{background:linear-gradient(135deg, var(--violet), var(--violet2)); color:#0c0216; box-shadow:0 12px 26px rgba(156,92,255,.35)}
-.btn.purple:hover{ background-position: 0 100%; box-shadow:0 16px 34px rgba(156,92,255,.45); }
+.btn:hover{ transform:translateY(-1px); background-position: 100% 0; box-shadow:0 16px 34px rgba(15,118,178,.6); }
+.btn.purple{background:linear-gradient(135deg, var(--violet), var(--violet2)); color:#f9f5ff; box-shadow:0 12px 26px rgba(79,70,229,.45)}
+.btn.purple:hover{ background-position: 0 100%; box-shadow:0 16px 34px rgba(79,70,229,.6); }
 .btn.ghost{background:transparent; color:var(--text); border:1px solid var(--line); box-shadow:none}
 .btn[disabled]{opacity:.5; pointer-events:none}
 .badge{font-size:12px; padding:6px 8px; border-radius:10px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:var(--muted)}
@@ -92,9 +93,9 @@ body{
   padding:12px 8px; border-radius:16px; font-size:12px; display:flex; flex-direction:column; align-items:center; gap:4px
 }
 .tab span{opacity:.85; font-size:11px}
-.tab.active{background:linear-gradient(135deg, rgba(255,122,24,.18), rgba(156,92,255,.18))}
+.tab.active{background:linear-gradient(135deg, rgba(56,189,248,.22), rgba(99,102,241,.22))}
 .gbtn{position:relative}
-.gbtn.active{outline:2px solid #ffb86b; box-shadow:0 0 0 6px rgba(255,186,107,.15)}
+.gbtn.active{outline:2px solid #38bdf8; box-shadow:0 0 0 6px rgba(56,189,248,.25)}
 .stage{
   position:relative; height:260px; border-radius:16px; background:rgba(255,255,255,.05);
   border:1px solid var(--line); overflow:hidden; touch-action:none;
@@ -110,12 +111,12 @@ body{
 .slot-wrap{display:grid; place-items:center; gap:10px}
 .simple-slot{
   position:relative; width:310px; border-radius:16px; overflow:hidden;
-  background:linear-gradient(180deg, #1a1623, #0f0c16);
+  background:radial-gradient(circle at top, #1d3557, #020617);
   border:1px solid var(--line); box-shadow:var(--shadow);
   display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:8px;
   height: calc(var(--sym)*3 + 16px);
 }
-.reel{position:relative; overflow:hidden; border-radius:12px; border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.06),rgba(255,255,255,.03)); height:calc(var(--sym)*3)}
+.reel{position:relative; overflow:hidden; border-radius:12px; border:1px solid var(--line); background:linear-gradient(180deg, rgba(148,210,255,.18),rgba(15,23,42,1)); height:calc(var(--sym)*3)}
 .roller{position:absolute; left:0; right:0; top:0; will-change:transform}
 .symbol{height:var(--sym); display:grid; place-items:center; font-size:42px; line-height:1}
 
@@ -124,17 +125,17 @@ body{
 .cup{position:absolute; width:var(--cup-w); height:var(--cup-h); will-change:transform; z-index:2; transition:transform .22s ease; border-radius:24px; transform-style:preserve-3d}
 .cup::before{
   content:""; position:absolute; inset:4px 10px 8px;
-  background:linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.45));
-  border:1px solid rgba(0,0,0,.22);
-  box-shadow: inset 0 10px 18px rgba(255,255,255,.25), inset 0 -12px 22px rgba(0,0,0,.12);
+  background:linear-gradient(180deg, rgba(255,255,255,.95), rgba(148,210,255,.7));
+  border:1px solid rgba(15,23,42,.4);
+  box-shadow: inset 0 10px 18px rgba(255,255,255,.3), inset 0 -12px 22px rgba(15,23,42,.45);
   border-radius: 28px / 22px;
   clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
-  background-color: #dfeaff;
+  background-color: #dbeafe;
   transition: background-color 0.3s ease;
 }
-.cup.cup--color1::before { background-color: #c39aff; }
-.cup.cup--color2::before { background-color: #ffb86b; }
-.cup.cup--color3::before { background-color: #6b95ff; }
+.cup.cup--color1::before { background-color: #bfdbfe; }
+.cup.cup--color2::before { background-color: #e0f2fe; }
+.cup.cup--color3::before { background-color: #c7d2fe; }
 
 .cup::after{
   content:""; position:absolute; left:50%; transform:translateX(-50%);
@@ -143,7 +144,7 @@ body{
 }
 .ball-sm{
   position:absolute; width:24px; height:24px; border-radius:50%;
-  background:radial-gradient(circle at 30% 30%, #ff6b6b, #c72a2a);
+  background:radial-gradient(circle at 30% 30%, #fbbf24, #f97316);
   box-shadow:0 8px 14px rgba(0,0,0,.35), inset 0 2px 4px rgba(255,255,255,.45);
   will-change:transform; z-index:1; transition:transform .22s ease, opacity .12s ease;
 }
@@ -157,18 +158,18 @@ body{
 .wheel-pointer{
   position:absolute; top: -2px; left: 50%; transform: translateX(-50%);
   width: 24px; height: 8px; border-radius: 4px;
-  background-color: #00f6ff;
-  box-shadow: 0 0 10px #00f6ff, 0 0 20px #00f6ff;
+  background-color: #38bdf8;
+  box-shadow: 0 0 10px #38bdf8, 0 0 20px #38bdf8;
   z-index: 10;
 }
 .wheel-container{
   position:absolute; width:100%; height:100%;
   border-radius:50%;
-  box-shadow: inset 0 0 20px rgba(0,0,0,.5), 0 0 0 6px #2a2a2a;
-  border: 1px solid #2a2a2a;
-  background: radial-gradient(circle at 30% 20%, rgba(0,246,255,.25), transparent 55%),
-              radial-gradient(circle at 70% 80%, rgba(156,92,255,.25), transparent 55%),
-              rgba(42, 42, 42, 0.35);
+  box-shadow: inset 0 0 20px rgba(0,0,0,.6), 0 0 0 6px #1f2933;
+  border: 1px solid #1f2933;
+  background: radial-gradient(circle at 30% 20%, rgba(56,189,248,.25), transparent 55%),
+              radial-gradient(circle at 70% 80%, rgba(129,140,248,.25), transparent 55%),
+              rgba(15,23,42,.85);
 }
 .wheel-container::before{
   content:"";
@@ -185,9 +186,9 @@ body{
 .wheel-center{
   position:absolute; width: 56px; height: 56px;
   border-radius: 50%;
-  background: radial-gradient(circle, #463766, #140c21);
-  border: 2px solid rgba(255,255,255,.3);
-  box-shadow: 0 0 18px rgba(0,0,0,.8), 0 0 18px rgba(0,246,255,.3);
+  background: radial-gradient(circle, #4f46e5, #111827);
+  border: 2px solid rgba(255,255,255,.4);
+  box-shadow: 0 0 18px rgba(0,0,0,.8), 0 0 18px rgba(56,189,248,.45);
 }
 .wheel-center::after{
   content:"SPIN";
@@ -203,10 +204,10 @@ body{
 .games-grid .span2{ grid-column: 1 / span 2; display:flex; justify-content:center }
 .games-grid .span2 .btn{ min-width:180px }
 
-.free-badge{font-size:12px; padding:6px 8px; border-radius:10px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:#ffd36b}
+.free-badge{font-size:12px; padding:6px 8px; border-radius:10px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:#ffe082}
 .bonus-bar{display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-top:8px}
 .bonus-day{height:28px; border-radius:12px; border:1px solid var(--line); display:grid; place-items:center; font-size:12px; color:#fff9; background:rgba(255,255,255,.04)}
-.bonus-day.on{ background:linear-gradient(135deg, rgba(255,122,24,.35), rgba(156,92,255,.35)); color:#120914; font-weight:800 }
+.bonus-day.on{ background:linear-gradient(135deg, rgba(56,189,248,.35), rgba(99,102,241,.35)); color:#e5f9ff; font-weight:800 }
 .toast{position:fixed; left:50%; bottom:120px; transform:translateX(-50%) translateY(20px); background:rgba(0,0,0,.8);
   border:1px solid var(--line); color:#fff; padding:10px 14px; border-radius:12px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; font-size:13px}
 .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
@@ -218,7 +219,7 @@ body{
 @media(min-width:720px){ .overgo .grid{grid-template-columns:360px minmax(0,1fr)} }
 .overgo .panel{border:1px solid var(--line); border-radius:18px; background:rgba(255,255,255,.05); padding:12px}
 .overgo .title{font-size:12px; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px}
-.overgo .field{display:flex; align-items:center; gap:8px; border:1px solid var(--line); border-radius:12px; padding:9px 12px; background:rgba(255,255,255,.06)}
+.overgo .field{display:flex; align-items:center; gap:8px; border:1px solid var(--line); border-radius:12px; padding:9px 12px; background:rgba(15,23,42,.9)}
 .overgo input[type="number"], .overgo input[type="text"]{flex:1; border:0; outline:0; background:transparent; color:var(--text); font-size:15px}
 .overgo .chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
 .overgo .chip{border:1px solid var(--line); background:#0a1228; color:#d1d5db; font-size:11px; border-radius:999px; padding:6px 10px; cursor:pointer; transition:.12s}
@@ -253,11 +254,50 @@ body{
 .overgo .toast.lose{background:rgba(220,38,38,.14); border:1px solid rgba(248,113,113,.9); color:#fecaca}
 .overgo .particle{position:absolute; width:6px; height:6px; border-radius:50%; pointer-events:none; opacity:0; animation:fly .9s ease-out forwards}
 @keyframes fly{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
+
+/* ====== Crash iframe layout (увеличили масштаб) ====== */
+.other-game-frame-wrap{
+  position:relative;
+  width:100%;
+  max-width:900px;
+  margin:0 auto;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  background:#020617;
+}
+.other-game-frame-wrap::before{
+  content:"";
+  display:block;
+  padding-top:70%; /* чуть больше высоты на телефоне */
+}
+.other-game-frame{
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translateX(-50%) scale(1.12); /* зум */
+  transform-origin:top center;
+  width:120%;  /* шире, чтобы не было рамок */
+  height:100%;
+  border:0;
+}
+
+/* на более широких экранах показываем без зума */
+@media (min-width:720px){
+  .other-game-frame-wrap::before{
+    padding-top:56.25%;
+  }
+  .other-game-frame{
+    left:0;
+    transform:none;
+    width:100%;
+  }
+}
 </style>
 </head>
 <body>
   <div class="header">
-    <div class="logo">🦇</div>
+    <div class="logo">❄️</div>
     <div>
       <div class="title">Starify</div>
       <div class="subtitle">магазин • мини-игры • рефералка</div>
@@ -291,7 +331,7 @@ body{
         <p>Выбери звёзды или Premium. Сразу перейдём к оформлению.</p>
         <div class="hr"></div>
         <div class="grid cols-2" style="margin-top:6px">
-          <div class="card" style="background:linear-gradient(180deg,rgba(255,122,24,.10),rgba(255,255,255,.06))">
+          <div class="card" style="background:linear-gradient(180deg,rgba(56,189,248,.18),rgba(255,255,255,.04))">
             <h3>⭐ Звёзды</h3>
             <div class="grid" id="starsQuick"></div>
             <div class="hr"></div>
@@ -303,7 +343,7 @@ body{
               <button class="btn purple" id="buyCustomStars">Указать</button>
             </div>
           </div>
-          <div class="card" style="background:linear-gradient(180deg,rgba(156,92,255,.12),rgba(255,255,255,.06))">
+          <div class="card" style="background:linear-gradient(180deg,rgba(99,102,241,.2),rgba(255,255,255,.04))">
             <h3>💎 Premium</h3>
             <div class="grid" id="premiumPlans"></div>
           </div>
@@ -550,7 +590,7 @@ function mountSlot(){
       </div>
       <span class="badge" id="slotOut" style="margin-top:6px;display:block;text-align:center;">Удачи!</span>
     </div>`;
-  const symbols=['🎃','🕷️','🕸️','🦇','🍬','7️⃣'], N=symbols.length;
+  const symbols=['⭐','❄️','🎄','☃️','🎁','7️⃣'], N=symbols.length;
   const itemH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sym'));
   const rollers = ['sl_r1','sl_r2','sl_r3'].map(id=>{
     const el = document.getElementById(id);
@@ -680,14 +720,14 @@ function mountWheel() {
   const wheelSVG = gameArea.querySelector('.wheel-svg');
   let currentRotation = 0;
   const PRIZES = [
-    { text: '+10 ⭐', color: '#ff7a18' },
-    { text: '+50 ⭐', color: '#9c5cff' },
-    { text: 'Ничего', color: '#4a415a' },
-    { text: '+100 ⭐', color: '#ffb86b' },
-    { text: 'x2', color: '#c39aff' },
-    { text: '+25 ⭐', color: '#ff7a18' },
-    { text: 'Ничего', color: '#4a415a' },
-    { text: 'Джекпот', color: '#e5c100' }
+    { text: '+10 ⭐', color: '#38bdf8' },
+    { text: '+50 ⭐', color: '#6366f1' },
+    { text: 'Ничего', color: '#4b5563' },
+    { text: '+100 ⭐', color: '#22d3ee' },
+    { text: 'x2', color: '#a5b4fc' },
+    { text: '+25 ⭐', color: '#38bdf8' },
+    { text: 'Ничего', color: '#4b5563' },
+    { text: 'Джекпот', color: '#eab308' }
   ];
   const numSegments = PRIZES.length, angleStep = 360 / numSegments;
   const center = 100, radius = 100;
@@ -702,7 +742,7 @@ function mountWheel() {
     wheelSVG.innerHTML+=`
       <path d="M ${s.x} ${s.y} A ${radius} ${radius} 0 0 0 ${e.x} ${e.y} L ${center} ${center} Z"
             fill="${p.color}"
-            stroke="rgba(0,0,0,.35)"
+            stroke="rgba(15,23,42,.45)"
             stroke-width="1.5"></path>`;
     const tp=polarToCartesian(radius*0.6,ma);
     wheelSVG.innerHTML+=`
@@ -756,15 +796,21 @@ function mountOtherGames(){
         <div class="banner" style="background-image:url('assets/overgo-cover.jpg'); height:120px;">
           <div class="tag">🧪 Overgo • высокий риск</div>
         </div>
+        <div class="banner" style="background-image:url('assets/star-crash-cover.jpg'); height:120px;">
+          <div class="tag">⭐ Star Crash • краш</div>
+        </div>
       </div>
       <div class="games-grid" style="margin-top:10px">
-        <button class="btn gbtn" data-og="overgo">🧪 Играть в Overgo</button>
+        <button class="btn gbtn" data-og="overgo">🧪 Overgo</button>
+        <button class="btn purple gbtn" data-og="crash">⭐ Star Crash</button>
       </div>
       <button class="btn ghost" style="margin-top:10px" data-og="back-main">← Назад к основным играм</button>
     </div>`;
   const overgoBtn = gameArea.querySelector('[data-og="overgo"]');
+  const crashBtn = gameArea.querySelector('[data-og="crash"]');
   const backBtn = gameArea.querySelector('[data-og="back-main"]');
   overgoBtn.onclick = () => mountOvergo();
+  crashBtn.onclick = () => mountCrash();
   backBtn.onclick = () => showGame('slot');
 }
 
@@ -974,6 +1020,21 @@ function mountOvergo(){
     });
   }
   playBtn.addEventListener('click', play);
+}
+
+/* ===== CRASH ===== */
+function mountCrash(){
+  markGame('other');
+  gameArea.innerHTML = `
+    <div class="card">
+      <h3>⭐ Star Crash</h3>
+      <p>Демо-режим: баланс не тратится.</p>
+      <div class="other-game-frame-wrap" style="margin-top:8px;">
+        <iframe src="crash-casino-final-v2.html" class="other-game-frame" loading="lazy"></iframe>
+      </div>
+      <button class="btn ghost" style="margin-top:10px" data-crash-back>← К другим играм</button>
+    </div>`;
+  gameArea.querySelector('[data-crash-back]').onclick = () => mountOtherGames();
 }
 
 /* Router */
