@@ -211,7 +211,7 @@ body{
 .toast{position:fixed; left:50%; bottom:120px; transform:translateX(-50%) translateY(20px); background:rgba(0,0,0,.8);
   border:1px solid var(--line); color:#fff; padding:10px 14px; border-radius:12px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; font-size:13px}
 .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
-@keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
+@keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}
 
 /* ===== OVERGO (порт анимаций) ===== */
 .overgo { --stroke:#10162b; --muted:#9ca3af; --win:#22c55e; --win2:#86efac; --lose:#ef4444; }
@@ -255,267 +255,25 @@ body{
 .overgo .particle{position:absolute; width:6px; height:6px; border-radius:50%; pointer-events:none; opacity:0; animation:fly .9s ease-out forwards}
 @keyframes fly{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
 
-/* ===== CRASH LAYOUT (как отдельная игра, без iframe) ===== */
-.crash{position:relative;}
-.crash-head{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  margin-bottom:8px;
+/* ===== STAR CRASH через iframe ===== */
+.crash-frame-wrap{
+  margin-top:10px;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  background:#020617;
 }
-.crash-note{font-size:12px; color:var(--muted);}
-.crash-grid{
-  display:grid;
-  gap:12px;
+.crash-frame{
+  width:100%;
+  height:560px;
+  border:0;
+  display:block;
 }
-@media(min-width:720px){
-  .crash-grid{
-    grid-template-columns:minmax(0,360px) minmax(0,1fr);
+@media(max-width:480px){
+  .crash-frame{
+    height:520px;
   }
 }
-.crash-left{
-  border-radius:18px;
-  border:1px solid var(--line);
-  background:radial-gradient(circle at top,#1f2937,#020617);
-  padding:12px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.crash-balance-box{
-  border-radius:16px;
-  background:rgba(15,23,42,.95);
-  border:1px solid rgba(148,163,184,.4);
-  padding:10px 14px;
-}
-.crash-balance-label{
-  font-size:12px;
-  color:#e5e7eb;
-  margin-bottom:4px;
-}
-.crash-balance-value{
-  font-size:24px;
-  font-weight:800;
-  color:#fde68a;
-}
-.crash-input-wrap{
-  border-radius:16px;
-  background:rgba(15,23,42,.9);
-  border:1px solid rgba(148,163,184,.5);
-  padding:8px 12px;
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-}
-.crash-input-wrap label{
-  font-size:12px;
-  color:#e5e7eb;
-}
-.crash-input-row{
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
-.crash-input-row input{
-  flex:1;
-  padding:8px 10px;
-  border-radius:12px;
-  border:1px solid rgba(148,163,184,.4);
-  background:rgba(15,23,42,.9);
-  color:#e5e7eb;
-  outline:none;
-  font-size:14px;
-}
-.crash-toggle-row{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-top:4px;
-}
-.crash-toggle-label{font-size:13px;}
-.crash-toggle{
-  width:38px;
-  height:22px;
-  border-radius:999px;
-  border:1px solid rgba(148,163,184,.7);
-  background:rgba(15,23,42,.9);
-  position:relative;
-  cursor:pointer;
-}
-.crash-toggle-dot{
-  position:absolute;
-  top:2px;
-  left:3px;
-  width:16px;
-  height:16px;
-  border-radius:999px;
-  background:#e5e7eb;
-  transition:.18s;
-}
-.crash-toggle.on{background:#22c55e;border-color:#22c55e;}
-.crash-toggle.on .crash-toggle-dot{transform:translateX(14px);background:#f9f9ff;}
-.crash-buttons{
-  margin-top:6px;
-  display:grid;
-  gap:8px;
-}
-@media(min-width:380px){
-  .crash-buttons{
-    grid-template-columns:1.2fr .9fr;
-  }
-}
-.crash-btn-play{
-  background:linear-gradient(135deg,#6366f1,#a855f7);
-  color:#f9fafb;
-}
-.crash-btn-cash{
-  background:linear-gradient(135deg,#fbbf24,#f97316);
-  color:#111827;
-}
-.crash-right{
-  border-radius:18px;
-  border:1px solid var(--line);
-  background:radial-gradient(circle at 20% 0%,rgba(250,250,255,.15),transparent 55%),
-             radial-gradient(circle at 80% 0%,rgba(56,189,248,.22),transparent 55%),
-             #020617;
-  padding:10px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-.crash-scene{
-  position:relative;
-  border-radius:16px;
-  border:1px solid rgba(148,163,184,.4);
-  background:radial-gradient(circle at 50% -10%,rgba(250,250,255,.24),transparent 60%),
-             radial-gradient(circle at 80% 20%,rgba(56,189,248,.25),transparent 55%),
-             #020617;
-  overflow:hidden;
-  min-height:170px;
-  padding:10px 12px;
-}
-.crash-stars{
-  position:absolute;
-  inset:0;
-  background-image:radial-gradient(circle at 10% 20%,rgba(255,255,255,.5) 0,transparent 3px),
-                    radial-gradient(circle at 90% 30%,rgba(255,255,255,.4) 0,transparent 3px),
-                    radial-gradient(circle at 50% 80%,rgba(255,255,255,.35) 0,transparent 3px);
-  opacity:.45;
-}
-.crash-mult-label{
-  position:absolute;
-  top:10px;
-  left:16px;
-  font-size:13px;
-  color:#e5e7eb;
-}
-.crash-mult-value{
-  position:absolute;
-  top:30px;
-  left:16px;
-  font-size:32px;
-  font-weight:800;
-  color:#fde68a;
-  text-shadow:0 0 14px rgba(250,204,21,.55),0 0 30px rgba(253,224,71,.7);
-}
-.crash-moon{
-  position:absolute;
-  top:20px;
-  right:24px;
-  width:68px;
-  height:68px;
-  border-radius:999px;
-  background:radial-gradient(circle at 30% 30%,#f9fafb,#e5e7eb);
-  box-shadow:0 0 40px rgba(148,163,184,.85);
-  display:grid;
-  place-items:center;
-}
-.crash-moon::after{
-  content:"";
-  width:30px;
-  height:30px;
-  border-radius:999px;
-  background:radial-gradient(circle at 30% 30%,rgba(148,163,184,.75),transparent 60%);
-}
-.crash-ship{
-  position:absolute;
-  bottom:16px;
-  left:50%;
-  transform:translateX(-50%);
-  width:46px;
-  height:46px;
-  border-radius:999px;
-  display:grid;
-  place-items:center;
-  background:radial-gradient(circle at 50% 30%,#fde68a,#f97316);
-  box-shadow:0 0 28px rgba(251,191,36,.7);
-}
-.crash-ship-icon{
-  font-size:26px;
-}
-.crash-timeline{
-  position:absolute;
-  left:12px;
-  right:12px;
-  bottom:8px;
-  height:8px;
-  border-radius:999px;
-  background:rgba(15,23,42,.95);
-  overflow:hidden;
-}
-.crash-timeline-fill{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#38bdf8,#a855f7);
-  transition:width .08s linear;
-}
-.crash-status{
-  font-size:12px;
-  color:#e5e7eb;
-  margin-top:2px;
-}
-.crash-history{
-  margin-top:4px;
-  display:flex;
-  align-items:flex-start;
-  gap:6px;
-}
-.crash-history-title{
-  font-size:11px;
-  color:#9ca3af;
-  text-transform:uppercase;
-  letter-spacing:.12em;
-}
-.crash-history-strip{
-  flex:1;
-  display:flex;
-  gap:4px;
-  overflow-x:auto;
-  padding-bottom:2px;
-}
-.crash-history-chip{
-  flex:0 0 auto;
-  min-width:40px;
-  padding:3px 8px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:700;
-  text-align:center;
-}
-.crash-history-chip.win{
-  background:#166534;
-  color:#bbf7d0;
-}
-.crash-history-chip.lose{
-  background:#7f1d1d;
-  color:#fecaca;
-}
-.crash-status-message{
-  font-size:12px;
-  color:#9ca3af;
-}
-
-/* конец CSS */
 </style>
 </head>
 <body>
@@ -1015,6 +773,7 @@ function mountOtherGames(){
     <div class="card">
       <h3>Другие игры</h3>
       <p>Экспериментальные режимы. Баланс не тратится — всё в демо.</p>
+
       <div class="banners" style="margin-top:10px">
         <div class="banner" style="background-image:url('assets/overgo-cover.jpg'); height:120px;">
           <div class="tag">🧪 Overgo • высокий риск</div>
@@ -1023,18 +782,20 @@ function mountOtherGames(){
           <div class="tag">⭐ Star Crash • краш</div>
         </div>
       </div>
+
       <div class="games-grid" style="margin-top:10px">
         <button class="btn gbtn" data-og="overgo">🧪 Overgo</button>
         <button class="btn purple gbtn" data-og="crash">⭐ Star Crash</button>
       </div>
+
       <button class="btn ghost" style="margin-top:10px" data-og="back-main">← Назад к основным играм</button>
     </div>`;
   const overgoBtn = gameArea.querySelector('[data-og="overgo"]');
-  const crashBtn = gameArea.querySelector('[data-og="crash"]');
-  const backBtn = gameArea.querySelector('[data-og="back-main"]');
+  const crashBtn  = gameArea.querySelector('[data-og="crash"]');
+  const backBtn   = gameArea.querySelector('[data-og="back-main"]');
   overgoBtn.onclick = () => mountOvergo();
-  crashBtn.onclick = () => mountCrash();
-  backBtn.onclick = () => showGame('slot');
+  crashBtn.onclick  = () => mountCrash();
+  backBtn.onclick   = () => showGame('slot');
 }
 
 /* ===== OVERGO (с анимациями) ===== */
@@ -1243,178 +1004,25 @@ function mountOvergo(){
   playBtn.addEventListener('click', play);
 }
 
-/* ===== CRASH (демо, виджеты) ===== */
-let crashLoop = null;
+/* ===== STAR CRASH — берём игру из crash-casino-final-v2.html ===== */
 function mountCrash(){
   markGame('other');
   gameArea.innerHTML = `
-    <div class="card crash">
-      <div class="crash-head">
-        <div><b>⭐ Star Crash</b></div>
-        <div class="crash-note">Демо-режим: баланс не тратится.</div>
+    <div class="card">
+      <h3>⭐ Star Crash</h3>
+      <p>Демо-режим: баланс не тратится. Игра загружается как отдельная страница.</p>
+      <div class="crash-frame-wrap">
+        <iframe
+          src="crash-casino-final-v2.html"
+          class="crash-frame"
+          allowfullscreen
+        ></iframe>
       </div>
-      <div class="crash-grid">
-        <div class="crash-left">
-          <div class="crash-balance-box">
-            <div class="crash-balance-label">Баланс</div>
-            <div class="crash-balance-value">∞</div>
-          </div>
-
-          <div class="crash-input-wrap">
-            <label for="cr_bet">Сумма ставки (₽)</label>
-            <div class="crash-input-row">
-              <input id="cr_bet" type="number" min="1" value="100" />
-            </div>
-          </div>
-
-          <div class="crash-input-wrap">
-            <label for="cr_auto">Авто-стоп по иксу</label>
-            <div class="crash-input-row">
-              <input id="cr_auto" type="number" min="1" step="0.1" placeholder="Например, 2.5" />
-            </div>
-            <div class="crash-toggle-row">
-              <div class="crash-toggle" id="cr_auto_toggle">
-                <div class="crash-toggle-dot"></div>
-              </div>
-              <span class="crash-toggle-label">Авто-стоп</span>
-            </div>
-          </div>
-
-          <div class="crash-buttons">
-            <button class="btn crash-btn-play" id="cr_play">ИГРАТЬ</button>
-            <button class="btn crash-btn-cash" id="cr_cash" disabled>ЗАБРАТЬ</button>
-          </div>
-        </div>
-
-        <div class="crash-right">
-          <div class="crash-scene">
-            <div class="crash-stars"></div>
-            <div class="crash-mult-label" id="cr_phase">До начала</div>
-            <div class="crash-mult-value" id="cr_mult">1.00×</div>
-            <div class="crash-moon"></div>
-            <div class="crash-ship"><div class="crash-ship-icon">⭐</div></div>
-            <div class="crash-timeline">
-              <div class="crash-timeline-fill" id="cr_bar"></div>
-            </div>
-          </div>
-          <div class="crash-status">
-            <span id="cr_status" class="crash-status-message">Новая игра ещё не началась.</span>
-          </div>
-          <div class="crash-history">
-            <div class="crash-history-title">ИСТОРИЯ</div>
-            <div class="crash-history-strip" id="cr_hist"></div>
-          </div>
-        </div>
-      </div>
-      <button class="btn ghost" style="margin-top:10px" data-crash-back>← К другим играм</button>
+      <button class="btn ghost" style="margin-top:10px" data-crash-back>
+        ← К другим играм
+      </button>
     </div>`;
-
-  const playBtn = document.getElementById('cr_play');
-  const cashBtn = document.getElementById('cr_cash');
-  const multEl = document.getElementById('cr_mult');
-  const phaseEl = document.getElementById('cr_phase');
-  const statusEl = document.getElementById('cr_status');
-  const barEl = document.getElementById('cr_bar');
-  const histEl = document.getElementById('cr_hist');
-  const autoInput = document.getElementById('cr_auto');
-  const autoToggle = document.getElementById('cr_auto_toggle');
-
-  let state = {
-    running:false,
-    crashed:false,
-    mult:1,
-    target:2,
-    progress:0
-  };
-
-  autoToggle.onclick = ()=>{
-    autoToggle.classList.toggle('on');
-  };
-
-  function addHistory(mult, win){
-    const chip = document.createElement('div');
-    chip.className = 'crash-history-chip ' + (win?'win':'lose');
-    chip.textContent = mult.toFixed(2)+'x';
-    histEl.appendChild(chip);
-    while (histEl.children.length>20) histEl.removeChild(histEl.firstChild);
-    histEl.scrollLeft = histEl.scrollWidth;
-  }
-
-  function resetLoop(){
-    if(crashLoop){ cancelAnimationFrame(crashLoop); crashLoop = null; }
-  }
-
-  function startRound(){
-    resetLoop();
-    state.running = true;
-    state.crashed = false;
-    state.mult = 1;
-    state.progress = 0;
-    // рандомный краш 1.1–8x
-    state.target = 1.1 + Math.random()*7;
-    multEl.textContent = '1.00×';
-    barEl.style.width = '0%';
-    phaseEl.textContent = 'В полёте';
-    statusEl.textContent = 'Самолёт набирает высоту...';
-    playBtn.disabled = true;
-    cashBtn.disabled = false;
-
-    const start = performance.now();
-    function loop(now){
-      const dt = (now-start)/1000;
-      if(!state.running){ return; }
-      // слегка экспонента
-      state.mult = 1 + dt*1.3 + dt*dt*0.35;
-      if(state.mult >= state.target){
-        // краш
-        state.mult = state.target;
-        multEl.textContent = state.mult.toFixed(2)+'×';
-        barEl.style.width = '100%';
-        state.running = false;
-        state.crashed = true;
-        phaseEl.textContent = 'КРАШ';
-        statusEl.textContent = 'Самолёт взорвался 💥';
-        playBtn.disabled = false;
-        cashBtn.disabled = true;
-        addHistory(state.mult, false);
-        return;
-      }
-      const bar = Math.min(100, (state.mult/state.target)*100);
-      barEl.style.width = bar.toFixed(1)+'%';
-      multEl.textContent = state.mult.toFixed(2)+'×';
-
-      // авто-стоп
-      if(autoToggle.classList.contains('on')){
-        const v = parseFloat((autoInput.value||'').replace(',','.'));
-        if(v && state.mult >= v){
-          cashOut();
-          return;
-        }
-      }
-
-      crashLoop = requestAnimationFrame(loop);
-    }
-    crashLoop = requestAnimationFrame(loop);
-  }
-
-  function cashOut(){
-    if(!state.running) return;
-    resetLoop();
-    state.running = false;
-    phaseEl.textContent = 'ЗАБРАНО';
-    statusEl.textContent = `Ты забрал при ${state.mult.toFixed(2)}x (демо).`;
-    playBtn.disabled = false;
-    cashBtn.disabled = true;
-    addHistory(state.mult, true);
-  }
-
-  playBtn.onclick = startRound;
-  cashBtn.onclick = cashOut;
-
-  gameArea.querySelector('[data-crash-back]').onclick = () => {
-    resetLoop();
-    mountOtherGames();
-  };
+  gameArea.querySelector('[data-crash-back]').onclick = () => mountOtherGames();
 }
 
 /* Router */
